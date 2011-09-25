@@ -15,10 +15,11 @@
 #In Progress Release
 
 ## v0.2 - Action time!
-- World goes through steps
-- Add slime actor with random movements
+- done: Switch between 1x and 2x view
+- done: World goes through steps
+- done: Debug info panel showing passing time
+- Add slime actors with random movements
 - Isograph can be modified with difgram or changelog
-- Debug info panel
 - Show step number in debug
 
 #Upcomming Releases
@@ -76,7 +77,19 @@
 
 
 # Unplanned Backlog
+- Day and night settings with ambiant decor (day, night, sun, moon, stars, clouds, etc)
+- Each levels separated by black screen with title
 - Actors say/think stuff in a speech bubble
-- Switch between 1x and 2x view
-- Rotate view n, e, s, w.
+- Rotate view n, e, s, w. and show a compass rose or arrows for cardinal directions
+- Show bloc cursor by translating mouse cursor position back to isometric coordinates
+- Scroll scenegraph to show only portion of a larger stage
+- Render block shadows and add property to "hasShadow"
+- Prevent mouse cursor from touching/selecting html elements of the scenegraph
+- Control randomness with number generator and seed
+- During "setups", some blocs are added by falling from the sky
+- Slow/Fastforward
+- Rewind??!?!?!
+
+# Abandonned ides
+- Show a top-view map. The new concept doesnt require scrolling across a larger than viewport world.
 

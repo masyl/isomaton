@@ -12,7 +12,7 @@
 		this.Coord = Coord;
 		this.Area = Area;
 		this.Stage = Stage;
-		this.Entity = Entity;
+		this.EntityType = EntityTypeFactory;
 		this.World = World;
 		this.Isograph = Isograph;
 		this.worlds = {}; // Collection of available worlds
@@ -25,27 +25,70 @@
 		this.start = function(options) {
 			console.log("Starting Tinycraft!");
 			var isograph, world;
-			isograph = new this.Isograph();
+			isograph = new this.Isograph({
+				skin: options.skin
+			});
 			world = this.worlds[options.world];
 			world.start({
 				isograph: isograph,
-				stage: options.stage
+				stage: options.stage,
+				step: options.step,
+				root: options.root,
+				width: options.width,
+				height: options.height
 			});
 		}
 
 	}
 
 
-	function Entity(id, options) {
+	function EntityTypeFactory (id, typeOptions) {
+		function EntityType(coord, options) {
 
+			this.id = id;
+			this._options = {};
+			this.coord = coord;
+			this.block = null;
+			this.label = "Anonymous";
+
+			this.init = function () {
+				this.options(typeOptions);
+			};
+
+			this.options = function (_options) {
+				_(this._options).extend(_options);
+				return this._options;
+			};
+
+			this.step = function (stage, world) {
+				this._options.step.call(this, world);
+			};
+
+			this.init();
+		}
+		return EntityType;
 	}
 
 	function Stage(id, stageOptions) {
 		this.blocks = [];
+		this.entities = [];
 		this.spawnCoords = new Coord(0, 0, 1);
 		this.isograph = null;
+		this.time = 0;
+		this.speed = 1000;
+		this._options = {};
+
+		this.init = function () {
+			this.options(stageOptions);
+		};
+
+		this.options = function (_options) {
+			_(this._options).extend(_options);
+			return this._options;
+		};
 
 		this.start = function(options) {
+			this.options(options);
 			this.isograph = options.isograph;
 			stageOptions.start.call(this);
 		};
@@ -55,32 +98,89 @@
 			this.isograph.render();
 		};
 
-		this.place = function (blocks) {
+		this.placeBlocks = function (blocks) {
 			var i, _blocks;
 			_blocks = this.blocks;
 			for (i in blocks) {
 				_blocks.push(blocks[i]);
 			}
-			this.isograph.place(blocks);
+			this.isograph.placeBlocks(blocks);
+		};
+
+		this.placeEntities = function (entities) {
+			var i, _entity;
+			_entity = this.entities;
+			for (i in entities) {
+				_entity.push(entities[i]);
+				if (_entity.block) {
+					this.isograph.placeBlocks([_entity.block]);
+				}
+			}
+		};
+
+		this.step = function (world) {
+			var stage, entityId;
+			stage = this;
+			stage.time = stage.time + 1;
+			//console.log("_options: ", stage._options);
+
+			// Step through the stage logic
+			stage._options.step.call(stage, world);
+
+			// Step through the entities logic
+			for (entityId in this.entities) {
+				this.entities[entityId].step(this, world);
+			}
+
+			// Step through the world options step (usually debugging)
+			world._options.step(stage, world);
+
+			// call next step
+			_.delay(function() {
+				stage.step(world);
+			}, stage.speed);
 		};
 
 		this.spawn = function (coord) {
 			this.spawnCoord = coord;
 		};
+
+		this.init();
 	}
 
-	function Isograph() {
+	function Isograph(options) {
 		// todo: get texture image from options
-		this.textures = "tinycraft-2x.png";
+		this._options = {};
+		this.textures = options.spritesURL;
 		this.blocks = [];
 
-		this.place = function (blocks) {
+		this.init = function () {
+			this.options(options);
+		};
+
+		this.options = function (_options) {
+			_(options).extend(this._options);
+			return this._options;
+		};
+
+		this.placeBlocks = function (blocks) {
 			var
 					i,
 					_blocks = this.blocks;
 			for (i in blocks) {
 				_blocks.push(blocks[i]);
 			}
+		};
+
+		this.translateFromISO = function (coord) {
+			var newCoord;
+			var skin = options.skin;
+			newCoord = {
+				x: (coord.y - coord.x) * skin.isoWidth,
+				y: (coord.y + coord.x) * skin.isoTopHeight - (coord.z * skin.isoBlockHeight),
+				z: coord.x + coord.y + coord.z
+			};
+			return newCoord;
 		};
 
 		this.render = function() {
@@ -96,33 +196,41 @@
 		};
 
 		this.getElementFromBlock = function (block) {
-			var coord, element;
-			coord = block.coord.translate();
-			// todo: Get offsets from options
-			var offsetX = 500;
-			var offsetY = 200;
-			var bgOffsetX = -10 - (block.type.offset * 80);
-			var bgOffsetY = -16;
-			element = $("<div style='background-position: " + bgOffsetX + "px " + bgOffsetY + "px; left:" + (coord.x + offsetX) + "; top:" + (coord.y + offsetY) + "; z-index:" + coord.z + "' class='block'>" + block.type + "</div>");
+			var skin, coord, element;
+			skin = options.skin;
+			coord = this.translateFromISO(block.coord);
+			// todo: Get offsets depending on total stage width
+			var offsetX = skin.stageOffsetX;
+			var offsetY = skin.stageOffsetY;
+
+			var bgOffsetX = -skin.spritesOffsetX - (block.type.offset * skin.spritesWidth);
+			var bgOffsetY = -skin.spritesHeight;
+			element = $("<div style='width: " + skin.isoSpriteWidth + "px; height: " + skin.isoSpriteHeight + "px; background-image: url(" + skin.spritesURL + "); background-position: " + bgOffsetX + "px " + bgOffsetY + "px; left:" + (coord.x + offsetX) + "; top:" + (coord.y + offsetY) + "; z-index:" + coord.z + "' class='block'>" + block.type.id + "</div>");
 			return element;
-		}
+		};
+
+		this.init();
 	}
 
 	function World(options) {
 		/**
 		 * Builder helper to easy the creation of block structures
 		 */
-		this.entities = {};
+		this.entityTypes = {};
 		this.stages = {};
 		this.blockSets = {};
 		this.blockTypes = {};
+		this._options = {};
 
 		this.init = function () {
 			this.options(options);
 		};
 
-		this.options = function (options) {
-			var setId, blockSet, typeId, typeId;
+		this.options = function (_options) {
+			var options, setId, blockSet, typeId;
+
+			options = this._options;
+			_(options).extend(_options);
 
 			// Load the blockSet collections from the options
 			for (setId in options.blockSets) {
@@ -132,8 +240,10 @@
 					this.blockTypes[setId + "." + typeId] = blockSet.blockTypes[typeId];
 				}
 			}
+			return options;
 		};
-		this.start = function(options) {
+		this.start = function(_options) {
+			var options = this.options(_options);
 			console.log("Starting world...");
 			var stage;
 			stage = this.stages[options.stage];
@@ -142,6 +252,7 @@
 				isograph: options.isograph
 			});
 			stage.render();
+			stage.step(this);
 		};
 
 		this.init();
@@ -183,19 +294,6 @@
 			var offset = (_offset === undefined) ? 1 : _offset;
 			this.z = this.z + offset;
 		};
-		this.translate = function() {
-			var
-					coord,
-					width = 28,
-					topHeight = 14,
-					blockHeight = 34;
-			coord = {
-				x: (this.y - this.x) * width,
-				y: (this.y + this.x) * topHeight - (this.z * blockHeight),
-				z: x + y + z
-			};
-			return coord;
-		}
 	}
 
 	function Area(coord, width, height) {
@@ -212,7 +310,6 @@
 			return newCoord;
 		}
 	}
-
 
 	function one(type, coord) {
 		var block = new Block(type, coord);
@@ -240,7 +337,6 @@
 				block = new Block(type, coord);
 				blocks.push(block);
 		}
-		console.log("placing random blocs: ", blocks, count);
 		return blocks;
 	}
 

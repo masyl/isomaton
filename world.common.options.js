@@ -2,6 +2,14 @@ window.commonworld = {
 	"id": "common",
 	"label": "Common world",
 	"blockSets": {
+		"blank": {
+			"offset": 0,
+			"blocks": {
+				"blank": {
+					"offset": 0
+				}
+			}
+		},
 		"materials": {
 			"offset": 1,
 			"blocks": {

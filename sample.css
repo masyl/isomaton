@@ -2,3 +2,12 @@ body {
 	height: 900px;
 	background:  #000;
 }
+
+#debug {
+	padding: 10px;
+	color: #ccc;
+	background: #333;
+	float: left;
+	font-size: 0.8em;
+	font-family: terminal, monospace;
+}
