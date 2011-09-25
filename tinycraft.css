@@ -1,0 +1,9 @@
+.block {
+	position: absolute;
+	background-image: url(tinycraft-2x.png);
+	background-position: -250px -16px;
+	width: 58px;
+	height: 64px;
+	overflow:  hidden;
+	text-indent: -1000em;
+}

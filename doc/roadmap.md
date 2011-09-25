@@ -12,8 +12,7 @@
 - First "prairie" stage with some random materials
 
 
-
-#Upcomming
+#In Progress Release
 
 ## v0.2 - Action time!
 - World goes through steps
@@ -21,6 +20,8 @@
 - Isograph can be modified with difgram or changelog
 - Debug info panel
 - Show step number in debug
+
+#Upcomming Releases
 
 ## v0.3 - Solid rules
 - Define solid/non-solid blocType attribute
