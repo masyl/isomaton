@@ -15,9 +15,7 @@
 		this.Entity = Entity;
 		this.World = World;
 		this.Isograph = Isograph;
-
 		this.worlds = {}; // Collection of available worlds
-
 		this.builder = {
 			fill: fill,
 			one: one,
@@ -25,7 +23,7 @@
 		};
 
 		this.start = function(options) {
-			console.log("starting!");
+			console.log("Starting Tinycraft!");
 			var isograph, world;
 			isograph = new this.Isograph();
 			world = this.worlds[options.world];
@@ -58,9 +56,8 @@
 		};
 
 		this.place = function (blocks) {
-			var
-					i,
-					_blocks = this.blocks;
+			var i, _blocks;
+			_blocks = this.blocks;
 			for (i in blocks) {
 				_blocks.push(blocks[i]);
 			}
@@ -73,6 +70,7 @@
 	}
 
 	function Isograph() {
+		// todo: get texture image from options
 		this.textures = "tinycraft-2x.png";
 		this.blocks = [];
 
@@ -88,10 +86,9 @@
 		this.render = function() {
 			var i, blocks, $root, blockElement;
 			blocks = this.blocks;
+			// todo: get root target from options
 			$root = $("#tinycraft");
-			console.log("flushing graph");
 			$root.empty();
-			console.log("rendering dom elements");
 			for (i in blocks) {
 				blockElement = this.getElementFromBlock(blocks[i]);
 				$root.append(blockElement);
@@ -101,6 +98,7 @@
 		this.getElementFromBlock = function (block) {
 			var coord, element;
 			coord = block.coord.translate();
+			// todo: Get offsets from options
 			var offsetX = 500;
 			var offsetY = 0;
 			var bgOffsetX = -10 - (block.type.offset * 80);
