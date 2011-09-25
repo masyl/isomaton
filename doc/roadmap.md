@@ -25,7 +25,7 @@
 
 ## v0.3 - Solid rules
 - Define solid/non-solid blocType attribute
-- Non-solid bloc type: grass, pebbels
+- Non-solid bloc types: longgrass, pebbels, flowews, mushrooms
 - Rule to force actor to step of solid blocs
 - Rule to prevent multiple "solid" blocks from taking space
 - Rule to allow actor to occupy same space as a non-solid block
@@ -77,5 +77,6 @@
 
 # Unplanned Backlog
 - Actors say/think stuff in a speech bubble
-
+- Switch between 1x and 2x view
+- Rotate view n, e, s, w.
 

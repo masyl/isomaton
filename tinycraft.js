@@ -100,7 +100,7 @@
 			coord = block.coord.translate();
 			// todo: Get offsets from options
 			var offsetX = 500;
-			var offsetY = 0;
+			var offsetY = 200;
 			var bgOffsetX = -10 - (block.type.offset * 80);
 			var bgOffsetY = -16;
 			element = $("<div style='background-position: " + bgOffsetX + "px " + bgOffsetY + "px; left:" + (coord.x + offsetX) + "; top:" + (coord.y + offsetY) + "; z-index:" + coord.z + "' class='block'>" + block.type + "</div>");

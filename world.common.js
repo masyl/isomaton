@@ -26,7 +26,7 @@
 			var goldBlock = world.blockTypes["materials.gold"];
 			var stoneBlock = world.blockTypes["materials.stone"];
 
-			var groundArea = new Area(new Coord(-8, -8, -20), 16, 16);
+			var groundArea = new Area(new Coord(-6, -6, -2), 12, 12);
 
 			// place layer of stone
 			this.place(builder.fill(stoneBlock, groundArea));
