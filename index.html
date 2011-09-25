@@ -1,0 +1,47 @@
+<html>
+	<head>
+		<script src="jquery-1.6.min.js"></script>
+		<script src="underscore.js"></script>
+		<script src="tinycraft.js"></script>
+		<script src="world.common.options.js"></script>
+		<script src="world.common.js"></script>
+		<style>
+			body {
+				height: 900px;
+				background:  #000;
+			}
+			.block {
+				position: absolute;
+				background-image: url(tinycraft-2x.png);
+				background-position: -250px -16px;
+				width: 58px;
+				height: 64px;
+				overflow:  hidden;
+				text-indent: -1000em;
+			}
+		</style>
+	</head>
+	<body>
+		<script>
+			jQuery(function() {
+				tinycraft.start({
+					world: "common",
+					root: "#tinycraft",
+					stage: "prairie"
+				});
+				$(".block").live("mouseover", function () {
+					$(this).animate({
+						"margin-top": -16
+					}, 100);
+				});
+				$(".block").live("mouseout", function () {
+					$(this).animate({
+						"margin-top": 0
+					}, 300);
+				});
+			});
+		</script>
+		<div id="tinycraft">
+		</div>
+	</body>
+</html>
