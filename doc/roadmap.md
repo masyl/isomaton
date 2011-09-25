@@ -18,28 +18,38 @@
 ## v0.2 - Action time!
 - World goes through steps
 - Add slime actor with random movements
-- Movement constraints for actors
 - Isograph can be modified with difgram or changelog
+- Debug info panel
+- Show step number in debug
 
-## v0.3 - Moving around
+## v0.3 - Solid rules
+- Define solid/non-solid blocType attribute
+- Non-solid bloc type: grass, pebbels
+- Rule to force actor to step of solid blocs
+- Rule to prevent multiple "solid" blocks from taking space
+- Rule to allow actor to occupy same space as a non-solid block
+
+## v0.2 - Action time!
+
+## v0.4 - Moving around
 - Add knight actor which looks for gold on its own
 - Detect/Control collisions between actors and blocks
 - Add orientation to actors, blocs (n, e, w, s)
 
-## v0.4 - Control
+## v0.5 - Control
 - Player commands knight with keyboard/mouse (attach, retreat, follow);
 
-## v0.5 - Story log
+## v0.6 - Story log
 - A story log stores all the significant game actions
 - Inventory changes are logged to the story log
 
 
-## v0.6 - Health
+## v0.7 - Health
 - Health meter for actors
 - knight looses healt when colliding with slime
 - Actor dies when he looses all his health
 
-## v0.7 - Success or failure
+## v0.8 - Success or failure
 - "Knight kills slime" objective
 - "Knight finds gold" objective
 - Show level objectives and report achievement in story log
