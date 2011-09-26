@@ -52,6 +52,8 @@
 			var dirtBlock = world.blockTypes["materials.dirt"];
 			var goldBlock = world.blockTypes["materials.gold"];
 			var stoneBlock = world.blockTypes["materials.stone"];
+			var yellowflowersBlock = world.blockTypes["decorations.yellowflowers"];
+			var shortweedsBlock = world.blockTypes["decorations.shortweeds"];
 			var groundArea = new Area(new Coord(0, 0, -2), worldOptions.width, worldOptions.height);
 
 			// place layer of stone
@@ -69,8 +71,18 @@
 			var dirtPatchCount = Math.round(Math.random() * 9);
 			this.placeBlocks(tinycraft.builder.random(dirtBlock, groundArea, dirtPatchCount));
 
-			// place a gold block at random
+			// Go up once to place stuff "on" the ground layer
 			groundArea.coord.up();
+
+			// place random yellow flowers
+			var flowersCount = Math.round(Math.random() * 9);
+			this.placeBlocks(tinycraft.builder.random(yellowflowersBlock, groundArea, flowersCount));
+
+			// place random weeds
+			var weedCount = Math.round(Math.random() * 20);
+			this.placeBlocks(tinycraft.builder.random(shortweedsBlock, groundArea, weedCount));
+
+			// place a gold block at random
 			var randomCoord = groundArea.randomCoord();
 			console.log("random coord", randomCoord);
 			this.placeBlocks(tinycraft.builder.one(goldBlock, groundArea.randomCoord()));

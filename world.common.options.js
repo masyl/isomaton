@@ -48,10 +48,21 @@ window.commonworld = {
 			}
 		},
 		"items": {
-			"offset": 7,
+			"offset": 10,
 			"blocks": {
 				"sword": {
 					"offset": 0
+				}
+			}
+		},
+		"decorations": {
+			"offset": 11,
+			"blocks": {
+				"yellowflowers": {
+					"offset": 0
+				},
+				"shortweeds": {
+					"offset": 1
 				}
 			}
 		}
