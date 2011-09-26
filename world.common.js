@@ -1,5 +1,10 @@
 (function (tinycraft){
 
+	function random(items) {
+		var i;
+		i = Math.round(Math.random() * (items.length -1));
+		return items[i];
+	}
 
 	var world = tinycraft.worlds.common = new tinycraft.World(window.commonworld);
 
@@ -11,7 +16,30 @@
 		label: "Slime",
 		blockType: world.blockTypes["actors.slime"],
 		step: function (stage, world) {
-//			this.coord.up();
+			// Move at random 
+			var direction = random([0, 1, 2, 3]);
+			this.coord.move(direction);
+		}
+	});
+
+
+	world.entityTypes.Knight = tinycraft.EntityType("knight", {
+		label: "Knight",
+		blockType: world.blockTypes["actors.knight"],
+		step: function (stage, world) {
+			// Move at random
+			var direction = random([0, 1, 2, 3]);
+			this.coord.move(direction);
+		}
+	});
+
+	world.entityTypes.Princess = tinycraft.EntityType("princess", {
+		label: "Princess",
+		blockType: world.blockTypes["actors.princess"],
+		step: function (stage, world) {
+			// Move at random
+			var direction = random([0, 1, 2, 3]);
+			this.coord.move(direction);
 		}
 	});
 
@@ -50,10 +78,17 @@
 			// place 5 stones at random
 			this.placeBlocks(tinycraft.builder.random(stoneBlock, groundArea, 5));
 
-			// place 1 slime entity
-			
+			// place 1 slime
 			var slime = new world.entityTypes.Slime(groundArea.randomCoord());
 			this.placeEntities([slime]);
+
+			// place 1 knight
+			var knight = new world.entityTypes.Knight(groundArea.randomCoord());
+			this.placeEntities([knight]);
+
+			// place 1 princess
+			var princess = new world.entityTypes.Princess(groundArea.randomCoord());
+			this.placeEntities([princess]);
 
 			// set player spawn point at center
 			this.spawn(0, 0);

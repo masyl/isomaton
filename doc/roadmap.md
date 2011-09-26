@@ -19,7 +19,7 @@
 - done: World goes through steps
 - done: Debug info panel showing passing time
 - done: Show step number in debug
-- Add slime actors with random movements
+- done: Add slime actors with random movements
 - Isograph can be modified with difgram or changelog
 
 #Upcomming Releases
@@ -77,6 +77,7 @@
 
 
 # Unplanned Backlog
+- Show relevant actors/entities in the UI with label
 - HTML5 persistance to stop/resume (persist blocks, entity state (position, inventory, health)
 - Day and night settings with ambiant decor (day, night, sun, moon, stars, clouds, etc)
 - Each levels separated by black screen with title

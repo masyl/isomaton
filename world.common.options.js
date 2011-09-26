@@ -36,7 +36,7 @@ window.commonworld = {
 		"actors": {
 			"offset": 7,
 			"blocks": {
-				"blackknight": {
+				"knight": {
 					"offset": 0
 				},
 				"princess": {

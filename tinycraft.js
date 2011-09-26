@@ -287,6 +287,15 @@
 	}
 
 	function Coord(x, y, z) {
+		/*
+		Directions:
+			0: North
+			1: East
+			2: South
+			3: West
+			4: Up
+			5: Down
+		 */
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -298,6 +307,29 @@
 			var offset = (_offset === undefined) ? 1 : _offset;
 			this.z = this.z + offset;
 		};
+		this.move = function (direction, _offset) {
+			var cardinalDirections;
+			cardinalDirections = ["north", "east", "south", "west", "up", "down"];
+			this[cardinalDirections[direction]](_offset);
+		};
+		// todo: test if cardinal points are adressed correctly
+		this.north = function (_offset) {
+			var offset = (_offset === undefined) ? 1 : _offset;
+			this.x = this.x + offset;
+		};
+		this.east = function (_offset) {
+			var offset = (_offset === undefined) ? 1 : _offset;
+			this.y = this.y + offset;
+		};
+		this.south = function (_offset) {
+			var offset = (_offset === undefined) ? 1 : _offset;
+			this.x = this.x - offset;
+		};
+		this.west = function (_offset) {
+			var offset = (_offset === undefined) ? 1 : _offset;
+			this.y = this.y - offset;
+		};
+		// todo: function to turn clockwise and anti-clockwise
 	}
 
 	function Area(coord, width, height) {
