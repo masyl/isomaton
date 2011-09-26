@@ -18,9 +18,9 @@
 - done: Switch between 1x and 2x view
 - done: World goes through steps
 - done: Debug info panel showing passing time
+- done: Show step number in debug
 - Add slime actors with random movements
 - Isograph can be modified with difgram or changelog
-- Show step number in debug
 
 #Upcomming Releases
 
@@ -77,6 +77,7 @@
 
 
 # Unplanned Backlog
+- HTML5 persistance to stop/resume (persist blocks, entity state (position, inventory, health)
 - Day and night settings with ambiant decor (day, night, sun, moon, stars, clouds, etc)
 - Each levels separated by black screen with title
 - Actors say/think stuff in a speech bubble
@@ -87,9 +88,13 @@
 - Prevent mouse cursor from touching/selecting html elements of the scenegraph
 - Control randomness with number generator and seed
 - During "setups", some blocs are added by falling from the sky
-- Slow/Fastforward
-- Rewind??!?!?!
+- Control game speed: Slowdown, Fastforward
+- Ability to pause the game
 
-# Abandonned ides
+# Far Future Backlog
+- Multiplayer Server/Gameplay
+- Rewind a game to any given point
+
+# Abandonned ideas
 - Show a top-view map. The new concept doesnt require scrolling across a larger than viewport world.
 

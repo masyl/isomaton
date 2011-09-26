@@ -30,7 +30,7 @@
 			isoSpriteWidth: 29,
 			isoSpriteHeight: 32,
 			stageOffsetX: 600,
-			stageOffsetY: 100
+			stageOffsetY: 120
 		};
 
 		tinycraft.start({

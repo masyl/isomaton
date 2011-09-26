@@ -3,7 +3,19 @@ body {
 	background:  #000;
 }
 
+.bottle {
+	width: 726px;
+	height: 640px;
+	position: absolute;
+	top: -108px;
+	left: 250px;
+	background-image: url(bottle.png);
+}
+
 #debug {
+	position: absolute;
+	top: 20px;
+	left: 20px;
 	padding: 10px;
 	color: #ccc;
 	background: #333;

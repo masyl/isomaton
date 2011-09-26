@@ -48,7 +48,8 @@
 			this.id = id;
 			this._options = {};
 			this.coord = coord;
-			this.block = null;
+			this.block = new Block(typeOptions.blockType, coord);
+
 			this.label = "Anonymous";
 
 			this.init = function () {
@@ -61,7 +62,7 @@
 			};
 
 			this.step = function (stage, world) {
-				this._options.step.call(this, world);
+				this._options.step.call(this, stage, world);
 			};
 
 			this.init();
@@ -91,6 +92,7 @@
 			this.options(options);
 			this.isograph = options.isograph;
 			stageOptions.start.call(this);
+			this.render();
 		};
 
 		this.render = function() {
@@ -108,12 +110,13 @@
 		};
 
 		this.placeEntities = function (entities) {
-			var i, _entity;
-			_entity = this.entities;
+			var i, entity, _entities;
+			_entities = this.entities;
 			for (i in entities) {
-				_entity.push(entities[i]);
-				if (_entity.block) {
-					this.isograph.placeBlocks([_entity.block]);
+				entity = entities[i];
+				_entities.push(entity);
+				if (entity.block) {
+					this.isograph.placeBlocks([entity.block]);
 				}
 			}
 		};
@@ -134,6 +137,8 @@
 
 			// Step through the world options step (usually debugging)
 			world._options.step(stage, world);
+
+			stage.render();
 
 			// call next step
 			_.delay(function() {
@@ -251,7 +256,6 @@
 			stage.start({
 				isograph: options.isograph
 			});
-			stage.render();
 			stage.step(this);
 		};
 

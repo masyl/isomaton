@@ -7,17 +7,11 @@
 	var Area = tinycraft.Area;
 	var builder = tinycraft.builder;
 
-	world.entityTypes.Knight = tinycraft.EntityType("knight", {
-		label: "Player",
-		blockset: "actors",
-		blocktype: "blackknight"
-	});
-
 	world.entityTypes.Slime = tinycraft.EntityType("slime", {
 		label: "Slime",
-		block: world.blockTypes["actors.slime"],
-		step: function (world) {
-			
+		blockType: world.blockTypes["actors.slime"],
+		step: function (stage, world) {
+//			this.coord.up();
 		}
 	});
 
@@ -65,7 +59,6 @@
 			this.spawn(0, 0);
 		},
 		step: function (world) {
-			console.log("stage is steping!");
 		}
 	});
 
