@@ -11,31 +11,30 @@
 - Build helper functions
 - First "prairie" stage with some random materials
 
+## v0.2 - Action time!
+- Switch between 1x and 2x view
+- World goes through steps
+- Debug info panel showing passing time
+- Show step number in debug
+- Add edslime actors with random movements
+
 
 #In Progress Release
 
-## v0.2 - Action time!
-- done: Switch between 1x and 2x view
-- done: World goes through steps
-- done: Debug info panel showing passing time
-- done: Show step number in debug
-- done: Add slime actors with random movements
-- Isograph can be modified with difgram or changelog
+## v0.3 - Watch your step
+- Rule to force actor to step of solid blocs
+- Define solid/non-solid blocType attribute
+- Non-solid bloc types: longgrass, pebbels, flowews, mushrooms
+- Rule to prevent multiple "solid" blocks from taking space
+- Rule to allow actor to occupy same space as a non-solid block
+- Detect/Control collisions between actors and blocks
 
 #Upcomming Releases
 
-## v0.3 - Solid rules
-- Define solid/non-solid blocType attribute
-- Non-solid bloc types: longgrass, pebbels, flowews, mushrooms
-- Rule to force actor to step of solid blocs
-- Rule to prevent multiple "solid" blocks from taking space
-- Rule to allow actor to occupy same space as a non-solid block
-
-## v0.2 - Action time!
-
-## v0.4 - Moving around
+## v0.4 - Smooth moves
+- Smooth animation of blocs between stage steps
+- Isograph can be modified with difgram or changelog
 - Add knight actor which looks for gold on its own
-- Detect/Control collisions between actors and blocks
 - Add orientation to actors, blocs (n, e, w, s)
 
 ## v0.5 - Control
@@ -91,11 +90,11 @@
 - During "setups", some blocs are added by falling from the sky
 - Control game speed: Slowdown, Fastforward
 - Ability to pause the game
-
 # Far Future Backlog
 - Multiplayer Server/Gameplay
 - Rewind a game to any given point
 
 # Abandonned ideas
 - Show a top-view map. The new concept doesnt require scrolling across a larger than viewport world.
+- Coord movements in 26 directions instead of 6 directions ? No. This would complexify any "push/pull" logic too much
 
