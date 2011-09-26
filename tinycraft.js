@@ -43,11 +43,11 @@
 
 
 	function EntityTypeFactory (id, typeOptions) {
-		function EntityType(coord, options) {
-
+		function Entity(coord, options) {
 			this.id = id;
 			this._options = {};
 			this.coord = coord;
+			this.nextCoord = null;
 			this.block = new Block(typeOptions.blockType, coord);
 
 			this.label = "Anonymous";
@@ -67,16 +67,22 @@
 
 			this.init();
 		}
-		return EntityType;
+		return Entity;
 	}
 
 	function Stage(id, stageOptions) {
 		this.blocks = [];
+		this.registry = {
+			// "x-y-x": {
+			// 		blocks: []
+			// 		entities: []
+			// }
+		};
 		this.entities = [];
 		this.spawnCoords = new Coord(0, 0, 1);
 		this.isograph = null;
 		this.time = 0;
-		this.speed = 1000;
+		this.speed = 100;
 		this._options = {};
 
 		this.init = function () {
@@ -88,6 +94,39 @@
 			return this._options;
 		};
 
+		//todo: not optimal... registry should be live
+		this.updateRegistry = function () {
+			this.registry = {};
+			var i, key, block, entity, x, y, z;
+			for (i in this.blocks) {
+				block = this.blocks[i];
+				x = block.coord.x;
+				y = block.coord.y;
+				z = block.coord.z;
+				key = x + "-" + y + "-" + z;
+				if (!this.registry[key]) this.registry[key] = new RegistryEntry(key, block.coord);
+				this.registry[key].blocks.push(block);
+			}
+
+			for (i in this.entities) {
+				entity = this.blocks[i];
+				x = entity.coord.x;
+				y = entity.coord.y;
+				z = entity.coord.z;
+				key = x + "-" + y + "-" + z;
+				if (!this.registry[key]) this.registry[key] = new RegistryEntry(key, entity.coord);
+				this.registry[key].entities.push(entity);
+			}
+
+			function RegistryEntry(key, coord) {
+				this.key = key;
+				this.coord = coord;
+				this.blocks = [];
+				this.entities = [];
+			}
+			//console.log("registry updated", this.registry);
+		};
+
 		this.start = function(options) {
 			this.options(options);
 			this.isograph = options.isograph;
@@ -96,7 +135,7 @@
 		};
 
 		this.render = function() {
-			console.log("rendering");
+//			console.log("rendering");
 			this.isograph.render();
 		};
 
@@ -122,8 +161,11 @@
 		};
 
 		this.step = function (world) {
-			var stage, entityId;
+			var isValidMove, registryEntry, key, stage, entity, entityId;
 			stage = this;
+
+			stage.updateRegistry();
+
 			stage.time = stage.time + 1;
 			//console.log("_options: ", stage._options);
 
@@ -134,6 +176,49 @@
 			for (entityId in this.entities) {
 				this.entities[entityId].step(this, world);
 			}
+
+			// Test everyones move and see if there are collissions to resolve
+			// or rules to apply
+//			debugger;
+			for (entityId in this.entities) {
+				isValidMove = true;
+				entity = this.entities[entityId];
+
+				// Test if next move is into a solid block
+				key = entity.nextCoord.x + "-" + entity.nextCoord.y + "-" + entity.nextCoord.z;
+				registryEntry = stage.registry[key];
+				if (registryEntry) {
+					if (registryEntry.blocks[0].type.isSolid) {
+						isValidMove = false;
+					}
+				}
+
+				// Test if next move is on a solid block
+				key = entity.nextCoord.x + "-" + entity.nextCoord.y + "-" + (entity.nextCoord.z-1);
+				registryEntry = stage.registry[key];
+				if (registryEntry) {
+					if (!registryEntry.blocks[0].type.isSolid) {
+						isValidMove = false;
+					}
+				} else {
+					isValidMove = false;
+				}
+
+				if (!isValidMove) {
+					entity.nextCoord = null;
+				}
+				// todo: test for collisions with "nextCoord" or other blocks and entities
+			}
+			// Process all remaining nextCoord's as valid moves
+			for (entityId in this.entities) {
+				entity = this.entities[entityId];
+				if (entity.nextCoord) {
+					entity.coord = entity.nextCoord;
+					entity.block.coord = entity.coord;
+					entity.nextCoord = null;
+				}
+			}
+
 
 			// Step through the world options step (usually debugging)
 			world._options.step(stage, world);
@@ -265,11 +350,13 @@
 	function Block(type, coord) {
 		this.type = type;
 		this.coord = coord;
+		this.nextCoord = null;
 	}
 
 	function BlockType(id, options) {
 		this.id = id;
 		this.offset = options.offset || 0;
+		this.isSolid = options.isSolid || true;
 	}
 
 	function BlockSet(id, options) {
@@ -299,36 +386,54 @@
 		this.x = x;
 		this.y = y;
 		this.z = z;
+
+		this.copy = function () {
+			return new Coord(this.x, this.y, this.z);
+		};
+
 		this.down = function (_offset) {
 			var offset = (_offset === undefined) ? 1 : _offset;
 			this.z = this.z - offset;
+			return this;
 		};
+
 		this.up = function (_offset) {
 			var offset = (_offset === undefined) ? 1 : _offset;
 			this.z = this.z + offset;
+			return this;
 		};
+
 		this.move = function (direction, _offset) {
 			var cardinalDirections;
 			cardinalDirections = ["north", "east", "south", "west", "up", "down"];
-			this[cardinalDirections[direction]](_offset);
+			return this[cardinalDirections[direction]](_offset);
 		};
+
 		// todo: test if cardinal points are adressed correctly
 		this.north = function (_offset) {
 			var offset = (_offset === undefined) ? 1 : _offset;
 			this.x = this.x + offset;
+			return this;
 		};
+
 		this.east = function (_offset) {
 			var offset = (_offset === undefined) ? 1 : _offset;
 			this.y = this.y + offset;
+			return this;
 		};
+
 		this.south = function (_offset) {
 			var offset = (_offset === undefined) ? 1 : _offset;
 			this.x = this.x - offset;
+			return this;
 		};
+
 		this.west = function (_offset) {
 			var offset = (_offset === undefined) ? 1 : _offset;
 			this.y = this.y - offset;
+			return this;
 		};
+
 		// todo: function to turn clockwise and anti-clockwise
 	}
 

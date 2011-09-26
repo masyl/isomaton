@@ -6,6 +6,7 @@ window.commonworld = {
 			"offset": 0,
 			"blocks": {
 				"blank": {
+					"isSolid": true,
 					"offset": 0
 				}
 			}
@@ -14,21 +15,27 @@ window.commonworld = {
 			"offset": 1,
 			"blocks": {
 				"dirt": {
+					"isSolid": true,
 					"offset": 0
 				},
 				"bush": {
+					"isSolid": true,
 					"offset": 1
 				},
 				"grass": {
+					"isSolid": true,
 					"offset": 2
 				},
 				"gold": {
+					"isSolid": true,
 					"offset": 3
 				},
 				"stone": {
+					"isSolid": true,
 					"offset": 4
 				},
 				"water": {
+					"isSolid": false,
 					"offset": 5
 				}
 			}
@@ -37,12 +44,15 @@ window.commonworld = {
 			"offset": 7,
 			"blocks": {
 				"knight": {
+					"isSolid": true,
 					"offset": 0
 				},
 				"princess": {
+					"isSolid": true,
 					"offset": 1
 				},
 				"slime": {
+					"isSolid": true,
 					"offset": 2
 				}
 			}
@@ -51,6 +61,7 @@ window.commonworld = {
 			"offset": 10,
 			"blocks": {
 				"sword": {
+					"isSolid": false,
 					"offset": 0
 				}
 			}
@@ -59,9 +70,11 @@ window.commonworld = {
 			"offset": 11,
 			"blocks": {
 				"yellowflowers": {
+					"isSolid": false,
 					"offset": 0
 				},
 				"shortweeds": {
+					"isSolid": false,
 					"offset": 1
 				}
 			}

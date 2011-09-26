@@ -2,7 +2,7 @@
 
 	function random(items) {
 		var i;
-		i = Math.round(Math.random() * (items.length -1));
+		i = Math.round(Math.random() * (items.length -0.5));
 		return items[i];
 	}
 
@@ -18,7 +18,7 @@
 		step: function (stage, world) {
 			// Move at random 
 			var direction = random([0, 1, 2, 3]);
-			this.coord.move(direction);
+			this.nextCoord = this.coord.copy().move(direction);
 		}
 	});
 
@@ -29,7 +29,7 @@
 		step: function (stage, world) {
 			// Move at random
 			var direction = random([0, 1, 2, 3]);
-			this.coord.move(direction);
+			this.nextCoord = this.coord.copy().move(direction);
 		}
 	});
 
@@ -39,7 +39,7 @@
 		step: function (stage, world) {
 			// Move at random
 			var direction = random([0, 1, 2, 3]);
-			this.coord.move(direction);
+			this.nextCoord = this.coord.copy().move(direction);
 		}
 	});
 
@@ -88,7 +88,7 @@
 			this.placeBlocks(tinycraft.builder.one(goldBlock, groundArea.randomCoord()));
 
 			// place 5 stones at random
-			this.placeBlocks(tinycraft.builder.random(stoneBlock, groundArea, 5));
+			this.placeBlocks(tinycraft.builder.random(stoneBlock, groundArea, 25));
 
 			// place 1 slime
 			var slime = new world.entityTypes.Slime(groundArea.randomCoord());
