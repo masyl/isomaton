@@ -22,35 +22,39 @@
 #In Progress Release
 
 ## v0.3 - Watch your step
-- Rule to force actor to step of solid blocs
-- Define solid/non-solid blocType attribute
-- Non-solid bloc types: longgrass, pebbels, flowews, mushrooms
+- done: Rule to force actor to step of solid blocs
+- done: Define solid/non-solid blocType attribute
+- Non-solid bloc types: weeds, flowews
 - Rule to prevent multiple "solid" blocks from taking space
 - Rule to allow actor to occupy same space as a non-solid block
 - Detect/Control collisions between actors and blocks
+- When placing blocs, enforce cohesion rules (no two blocs, occupying)
+- Placing blocs in "replace", "dont-replace" mode
+- Placing blocs by layering them (falling from the sky until they touch ground
+- Enforcing limits on the maximum width/height/tallness of the world
 
 #Upcomming Releases
 
-## v0.4 - Smooth moves
+## v0.? - Smooth moves
 - Smooth animation of blocs between stage steps
 - Isograph can be modified with difgram or changelog
 - Add knight actor which looks for gold on its own
 - Add orientation to actors, blocs (n, e, w, s)
 
-## v0.5 - Control
+## v0.? - Control
 - Player commands knight with keyboard/mouse (attach, retreat, follow);
 
-## v0.6 - Story log
+## v0.? - Story log
 - A story log stores all the significant game actions
 - Inventory changes are logged to the story log
 
 
-## v0.7 - Health
+## v0.? - Health
 - Health meter for actors
 - knight looses healt when colliding with slime
 - Actor dies when he looses all his health
 
-## v0.8 - Success or failure
+## v0.? - Success or failure
 - "Knight kills slime" objective
 - "Knight finds gold" objective
 - Show level objectives and report achievement in story log
@@ -76,6 +80,9 @@
 
 
 # Unplanned Backlog
+- Water has two bloc states... water on top and water under another bloc (same situation elsewhere?)
+- Figure out how item crafting play into the story and how it is done
+- "item" bloc types... pickable whe stepping on them, floating a little
 - Show relevant actors/entities in the UI with label
 - HTML5 persistance to stop/resume (persist blocks, entity state (position, inventory, health)
 - Day and night settings with ambiant decor (day, night, sun, moon, stars, clouds, etc)
@@ -98,3 +105,60 @@
 - Show a top-view map. The new concept doesnt require scrolling across a larger than viewport world.
 - Coord movements in 26 directions instead of 6 directions ? No. This would complexify any "push/pull" logic too much
 
+# Ideas for Bloc Types and Items
+- Naturals
+	- Long grass
+	- Mushrooms
+	- Flowers
+	- skelletons, fossils
+	- Small rocks, Big rock, pebbles
+	- Puddle
+- Material
+	- Ores: iron, coal, gold, diamond
+	- Marbles
+	- Cobblestone, gravel
+	- Brick
+	- Marsh
+- Liquids
+	- Tar
+	- Lava
+	- Blood
+- Tools:
+  - Sword
+  - Knife
+  - Bow
+  - Shield
+  - Whip
+  - Armor: helmet, boots, etc
+- Items:
+  - Scrolls
+  -
+  -
+  -
+- Creatures
+	- Ghosts
+	- Spiders
+	- Wasp
+	- Skeletons
+	- Zombies / Undead
+	- Blobs
+	- 
+
+- Animals
+	- Pig
+	- Cow
+	- Chicken
+	- Duck
+	- Cat
+	- Dog
+	- Wolf
+	- Rat / Mouse
+	- Frog
+	- Turtle
+	- Bird
+	- Snake
+	- Bees
+
+- Other
+	- Meat
+	- 

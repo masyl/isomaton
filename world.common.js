@@ -49,6 +49,7 @@
 			console.log("placing blocks...");
 
 			var grassBlock = world.blockTypes["materials.grass"];
+			var waterBlock = world.blockTypes["materials.water"];
 			var dirtBlock = world.blockTypes["materials.dirt"];
 			var goldBlock = world.blockTypes["materials.gold"];
 			var stoneBlock = world.blockTypes["materials.stone"];
@@ -70,6 +71,10 @@
 			// place random patches of dirt in the grass at random
 			var dirtPatchCount = Math.round(Math.random() * 9);
 			this.placeBlocks(tinycraft.builder.random(dirtBlock, groundArea, dirtPatchCount));
+
+			// place random patches of water in the grass at random
+			var waterCount = Math.round(Math.random() * 9);
+			this.placeBlocks(tinycraft.builder.random(waterBlock, groundArea, waterCount));
 
 			// Go up once to place stuff "on" the ground layer
 			groundArea.coord.up();

@@ -1,4 +1,6 @@
 body {
+	margin:  0px;
+	padding:  0px;
 	height: 900px;
 	background:  #000;
 }
@@ -22,4 +24,12 @@ body {
 	float: left;
 	font-size: 0.8em;
 	font-family: terminal, monospace;
+}
+
+.cursor {
+	position: absolute;
+	width: 29px;
+	height: 32px;
+	border:  1px dotted #000;
+	z-index: 90000;
 }

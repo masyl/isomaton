@@ -82,7 +82,7 @@
 		this.spawnCoords = new Coord(0, 0, 1);
 		this.isograph = null;
 		this.time = 0;
-		this.speed = 100;
+		this.speed = 2000;
 		this._options = {};
 
 		this.init = function () {
@@ -131,6 +131,7 @@
 			this.options(options);
 			this.isograph = options.isograph;
 			stageOptions.start.call(this);
+			this.updateRegistry();
 			this.render();
 		};
 
@@ -184,6 +185,11 @@
 				isValidMove = true;
 				entity = this.entities[entityId];
 
+
+				// todo: make rules specific to each actors
+				// a bird or fish doesnt move with the same rules as
+				// an ordinary knight!
+
 				// Test if next move is into a solid block
 				key = entity.nextCoord.x + "-" + entity.nextCoord.y + "-" + entity.nextCoord.z;
 				registryEntry = stage.registry[key];
@@ -227,7 +233,7 @@
 
 			// call next step
 			_.delay(function() {
-				stage.step(world);
+				//stage.step(world);
 			}, stage.speed);
 		};
 
@@ -243,9 +249,35 @@
 		this._options = {};
 		this.textures = options.spritesURL;
 		this.blocks = [];
+		this.currentFocus = null;
+		window.dbBlocks = this.dbBlocks = new Minidb();
+
+		//todo: get rid of the cursor
+		var $cursor;
+		$(function () {
+			$cursor = $(".cursor");
+		});
 
 		this.init = function () {
+			var isograph = this;
 			this.options(options);
+
+			var throttledMove = _.throttle(move, 50);
+			function move(e) {
+				var isocoord = isograph.translateToISO(e.pageX, e.pageY);
+				var pagecoord = isograph.translateFromISO(isocoord);
+				//console.log("block at : ", isocoord.x, isocoord.y);
+				var focusedBlock = isograph.dbBlocks.get({
+					"coord.x": isocoord.x,
+					"coord.y": isocoord.y,
+					"coord.z": 0
+				});
+				if (focusedBlock) {
+					isograph.focus(focusedBlock);
+				}
+			}
+			$(window).mousemove(throttledMove);
+
 		};
 
 		this.options = function (_options) {
@@ -253,15 +285,44 @@
 			return this._options;
 		};
 
+		this.focus = function (block) {
+			if (this.currentFocus) {
+				if (this.currentFocus.toString() === block.toString()) {
+					return;
+				}
+				id = "#" + this.currentFocus.toString();
+				$elems = $(id)
+				$elems.animate({
+					"margin-top": 0
+				}, 50);
+			}
+			var i, id, $elems;
+			id = "#" + block.toString();
+			$elems = $(id)
+					.animate({
+						"margin-top": -10
+					}, 50);
+			this.currentFocus = block;
+//			console.log("$elems: ", $elems, ids);
+		};
+		
+
 		this.placeBlocks = function (blocks) {
 			var
 					i,
+					block,
 					_blocks = this.blocks;
 			for (i in blocks) {
-				_blocks.push(blocks[i]);
+				block = blocks[i];
+				_blocks.push(block);
+				this.dbBlocks.add(block);
 			}
 		};
 
+		/**
+		 * Convert isometric coordinates to pixel positions
+		 * @param coord
+		 */
 		this.translateFromISO = function (coord) {
 			var newCoord;
 			var skin = options.skin;
@@ -273,15 +334,42 @@
 			return newCoord;
 		};
 
+
+		/**
+		 * Convert pixel position to Isometric coordnates
+		 * @param x
+		 * @param y
+		 */
+		this.translateToISO = function (mouseX, mouseY) {
+			var _x, _y, x, y, coord, skin;
+			skin = options.skin;
+
+			x = mouseX - skin.stageOffsetX - (skin.isoWidth);
+//			y = mouseY - skin.stageOffsetY + (skin.isoBlockHeight);
+			y = mouseY - skin.stageOffsetY + 7;
+
+			y = y / (skin.isoTopHeight * 2);
+			x = -(x / skin.isoWidth);
+
+			_y = parseInt((2 * y - x) / 2);
+			_x = parseInt(x + _y);
+
+			coord = new Coord(_x, _y, 0);
+			return coord;
+		};
+
 		this.render = function() {
-			var i, blocks, $root, blockElement;
+			var i, block, blocks, $root, $blockElement;
 			blocks = this.blocks;
 			// todo: get root target from options
 			$root = $("#tinycraft");
 			$root.empty();
 			for (i in blocks) {
-				blockElement = this.getElementFromBlock(blocks[i]);
-				$root.append(blockElement);
+				block = blocks[i];
+				$blockElement = this.getElementFromBlock(block);
+
+				// todo. keep reference to dom element and highlight on mouseover
+				$root.append($blockElement);
 			}
 		};
 
@@ -295,7 +383,7 @@
 
 			var bgOffsetX = -skin.spritesOffsetX - (block.type.offset * skin.spritesWidth);
 			var bgOffsetY = -skin.spritesHeight;
-			element = $("<div style='width: " + skin.isoSpriteWidth + "px; height: " + skin.isoSpriteHeight + "px; background-image: url(" + skin.spritesURL + "); background-position: " + bgOffsetX + "px " + bgOffsetY + "px; left:" + (coord.x + offsetX) + "; top:" + (coord.y + offsetY) + "; z-index:" + coord.z + "' class='block'>" + block.type.id + "</div>");
+			element = $("<div id='" + block.toString() + "' style='width: " + skin.isoSpriteWidth + "px; height: " + skin.isoSpriteHeight + "px; background-image: url(" + skin.spritesURL + "); background-position: " + bgOffsetX + "px " + bgOffsetY + "px; left:" + (coord.x + offsetX) + "; top:" + (coord.y + offsetY) + "; z-index:" + coord.z + "' class='block'>" + block.type.id + "</div>");
 			return element;
 		};
 
@@ -348,9 +436,24 @@
 	}
 
 	function Block(type, coord) {
+		this.id = _.uniqueId();
 		this.type = type;
 		this.coord = coord;
 		this.nextCoord = null;
+
+		this.toString = function () {
+			return "Block-" + this.id;
+		};
+		this.toIndex = function () {
+			return {
+				"id": this.id,
+				"type.id": this.type.id,
+				"type.isSolid": this.type.isSolid,
+				"coord.x": this.coord.x,
+				"coord.y": this.coord.y,
+				"coord.z": this.coord.z
+			}
+		};
 	}
 
 	function BlockType(id, options) {
