@@ -26,6 +26,8 @@
 - done: Define solid/non-solid blocType attribute
 - done: Non-solid bloc types: weeds, flowews
 - done: Rule to prevent multiple "solid" blocks from taking space
+- done: Smooth animation of blocs between stage steps
+- done: Prevent mouse cursor from touching/selecting html elements of the scenegraph
 - Rule to allow actor to occupy same space as a non-solid block, with the proper overriding z-index
 - Detect/Control collisions between actors and blocks
 - When placing blocs, enforce cohesion rules (no two blocs, occupying)
@@ -36,10 +38,10 @@
 #Upcomming Releases
 
 ## v0.? - Smooth moves
-- Smooth animation of blocs between stage steps
 - Isograph can be modified with difgram or changelog
-- Add knight actor which looks for gold on its own
 - Add orientation to actors, blocs (n, e, w, s)
+- Add knight actor which looks for gold on its own
+- Actors should no try to move on a non-moving block, they should detect their move is no possible
 
 ## v0.? - Control
 - Player commands knight with keyboard/mouse (attach, retreat, follow);
@@ -80,6 +82,8 @@
 
 
 # Unplanned Backlog
+
+- Better choice of easing for actor animation... could ever "hop" on the next coordinate
 - Water has two bloc states... water on top and water under another bloc (same situation elsewhere?)
 - Figure out how item crafting play into the story and how it is done
 - "item" bloc types... pickable whe stepping on them, floating a little
@@ -88,15 +92,16 @@
 - Day and night settings with ambiant decor (day, night, sun, moon, stars, clouds, etc)
 - Each levels separated by black screen with title
 - Actors say/think stuff in a speech bubble
-- Rotate view n, e, s, w. and show a compass rose or arrows for cardinal directions
+- Rotate the stage n, e, s, w. and show a compass rose or arrows for cardinal directions
 - Show bloc cursor by translating mouse cursor position back to isometric coordinates
 - Scroll scenegraph to show only portion of a larger stage
 - Render block shadows and add property to "hasShadow"
-- Prevent mouse cursor from touching/selecting html elements of the scenegraph
 - Control randomness with number generator and seed
 - During "setups", some blocs are added by falling from the sky
 - Control game speed: Slowdown, Fastforward
 - Ability to pause the game
+
+
 # Far Future Backlog
 - Multiplayer Server/Gameplay
 - Rewind a game to any given point

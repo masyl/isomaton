@@ -290,12 +290,13 @@
 		};
 
 		this.animate = function (block) {
-			var $elem, speed, coord;
+			var $elem, speed, easing, coord;
 			coord = this.translateFromISO(block.coord);
 			// If the block is lowering his z-index set it first
 			// Otherwise set it after
 			$elem = $("#" + block.toString());
 			speed = this.stepSpeed * 0.8;
+			easing = "linear";
 			if ($elem.css("z-index") < coord.z) {
 				$elem
 						.css({
@@ -304,13 +305,13 @@
 						.animate({
 							left: coord.x,
 							top: coord.y
-						}, speed);
+						}, speed, easing);
 			} else {
 				$elem
 						.animate({
 							left: coord.x,
 							top: coord.y
-						}, speed, function () {
+						}, speed, easing, function () {
 							$(this)
 									.css({
 										"z-index": coord.z
@@ -405,12 +406,12 @@
 			blocks = this.blocks;
 			// todo: get root target from options
 			$root = $("#tinycraft");
-			$root.empty();
+			$root
+					.empty()
+					.append("<div class='clickZone' style='width: 100%; height: 100%; z-index: 10000; position: absolute;'></div>");
 			for (i in blocks) {
 				block = blocks[i];
 				$blockElement = this.getElementFromBlock(block);
-
-				// todo. keep reference to dom element and highlight on mouseover
 				$root.append($blockElement);
 			}
 		};
