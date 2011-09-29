@@ -82,7 +82,7 @@
 		this.spawnCoords = new Coord(0, 0, 1);
 		this.isograph = null;
 		this.time = 0;
-		this.speed = 200;
+		this.speed = 500;
 		this._options = {};
 
 		this.init = function () {
@@ -130,6 +130,7 @@
 		this.start = function(options) {
 			this.options(options);
 			this.isograph = options.isograph;
+			this.isograph.stepSpeed = this.speed * 1;
 			stageOptions.start.call(this);
 			this.updateRegistry();
 			this.render();
@@ -252,6 +253,7 @@
 		this.textures = options.spritesURL;
 		this.blocks = [];
 		this.currentFocus = null;
+		this.stepSpeed = 0;
 		window.dbBlocks = this.dbBlocks = new Minidb();
 
 		//todo: get rid of the cursor
@@ -288,12 +290,33 @@
 		};
 
 		this.animate = function (block) {
-			var coord = this.translateFromISO(block.coord);
-			$("#" + block.toString()).animate({
-				left: coord.x,
-				top: coord.y,
-				"z-index": coord.z
-			}, 100);
+			var $elem, speed, coord;
+			coord = this.translateFromISO(block.coord);
+			// If the block is lowering his z-index set it first
+			// Otherwise set it after
+			$elem = $("#" + block.toString());
+			speed = this.stepSpeed * 0.8;
+			if ($elem.css("z-index") < coord.z) {
+				$elem
+						.css({
+							"z-index": coord.z
+						})
+						.animate({
+							left: coord.x,
+							top: coord.y
+						}, speed);
+			} else {
+				$elem
+						.animate({
+							left: coord.x,
+							top: coord.y
+						}, speed, function () {
+							$(this)
+									.css({
+										"z-index": coord.z
+									})
+						});
+			}
 		};
 
 		this.focus = function (block) {

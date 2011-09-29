@@ -26,7 +26,7 @@
 - done: Define solid/non-solid blocType attribute
 - done: Non-solid bloc types: weeds, flowews
 - done: Rule to prevent multiple "solid" blocks from taking space
-- Rule to allow actor to occupy same space as a non-solid block
+- Rule to allow actor to occupy same space as a non-solid block, with the proper overriding z-index
 - Detect/Control collisions between actors and blocks
 - When placing blocs, enforce cohesion rules (no two blocs, occupying)
 - Placing blocs in "replace", "dont-replace" mode
