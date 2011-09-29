@@ -16,9 +16,12 @@
 		label: "Slime",
 		blockType: world.blockTypes["actors.slime"],
 		step: function (stage, world) {
-			// Move at random 
-			var direction = random([0, 1, 2, 3]);
-			this.nextCoord = this.coord.copy().move(direction);
+			var mod = stage.time % 8;
+			if (mod === 0) {
+				// Move at random
+				var direction = random([0, 1, 2, 3]);
+				this.nextCoord = this.coord.copy().move(direction);
+			}
 		}
 	});
 
@@ -27,9 +30,12 @@
 		label: "Knight",
 		blockType: world.blockTypes["actors.knight"],
 		step: function (stage, world) {
-			// Move at random
-			var direction = random([0, 1, 2, 3]);
-			this.nextCoord = this.coord.copy().move(direction);
+			var mod = stage.time % 4;
+			if (mod === 0) {
+				// Move at random
+				var direction = random([0, 1, 2, 3]);
+				this.nextCoord = this.coord.copy().move(direction);
+			}
 		}
 	});
 
@@ -38,8 +44,11 @@
 		blockType: world.blockTypes["actors.princess"],
 		step: function (stage, world) {
 			// Move at random
-			var direction = random([0, 1, 2, 3]);
-			this.nextCoord = this.coord.copy().move(direction);
+			var mod = stage.time % 6;
+			if (mod === 0) {
+				var direction = random([0, 1, 2, 3]);
+				this.nextCoord = this.coord.copy().move(direction);
+			}
 		}
 	});
 

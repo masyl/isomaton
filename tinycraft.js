@@ -82,7 +82,7 @@
 		this.spawnCoords = new Coord(0, 0, 1);
 		this.isograph = null;
 		this.time = 0;
-		this.speed = 500;
+		this.speed = 200;
 		this._options = {};
 
 		this.init = function () {
@@ -191,28 +191,30 @@
 				// a bird or fish doesnt move with the same rules as
 				// an ordinary knight!
 
-				// Test if next move is into a solid block
-				key = entity.nextCoord.x + "-" + entity.nextCoord.y + "-" + entity.nextCoord.z;
-				registryEntry = stage.registry[key];
-				if (registryEntry) {
-					if (registryEntry.blocks[0].type.isSolid) {
+				if (entity.nextCoord) {
+					// Test if next move is into a solid block
+					key = entity.nextCoord.x + "-" + entity.nextCoord.y + "-" + entity.nextCoord.z;
+					registryEntry = stage.registry[key];
+					if (registryEntry) {
+						if (registryEntry.blocks[0].type.isSolid) {
+							isValidMove = false;
+						}
+					}
+
+					// Test if next move is on a solid block
+					key = entity.nextCoord.x + "-" + entity.nextCoord.y + "-" + (entity.nextCoord.z-1);
+					registryEntry = stage.registry[key];
+					if (registryEntry) {
+						if (!registryEntry.blocks[0].type.isSolid) {
+							isValidMove = false;
+						}
+					} else {
 						isValidMove = false;
 					}
-				}
 
-				// Test if next move is on a solid block
-				key = entity.nextCoord.x + "-" + entity.nextCoord.y + "-" + (entity.nextCoord.z-1);
-				registryEntry = stage.registry[key];
-				if (registryEntry) {
-					if (!registryEntry.blocks[0].type.isSolid) {
-						isValidMove = false;
+					if (!isValidMove) {
+						entity.nextCoord = null;
 					}
-				} else {
-					isValidMove = false;
-				}
-
-				if (!isValidMove) {
-					entity.nextCoord = null;
 				}
 				// todo: test for collisions with "nextCoord" or other blocks and entities
 			}
