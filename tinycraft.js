@@ -82,7 +82,7 @@
 		this.spawnCoords = new Coord(0, 0, 1);
 		this.isograph = null;
 		this.time = 0;
-		this.speed = 2000;
+		this.speed = 200;
 		this._options = {};
 
 		this.init = function () {
@@ -221,6 +221,7 @@
 				if (entity.nextCoord) {
 					entity.coord = entity.nextCoord;
 					entity.block.coord = entity.coord;
+					stage.isograph.animate(entity.block);
 					entity.nextCoord = null;
 				}
 			}
@@ -228,12 +229,13 @@
 
 			// Step through the world options step (usually debugging)
 			world._options.step(stage, world);
-
-			stage.render();
+//			console.time("stage.render");
+			//stage.render();
+//			console.timeEnd("stage.render");
 
 			// call next step
 			_.delay(function() {
-				//stage.step(world);
+				stage.step(world);
 			}, stage.speed);
 		};
 
@@ -262,7 +264,7 @@
 			var isograph = this;
 			this.options(options);
 
-			var throttledMove = _.throttle(move, 50);
+			var throttledMove = _.throttle(move, 10);
 			function move(e) {
 				var isocoord = isograph.translateToISO(e.pageX, e.pageY);
 				var pagecoord = isograph.translateFromISO(isocoord);
@@ -285,6 +287,15 @@
 			return this._options;
 		};
 
+		this.animate = function (block) {
+			var coord = this.translateFromISO(block.coord);
+			$("#" + block.toString()).animate({
+				left: coord.x,
+				top: coord.y,
+				"z-index": coord.z
+			}, 100);
+		};
+
 		this.focus = function (block) {
 			if (this.currentFocus) {
 				if (this.currentFocus.toString() === block.toString()) {
@@ -300,7 +311,7 @@
 			id = "#" + block.toString();
 			$elems = $(id)
 					.animate({
-						"margin-top": -10
+						"margin-top": -3
 					}, 50);
 			this.currentFocus = block;
 //			console.log("$elems: ", $elems, ids);
@@ -324,12 +335,20 @@
 		 * @param coord
 		 */
 		this.translateFromISO = function (coord) {
-			var newCoord;
+			var x, y, z, newCoord;
 			var skin = options.skin;
+			x = (coord.y - coord.x) * skin.isoWidth;
+			y = (coord.y + coord.x) * skin.isoTopHeight - (coord.z * skin.isoBlockHeight);
+			z = (coord.x + coord.y) * 10 + coord.z;
+
+			// Apply Stage offset
+			x = x + skin.stageOffsetX;
+			y = y + skin.stageOffsetY;
+
 			newCoord = {
-				x: (coord.y - coord.x) * skin.isoWidth,
-				y: (coord.y + coord.x) * skin.isoTopHeight - (coord.z * skin.isoBlockHeight),
-				z: coord.x + coord.y + coord.z
+				x: x,
+				y: y,
+				z: z
 			};
 			return newCoord;
 		};
@@ -373,17 +392,15 @@
 			}
 		};
 
+
 		this.getElementFromBlock = function (block) {
 			var skin, coord, element;
 			skin = options.skin;
 			coord = this.translateFromISO(block.coord);
-			// todo: Get offsets depending on total stage width
-			var offsetX = skin.stageOffsetX;
-			var offsetY = skin.stageOffsetY;
 
 			var bgOffsetX = -skin.spritesOffsetX - (block.type.offset * skin.spritesWidth);
 			var bgOffsetY = -skin.spritesHeight;
-			element = $("<div id='" + block.toString() + "' style='width: " + skin.isoSpriteWidth + "px; height: " + skin.isoSpriteHeight + "px; background-image: url(" + skin.spritesURL + "); background-position: " + bgOffsetX + "px " + bgOffsetY + "px; left:" + (coord.x + offsetX) + "; top:" + (coord.y + offsetY) + "; z-index:" + coord.z + "' class='block'>" + block.type.id + "</div>");
+			element = $("<div id='" + block.toString() + "' style='width: " + skin.isoSpriteWidth + "px; height: " + skin.isoSpriteHeight + "px; background-image: url(" + skin.spritesURL + "); background-position: " + bgOffsetX + "px " + bgOffsetY + "px; left:" + coord.x + "; top:" + coord.y + "; z-index:" + coord.z + "' class='block'>" + block.type.id + "</div>");
 			return element;
 		};
 

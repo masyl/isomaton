@@ -24,8 +24,8 @@
 ## v0.3 - Watch your step
 - done: Rule to force actor to step of solid blocs
 - done: Define solid/non-solid blocType attribute
-- Non-solid bloc types: weeds, flowews
-- Rule to prevent multiple "solid" blocks from taking space
+- done: Non-solid bloc types: weeds, flowews
+- done: Rule to prevent multiple "solid" blocks from taking space
 - Rule to allow actor to occupy same space as a non-solid block
 - Detect/Control collisions between actors and blocks
 - When placing blocs, enforce cohesion rules (no two blocs, occupying)
