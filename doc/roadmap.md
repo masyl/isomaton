@@ -18,16 +18,27 @@
 - Show step number in debug
 - Add edslime actors with random movements
 
+## v0.3 - Watch your step
+- Rule to force actor to step of solid blocs
+- Define solid/non-solid blocType attribute
+- Non-solid bloc types: weeds, flowews
+- Rule to prevent multiple "solid" blocks from taking space
+- Smooth animation of blocs between stage steps
+- Prevent mouse cursor from touching/selecting html elements of the scenegraph
+- Actors dont all move at the same time
+
 
 #In Progress Release
 
-## v0.3 - Watch your step
-- done: Rule to force actor to step of solid blocs
-- done: Define solid/non-solid blocType attribute
-- done: Non-solid bloc types: weeds, flowews
-- done: Rule to prevent multiple "solid" blocks from taking space
-- done: Smooth animation of blocs between stage steps
-- done: Prevent mouse cursor from touching/selecting html elements of the scenegraph
+## v0.4 - HTML5 Raw
+- Render the isograph with canvas
+- Aimated transitions using jstween instead of jquery: http://jstween.blogspot.com/
+- Remove dependency on jQuery
+
+
+#Upcomming Releases
+
+## v0.? - Rules, rules, rules
 - Rule to allow actor to occupy same space as a non-solid block, with the proper overriding z-index
 - Detect/Control collisions between actors and blocks
 - When placing blocs, enforce cohesion rules (no two blocs, occupying)
@@ -35,7 +46,6 @@
 - Placing blocs by layering them (falling from the sky until they touch ground
 - Enforcing limits on the maximum width/height/tallness of the world
 
-#Upcomming Releases
 
 ## v0.? - Smooth moves
 - Isograph can be modified with difgram or changelog
