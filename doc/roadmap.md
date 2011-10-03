@@ -30,13 +30,17 @@
 
 #In Progress Release
 
-## v0.4 - HTML5 Raw
-- Render the isograph with canvas
-- Aimated transitions using jstween instead of jquery: http://jstween.blogspot.com/
-- Remove dependency on jQuery
-
+## v0.4 - Remember when?
+- Serialize the world/stage into json
+- Save a serialized checkpoint and resume from this checkpoint
+- Ability to quit and resume a game where it was left
 
 #Upcomming Releases
+
+## v0.5 - Some HTML5 Pezzaz!
+- Render the isograph with canvas, usign raw canvas or easel.js http://easeljs.com/docs/
+- Animated transitions using jstween instead of jquery: http://jstween.blogspot.com/
+- Remove dependency on jQuery
 
 ## v0.? - Rules, rules, rules
 - Rule to allow actor to occupy same space as a non-solid block, with the proper overriding z-index
@@ -57,8 +61,9 @@
 - Player commands knight with keyboard/mouse (attach, retreat, follow);
 
 ## v0.? - Story log
-- A story log stores all the significant game actions
-- Inventory changes are logged to the story log
+- Actors say/think stuff in a speech bubble
+- A story log stores all the significant game actions and actor exclamations
+- Achievements and Inventory changes are logged to the story log
 
 
 ## v0.? - Health
@@ -76,14 +81,15 @@
 
 # Unplanned releases
 
+## Inventory Release
+- "item" bloc types... pickable whe stepping on or next to them, floating a little
+- Actor grabs gold and puts in his inventory
+- Actor grabs sword and puts in his inventory
+
 ## Chicken & Egg Release
 - Chicken actor which lays eggs
 - Knight can pick up eggs and put in inventory
 - Knight eats egg from inventory to gain back health
-
-## Inventory Release
-- Actor grabs gold and puts in his inventory
-- Actor grabs sword and puts in his inventory
 
 ## Let's fight
 - Knight attacks slime with bare hands
@@ -91,25 +97,36 @@
 - Knight attacks slime with found sword
 
 
-# Unplanned Backlog
-
-- Better choice of easing for actor animation... could ever "hop" on the next coordinate
-- Water has two bloc states... water on top and water under another bloc (same situation elsewhere?)
-- Figure out how item crafting play into the story and how it is done
-- "item" bloc types... pickable whe stepping on them, floating a little
-- Show relevant actors/entities in the UI with label
+## Times Arrow
+- Control randomness with number generator and seed
+- Ability to pause the game
+- Control game speed: Slowdown, Fastforward
 - HTML5 persistance to stop/resume (persist blocks, entity state (position, inventory, health)
 - Day and night settings with ambiant decor (day, night, sun, moon, stars, clouds, etc)
-- Each levels separated by black screen with title
-- Actors say/think stuff in a speech bubble
-- Rotate the stage n, e, s, w. and show a compass rose or arrows for cardinal directions
-- Show bloc cursor by translating mouse cursor position back to isometric coordinates
-- Scroll scenegraph to show only portion of a larger stage
-- Render block shadows and add property to "hasShadow"
-- Control randomness with number generator and seed
+- API for other time-based property changes (biorythm, seasons, weather);
+
+## Storytelling
+- Show relevant actors/entities in the UI with label
+- Zoom scenegraph to show only a portion of the screen in more details/drama
 - During "setups", some blocs are added by falling from the sky
-- Control game speed: Slowdown, Fastforward
-- Ability to pause the game
+- Each levels/acts separated by black screen with title
+
+
+# Unplanned Backlog
+
+## Housekeeping and Architecture
+- Rename to minicraft
+- Bring back source PSD of common world into the project
+- Create a build script
+
+## Features
+
+- Better choice of easing for actor animation... could even "hop" on the next coordinate
+- Water has two bloc states... water on top and water under another bloc (same situation elsewhere?)
+- Figure out how item crafting play into the story and how it is done
+- Rotate the stage n, e, s, w. and show a compass rose or arrows for cardinal directions
+- Render block shadows and add property to "hasShadow"
+
 
 
 # Far Future Backlog

@@ -1,3 +1,26 @@
+/*
+Actions are logged as transactions, but not reversible
+State changes are reconstructer by starting from a checkpoint states and re-playing the transactions
+All these state changes have the old and new value to enable reverse playback
+Each world step can have any number of transactions, So each step much have a transaction/version number associated with it.
+Even when playing the world forward, it should be relying on the same transactionnal model as when it moves backward
+
+Fundamental questions:
+- If the transaction log is present, is there a need to playback the business rules? Or is it just transactionnal state changes occuring?
+
+
+Reversible Transactions:
+	- Block add, remove, move
+	- Entity add, remove, move (eventual attrs)
+	- User actions
+
+
+FIRST STEP:
+	- Ability to serialize and deserialize a complete world/stage state
+	- Make a predictable "save checkpoint" and "restart from checkpoint" to test world determinism
+
+ */
+
 (function ($, _, undefined){
 
 	window.tinycraft = new Tinycraft({
@@ -23,7 +46,7 @@
 		};
 
 		this.start = function(options) {
-			console.log("Starting Tinycraft!");
+			console.log("Starting!");
 			var isograph, world;
 			isograph = new this.Isograph({
 				skin: options.skin
@@ -93,6 +116,8 @@
 			_(this._options).extend(_options);
 			return this._options;
 		};
+
+		this.serialize
 
 		//todo: not optimal... registry should be live
 		this.updateRegistry = function () {
@@ -426,7 +451,7 @@
 
 			var bgOffsetX = -skin.spritesOffsetX - (block.type.offset * skin.spritesWidth);
 			var bgOffsetY = -skin.spritesHeight;
-			element = $("<div id='" + block.toString() + "' style='width: " + skin.isoSpriteWidth + "px; height: " + skin.isoSpriteHeight + "px; background-image: url(" + skin.spritesURL + "); background-position: " + bgOffsetX + "px " + bgOffsetY + "px; left:" + coord.x + "; top:" + coord.y + "; z-index:" + coord.z + "' class='block'>" + block.type.id + "</div>");
+			element = $("<div id='" + block.toString() + "' style='	position: absolute; overflow:  hidden; text-indent: -1000em; width: " + skin.isoSpriteWidth + "px; height: " + skin.isoSpriteHeight + "px; background-image: url(" + skin.spritesURL + "); background-position: " + bgOffsetX + "px " + bgOffsetY + "px; left:" + coord.x + "; top:" + coord.y + "; z-index:" + coord.z + "' class='block'>" + block.type.id + "</div>");
 			return element;
 		};
 

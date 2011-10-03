@@ -3,23 +3,8 @@
 		var $debug = $("#debug");
 		var $time = $debug.find(".time");
 
-		var tinycraft2x = {
-			spritesURL: "tinycraft-2x.png",
-			spritesOffsetX: 10,
-			spritesOffsetY: 0,
-			spritesWidth: 80,
-			spritesHeight: 16,
-			isoWidth: 28,
-			isoBlockHeight: 34,
-			isoTopHeight: 14,
-			isoSpriteWidth: 58,
-			isoSpriteHeight: 64,
-			stageOffsetX: 550,
-			stageOffsetY: 200
-		};
-
 		var tinycraft1x = {
-			spritesURL: "tinycraft.png",
+			spritesURL: "../src/worlds/common/tinycraft.png",
 			spritesOffsetX: 5,
 			spritesOffsetY: 0,
 			spritesWidth: 40,
@@ -37,8 +22,12 @@
 			world: "common",
 			root: "#tinycraft",
 			stage: "prairie",
+			/*
 			width: 24,
 			height: 24,
+			*/
+			width: 20,
+			height: 20,
 			skin: tinycraft1x,
 			step: function(stage, world) {
 				$time.html(stage.time);
