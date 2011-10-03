@@ -1,7 +1,7 @@
 
 (function (Tinycraft, $, _, undefined){
 
-	// todo: get rid of the registry? the minidb is enough
+	// todo: replace the registry with a subclass of minidb
 	Tinycraft.Stage = function Stage(id, stageOptions) {
 		this.blocks = [];
 		this.registry = {
