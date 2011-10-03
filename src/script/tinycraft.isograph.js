@@ -1,7 +1,7 @@
 
 (function (Tinycraft, $, _, undefined){
 
-	Tinycraft.Isograph = function (options) {
+	Tinycraft.Isograph = function Isograph(options) {
 		this._options = {};
 		this.blocks = [];
 		this.currentFocus = null;
@@ -143,7 +143,7 @@
 			_y = parseInt((2 * y - x) / 2);
 			_x = parseInt(x + _y);
 
-			coord = new Coord(_x, _y, 0);
+			coord = new Tinycraft.Coord(_x, _y, 0);
 			return coord;
 		};
 

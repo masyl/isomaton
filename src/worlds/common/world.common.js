@@ -8,7 +8,7 @@
 
 	var world = tinycraft.worlds.common = new tinycraft.World(window.commonworld);
 
-	var Coord = tinycraft.Coord;
+	var Coord = Tinycraft.Coord;
 	var Area = tinycraft.Area;
 	var builder = tinycraft.builder;
 
@@ -52,7 +52,7 @@
 		}
 	});
 
-	world.stages.prairie = new tinycraft.Stage("prairie", {
+	world.stages.prairie = new Tinycraft.Stage("prairie", {
 		start: function () {
 			var worldOptions = world.options();
 			console.log("placing blocks...");
