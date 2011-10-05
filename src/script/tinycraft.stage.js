@@ -11,7 +11,7 @@
 		this.spawnCoords = new Tinycraft.Coord(0, 0, 1);
 		this.isograph = null;
 		this.time = 0;
-		this.speed = 100;
+		this.speed = 10;
 		this._options = {};
 
 		this.init = function () {
@@ -180,9 +180,6 @@
 
 			// Step through the world options step (usually debugging)
 			this.world._options.step(stage, this.world);
-//			console.time("stage.render");
-			//stage.render();
-//			console.timeEnd("stage.render");
 
 			// call next step
 			_.delay(function() {

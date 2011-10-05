@@ -36,31 +36,39 @@
 		};
 
 		this.animate = function (block) {
-			var $elem, speed, easing, coord;
+			var $elem, speed, coord;
+			speed = this.stepSpeed * 0.8;
 			coord = this.translateFromISO(block.coord);
+			$elem = $("#" + block.toString());
+			this.animateElem($elem, coord.x, coord.y, coord.z, speed);
+
+			coord = this.translateFromISO(block.coord, true);
+			$elem = $("#inv-" + block.toString());
+			this.animateElem($elem, coord.x, coord.y, coord.z, speed);
+		};
+
+		this.animateElem = function($elem, x, y, z, speed) {
+			var easing = "linear";
 			// If the block is lowering his z-index set it first
 			// Otherwise set it after
-			$elem = $("#" + block.toString());
-			speed = this.stepSpeed * 0.8;
-			easing = "linear";
-			if ($elem.css("z-index") < coord.z) {
+			if ($elem.css("z-index") < z) {
 				$elem
 						.css({
-							"z-index": coord.z
+							"z-index": z
 						})
 						.animate({
-							left: coord.x,
-							top: coord.y
+							left: x,
+							top: y
 						}, speed, easing);
 			} else {
 				$elem
 						.animate({
-							left: coord.x,
-							top: coord.y
+							left: x,
+							top: y
 						}, speed, easing, function () {
 							$(this)
 									.css({
-										"z-index": coord.z
+										"z-index": z
 									})
 						});
 			}
@@ -104,12 +112,19 @@
 		 * Convert isometric coordinates to pixel positions
 		 * @param coord
 		 */
-		this.translateFromISO = function (coord) {
-			var x, y, z, newCoord;
+		this.translateFromISO = function (coord, flipX, flipY) {
+			var x, y, z, coordX, coordY, coordZ, newCoord;
 			var skin = options.skin;
-			x = (coord.y - coord.x) * skin.isoWidth;
-			y = (coord.y + coord.x) * skin.isoTopHeight - (coord.z * skin.isoBlockHeight);
-			z = (coord.x + coord.y) * 10 + coord.z;
+
+			coordX = coord.x;
+			coordY = coord.y;
+			coordZ = coord.z;
+			if (flipX) coordX = -coordX;
+			if (flipY) coordY = -coordY;
+
+			x = (coordY - coordX) * skin.isoWidth;
+			y = (coordY + coordX) * skin.isoTopHeight - (coordZ * skin.isoBlockHeight);
+			z = (coordX + coordY) * 10 + coordZ;
 
 			// Apply Stage offset
 			x = x + skin.stageOffsetX;
@@ -159,6 +174,8 @@
 				block = blocks[i];
 				$blockElement = this.getElementFromBlock(block);
 				$root.append($blockElement);
+				$blockElement = this.getElementFromBlockInv(block);
+				$root.append($blockElement);
 			}
 		};
 
@@ -171,6 +188,15 @@
 			var bgOffsetX = -skin.spritesOffsetX - (block.type.offset * skin.spritesWidth);
 			var bgOffsetY = -skin.spritesHeight;
 			element = $("<div id='" + block.toString() + "' style='	position: absolute; overflow:  hidden; text-indent: -1000em; width: " + skin.isoSpriteWidth + "px; height: " + skin.isoSpriteHeight + "px; background-image: url(" + skin.spritesURL + "); background-position: " + bgOffsetX + "px " + bgOffsetY + "px; left:" + coord.x + "; top:" + coord.y + "; z-index:" + coord.z + "' class='block'>" + block.type.id + "</div>");
+			return element;
+		};
+		this.getElementFromBlockInv = function (block) {
+			var skin, coord, element;
+			skin = options.skin;
+			coord = this.translateFromISO(block.coord, true);
+			var bgOffsetX = - skin.spritesOffsetX - (block.type.offset * skin.spritesWidth);
+			var bgOffsetY = - skin.spritesHeight;
+			element = $("<div id='inv-" + block.toString() + "' style='	position: absolute; overflow:  hidden; text-indent: -1000em; width: " + skin.isoSpriteWidth + "px; height: " + skin.isoSpriteHeight + "px; background-image: url(" + skin.spritesURL + "); background-position: " + bgOffsetX + "px " + bgOffsetY + "px; left:" + coord.x + "; top:" + coord.y + "; z-index:" + coord.z + "' class='block'>" + block.type.id + "</div>");
 			return element;
 		};
 
