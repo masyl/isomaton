@@ -143,8 +143,6 @@ Reversible Transactions:
 			stage.start(this, {
 				isograph: options.isograph
 			});
-			stage.step(this);
-
 		};
 
 		this.save = function save() {

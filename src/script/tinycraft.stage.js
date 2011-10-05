@@ -4,8 +4,10 @@ Optimization:
 	40 fps animé
 	80 fps sans anim
 	145 fps sans render
+	600 fps - no render, batched steps
 
 Optimizations:
+	- test run without delay... or raw setTimeout
 	- Usage de minidb au lieu du custom registry
 	- Generation de faux random avec banque de chiffres pré-calculés
 	- Better handling of state changes between steps (not having to cycle through each blocks)
@@ -16,7 +18,6 @@ Optimizations:
 	- Option to render the isograph with canvas
 
  */
-jQuery.fx.off = true;
 (function TinycraftStagePackage(Tinycraft, $, _, undefined) {
 
 	// todo: replace the registry with a subclass of minidb
@@ -124,6 +125,7 @@ jQuery.fx.off = true;
 			stageOptions.start.call(this);
 			this.updateRegistry();
 			this.render();
+			stage.step(1);
 		};
 
 		this.render = function render() {
@@ -141,10 +143,16 @@ jQuery.fx.off = true;
 		};
 
 		this.faster = function faster() {
+			if (this.speedMultiplier > 16) {
+				jQuery.fx.off = true;
+			}
 			this.speedMultiplier = this.speedMultiplier * 2;
 		};
 
 		this.slower = function slower() {
+			if (this.speedMultiplier < 16) {
+				jQuery.fx.off = false;
+			}
 			this.speedMultiplier = this.speedMultiplier / 2;
 		};
 
@@ -168,91 +176,99 @@ jQuery.fx.off = true;
 			this.playState = "play";
 		};
 
-		this.step = function step() {
+		/**
+		 * Go through a single or multiple logicl step forward in game time
+		 * @param stepCount The number of steps to do in a batch without applying a setTimout
+		 */
+		this.step = function step(stepCount) {
 			var isValidMove, registryEntry, key, entity, entityId;
+			for (var i = 0; i < stepCount; i = i + 1) {
+				stage.updateRegistry();
 
-			stage.updateRegistry();
+				stage.time = stage.time + 1;
+				//console.log("_options: ", stage._options);
 
-			stage.time = stage.time + 1;
-			//console.log("_options: ", stage._options);
+				// Step through the stage logic
+				stage._options.step.call(stage);
 
-			// Step through the stage logic
-			stage._options.step.call(stage);
+				// Step through the entities logic
+				for (entityId in this.entities) {
+					this.entities[entityId].step(this);
+				}
 
-			// Step through the entities logic
-			for (entityId in this.entities) {
-				this.entities[entityId].step(this);
-			}
-
-			// Test everyones move and see if there are collissions to resolve
-			// or rules to apply
-			for (entityId in this.entities) {
-				isValidMove = true;
-				entity = this.entities[entityId];
+				// Test everyones move and see if there are collissions to resolve
+				// or rules to apply
+				for (entityId in this.entities) {
+					isValidMove = true;
+					entity = this.entities[entityId];
 
 
-				// todo: make rules specific to each actors
-				// a bird or fish doesnt move with the same rules as
-				// an ordinary knight!
+					// todo: make rules specific to each actors
+					// a bird or fish doesnt move with the same rules as
+					// an ordinary knight!
 
-				if (entity.nextCoord) {
-					// Test if next move is into a solid block
-					key = entity.nextCoord.x + "-" + entity.nextCoord.y + "-" + entity.nextCoord.z;
-					registryEntry = stage.registry[key];
-					if (registryEntry) {
-						if (registryEntry.blocks[0].type.isSolid) {
+					if (entity.nextCoord) {
+						// Test if next move is into a solid block
+						key = entity.nextCoord.x + "-" + entity.nextCoord.y + "-" + entity.nextCoord.z;
+						registryEntry = stage.registry[key];
+						if (registryEntry) {
+							if (registryEntry.blocks[0].type.isSolid) {
+								isValidMove = false;
+							}
+						}
+
+						// Test if next move is on a solid block
+						key = entity.nextCoord.x + "-" + entity.nextCoord.y + "-" + (entity.nextCoord.z-1);
+						registryEntry = stage.registry[key];
+						if (registryEntry) {
+							if (!registryEntry.blocks[0].type.isSolid) {
+								isValidMove = false;
+							}
+						} else {
 							isValidMove = false;
 						}
-					}
 
-					// Test if next move is on a solid block
-					key = entity.nextCoord.x + "-" + entity.nextCoord.y + "-" + (entity.nextCoord.z-1);
-					registryEntry = stage.registry[key];
-					if (registryEntry) {
-						if (!registryEntry.blocks[0].type.isSolid) {
-							isValidMove = false;
+						if (!isValidMove) {
+							entity.nextCoord = null;
 						}
-					} else {
-						isValidMove = false;
 					}
-
-					if (!isValidMove) {
+					// todo: test for collisions with "nextCoord" or other blocks and entities
+				}
+				// Process all remaining nextCoord's as valid moves
+				for (entityId in this.entities) {
+					entity = this.entities[entityId];
+					if (entity.nextCoord) {
+						entity.coord = entity.nextCoord;
+						entity.block.coord = entity.coord;
+						stage.isograph.animate(entity.block);
 						entity.nextCoord = null;
 					}
 				}
-				// todo: test for collisions with "nextCoord" or other blocks and entities
-			}
-			// Process all remaining nextCoord's as valid moves
-			for (entityId in this.entities) {
-				entity = this.entities[entityId];
-				if (entity.nextCoord) {
-					entity.coord = entity.nextCoord;
-					entity.block.coord = entity.coord;
-//					stage.isograph.animate(entity.block);
-					entity.nextCoord = null;
-				}
-			}
 
+				this.fps.update();
+			}
+			this.nextStep(stepCount);
 
-			this.nextStep();
+			return this;
 		};
 
 		/**
 		 * Go through the next step event is the stage is paused or not.
 		 */
-		this.nextStep = function nextStep() {
+		this.nextStep = function nextStep(stepCount) {
 			// Step through the world options step (usually debugging)
-			this.world._options.step(stage, this.world);
+			this.world._options.step(this, this.world);
 
-			this.fps.update();
-
-			_.delay(function delay() {
+//			this.fps.update();
+			setTimeout(function() {
 				if (stage.playState !== "pause") {
-					stage.step();
+					stage.step(stepCount);
 				} else {
-					stage.nextStep();
+					stage.nextStep(stepCount);
 				}
 			}, stage.speed / stage.speedMultiplier);
+
+			return this;
 		};
 
 		this.init();
