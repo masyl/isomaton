@@ -9,7 +9,7 @@
 	world.entityTypes.Slime = tinycraft.EntityType("slime", {
 		label: "Slime",
 		blockType: world.blockTypes["actors.slime"],
-		step: function (stage) {
+		step: function slimeStep(stage) {
 			var mod = stage.time % 8;
 			if (mod === 0) {
 				// Move at random
@@ -22,7 +22,7 @@
 	world.entityTypes.Chicken = tinycraft.EntityType("chicken", {
 		label: "Chicken",
 		blockType: world.blockTypes["actors.chicken"],
-		step: function (stage) {
+		step: function chickenStep(stage) {
 			var mod = stage.time % 8;
 			if (mod === 0) {
 				// Move at random
@@ -36,7 +36,7 @@
 	world.entityTypes.Knight = tinycraft.EntityType("knight", {
 		label: "Knight",
 		blockType: world.blockTypes["actors.knight"],
-		step: function (stage) {
+		step: function knightStep(stage) {
 			var mod = stage.time % 4;
 			if (mod === 0) {
 				// Move at random
@@ -49,7 +49,7 @@
 	world.entityTypes.Princess = tinycraft.EntityType("princess", {
 		label: "Princess",
 		blockType: world.blockTypes["actors.princess"],
-		step: function (stage) {
+		step: function princessStep(stage) {
 			// Move at random
 			var mod = stage.time % 6;
 			if (mod === 0) {
@@ -60,7 +60,7 @@
 	});
 
 	world.stages.prairie = new Tinycraft.Stage("prairie", {
-		start: function () {
+		start: function start() {
 			var world = this.world;
 			var worldOptions = world.options();
 			console.log("placing blocks...");
@@ -129,7 +129,7 @@
 			this.placeEntities([princess]);
 
 		},
-		step: function () {
+		step: function prairieStep() {
 		}
 	});
 

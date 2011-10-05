@@ -17,7 +17,7 @@ Reversible Transactions:
 
  */
 
-(function ($, _, undefined){
+(function TinycraftPackage($, _, undefined){
 
 	window.tinycraft = new Tinycraft({
 		World: World
@@ -38,7 +38,7 @@ Reversible Transactions:
 			random: random
 		};
 
-		this.start = function(options) {
+		this.start = function start(options) {
 			console.log("Starting!");
 			var isograph, world;
 			isograph = new Tinycraft.Isograph({
@@ -60,7 +60,7 @@ Reversible Transactions:
 	window.Tinycraft = Tinycraft;
 
 
-	function EntityTypeFactory (id, typeOptions) {
+	function EntityTypeFactory(id, typeOptions) {
 		function Entity(coord, options) {
 			this.id = id;
 			this._options = {};
@@ -70,16 +70,16 @@ Reversible Transactions:
 
 			this.label = "Anonymous";
 
-			this.init = function () {
+			this.init = function init() {
 				this.options(typeOptions);
 			};
 
-			this.options = function (_options) {
+			this.options = function fnOptions(_options) {
 				_(this._options).extend(_options);
 				return this._options;
 			};
 
-			this.step = function (stage, world) {
+			this.step = function step(stage, world) {
 				this._options.step.call(this, stage, world);
 			};
 
@@ -100,11 +100,11 @@ Reversible Transactions:
 		this.blockTypes = {};
 		this._options = {};
 
-		this.init = function () {
+		this.init = function init() {
 			this.options(options);
 		};
 
-		this.options = function (_options) {
+		this.options = function fnOptions(_options) {
 			var options, setId, blockSet, typeId;
 
 			options = this._options;
@@ -123,7 +123,7 @@ Reversible Transactions:
 
 		this.random = fakeRandom;
 
-		this.serializer = function (json) {
+		this.serializer = function serializer(json) {
 			var obj = json || {};
 			if (json) {
 				// todo: deserialization
@@ -133,7 +133,7 @@ Reversible Transactions:
 			return obj;
 		};
 
-		this.start = function(_options) {
+		this.start = function start(_options) {
 			var options = this.options(_options);
 			console.log("Starting world...");
 			var stage;
@@ -147,12 +147,12 @@ Reversible Transactions:
 
 		};
 
-		this.save = function () {
+		this.save = function save() {
 			var save = this.serializer();
 			return save;
 		};
 
-		this.bindKeyboard = function () {
+		this.bindKeyboard = function bindKeyboard() {
 			$(document).bind('keydown', 'space', function(e) {
 				e.preventDefault();
 				var stage = world.currentStage;
@@ -187,10 +187,10 @@ Reversible Transactions:
 		this.coord = coord;
 		this.nextCoord = null;
 
-		this.toString = function () {
+		this.toString = function toString() {
 			return "Block-" + this.id;
 		};
-		this.toIndex = function () {
+		this.toIndex = function txoIndex() {
 			return {
 				"id": this.id,
 				"type.id": this.type.id,
@@ -244,12 +244,12 @@ Reversible Transactions:
 		this.y = y;
 		this.z = z;
 
-		this.copy = function () {
+		this.copy = function copy() {
 			return new Tinycraft.Coord(this.x, this.y, this.z);
 		};
 
 
-		this.serializer = function (json) {
+		this.serializer = function serializer(json) {
 			if (json) {
 
 			} else {
@@ -257,44 +257,44 @@ Reversible Transactions:
 			}
 		};
 
-		this.down = function (_offset) {
+		this.down = function down(_offset) {
 			var offset = (_offset === undefined) ? 1 : _offset;
 			this.z = this.z - offset;
 			return this;
 		};
 
-		this.up = function (_offset) {
+		this.up = function up(_offset) {
 			var offset = (_offset === undefined) ? 1 : _offset;
 			this.z = this.z + offset;
 			return this;
 		};
 
-		this.move = function (direction, _offset) {
+		this.move = function move(direction, _offset) {
 			var cardinalDirections;
 			cardinalDirections = ["north", "east", "south", "west", "up", "down"];
 			return this[cardinalDirections[direction]](_offset);
 		};
 
 		// todo: test if cardinal points are adressed correctly
-		this.north = function (_offset) {
+		this.north = function north(_offset) {
 			var offset = (_offset === undefined) ? 1 : _offset;
 			this.x = this.x + offset;
 			return this;
 		};
 
-		this.east = function (_offset) {
+		this.east = function east(_offset) {
 			var offset = (_offset === undefined) ? 1 : _offset;
 			this.y = this.y + offset;
 			return this;
 		};
 
-		this.south = function (_offset) {
+		this.south = function south(_offset) {
 			var offset = (_offset === undefined) ? 1 : _offset;
 			this.x = this.x - offset;
 			return this;
 		};
 
-		this.west = function (_offset) {
+		this.west = function west(_offset) {
 			var offset = (_offset === undefined) ? 1 : _offset;
 			this.y = this.y - offset;
 			return this;
@@ -308,7 +308,7 @@ Reversible Transactions:
 		this.width = width;
 		this.height = height;
 
-		this.randomCoord = function (seed) {
+		this.randomCoord = function randomCoord(seed) {
 			var coord, newCoord, offsetX, offsetY;
 			offsetX = Math.round(fakeRandom(seed, "offsetX") * (this.width-1));
 			offsetY = Math.round(fakeRandom(seed, "offsetY") * (this.height-1));
@@ -317,7 +317,7 @@ Reversible Transactions:
 			return newCoord;
 		};
 
-		this.serializer = function (json) {
+		this.serializer = function serializer(json) {
 			if (json) {
 
 			} else {

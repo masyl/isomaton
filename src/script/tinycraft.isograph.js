@@ -1,5 +1,5 @@
 
-(function (Tinycraft, $, _, undefined){
+(function TinycraftIsographPackage(Tinycraft, $, _, undefined){
 
 	Tinycraft.Isograph = function Isograph(options) {
 		this._options = {};

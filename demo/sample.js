@@ -1,6 +1,10 @@
 (function ($, _, undefined){
 	$(function() {
 		var $debug = $("#debug");
+		var $time = $debug.find(".time");
+		var $speedMultiplier = $debug.find(".speedMultiplier");
+		var $playState = $debug.find(".playState");
+		var $fps = $debug.find(".fps");
 
 		var tinycraftOptions = {
 			spritesURL: "../src/worlds/common/tinycraft.png",
@@ -24,10 +28,11 @@
 			width: 20,
 			height: 20,
 			skin: tinycraftOptions,
-			step: function(stage, world) {
-				$debug.find(".time").html(stage.time);
-				$debug.find(".speed").html(stage.speedMultiplier);
-				$debug.find(".playState").html(stage.playState);
+			step: function debugStep(stage, world) {
+				$time[0].innerHTML = stage.time;
+				$speedMultiplier[0].innerHTML = stage.speedMultiplier;
+				$playState[0].innerHTML = stage.playState;
+				$fps[0].innerHTML = stage.fps.previous;
 			}
 		});
 	});

@@ -1,5 +1,23 @@
+/*
+Optimization:
+	5 Entities
+	40 fps animé
+	80 fps sans anim
+	145 fps sans render
 
-(function (Tinycraft, $, _, undefined){
+Optimizations:
+	- Usage de minidb au lieu du custom registry
+	- Generation de faux random avec banque de chiffres pré-calculés
+	- Better handling of state changes between steps (not having to cycle through each blocks)
+	- Faster debug (html write, access by id, keep ref to element)
+	- Debug to show only fps
+	- Keystroke to activate/dactivate show/hide fps
+	- Keystroke to show/hide debug
+	- Option to render the isograph with canvas
+
+ */
+jQuery.fx.off = true;
+(function TinycraftStagePackage(Tinycraft, $, _, undefined) {
 
 	// todo: replace the registry with a subclass of minidb
 	Tinycraft.Stage = function Stage(id, stageOptions) {
@@ -16,27 +34,42 @@
 		this.speedMultiplier = 1;
 		this._options = {};
 		this.playState = "pause";
+		this.fps = {
+			previous: 0,
+			current: 0,
+			currentSecond: new Date().getSeconds(),
+			update: function update() {
+				//calculate the FPS
+				var second = new Date().getSeconds();
+				if (second !== this.currentSecond) {
+					this.previous = this.current;
+					this.current = 0;
+					this.currentSecond = second;
+				}
+				this.current = this.current + 1;
+			}
+		};
 
-		this.init = function () {
+		this.init = function init() {
 			this.options(stageOptions);
 		};
 
-		this.options = function (_options) {
+		this.options = function options(_options) {
 			_(this._options).extend(_options);
 			return this._options;
 		};
 
-		this.random = function (key) {
+		this.random = function random(key) {
 			return this.world.random(this.time, key);
 		};
 
-		this.randomItem = function(key, items) {
+		this.randomItem = function randomItem(key, items) {
 			var i;
 			i = parseInt((this.random(key)) * (items.length));
 			return items[i];
 		};
 
-		this.serializer = function (json) {
+		this.serializer = function serializer(json) {
 			var obj = json || {};
 			if (json) {
 				// todo: deserialization
@@ -51,7 +84,7 @@
 		};
 
 		//todo: not optimal... registry should be live
-		this.updateRegistry = function () {
+		this.updateRegistry = function updateRegistry() {
 			this.registry = {};
 			var i, key, block, entity, x, y, z;
 			for (i in this.blocks) {
@@ -83,7 +116,7 @@
 			//console.log("registry updated", this.registry);
 		};
 
-		this.start = function(world, options) {
+		this.start = function start(world, options) {
 			this.world = world;
 			this.options(options);
 			this.isograph = options.isograph;
@@ -93,7 +126,7 @@
 			this.render();
 		};
 
-		this.render = function() {
+		this.render = function render() {
 //			console.log("rendering");
 			this.isograph.render();
 		};
@@ -107,11 +140,11 @@
 			this.isograph.placeBlocks(blocks);
 		};
 
-		this.faster = function () {
+		this.faster = function faster() {
 			this.speedMultiplier = this.speedMultiplier * 2;
 		};
 
-		this.slower = function () {
+		this.slower = function slower() {
 			this.speedMultiplier = this.speedMultiplier / 2;
 		};
 
@@ -127,15 +160,15 @@
 			}
 		};
 
-		this.pause = function () {
+		this.pause = function pause() {
 			this.playState = "pause";
 		};
 
-		this.resume = function () {
+		this.resume = function resume() {
 			this.playState = "play";
 		};
 
-		this.step = function () {
+		this.step = function step() {
 			var isValidMove, registryEntry, key, entity, entityId;
 
 			stage.updateRegistry();
@@ -195,7 +228,7 @@
 				if (entity.nextCoord) {
 					entity.coord = entity.nextCoord;
 					entity.block.coord = entity.coord;
-					stage.isograph.animate(entity.block);
+//					stage.isograph.animate(entity.block);
 					entity.nextCoord = null;
 				}
 			}
@@ -207,11 +240,13 @@
 		/**
 		 * Go through the next step event is the stage is paused or not.
 		 */
-		this.nextStep = function () {
+		this.nextStep = function nextStep() {
 			// Step through the world options step (usually debugging)
 			this.world._options.step(stage, this.world);
 
-			_.delay(function() {
+			this.fps.update();
+
+			_.delay(function delay() {
 				if (stage.playState !== "pause") {
 					stage.step();
 				} else {
