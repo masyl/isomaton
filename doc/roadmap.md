@@ -31,10 +31,18 @@
 #In Progress Release
 
 ## v0.4 - Remember when?
-- Serialize the world/stage into json
+- done: Control randomness with number generator and seed
+- done: handle keystroke for "space" to Pause the game
+- handle keystroke for "-/+" to accelerate or slow-down the game
 - Save a serialized checkpoint and resume from this checkpoint
 - Ability to quit and resume a game where it was left
-- done: Control randomness with number generator and seed
+- handle keystroke for "S" to Save Checkpoint
+- handle keystroke for "Q" to Quit and Save
+- handle keystroke for "R" to Resume from checkpoint
+- Ability to serialize and deserialize a complete world/stage state
+- Make a predictable "save checkpoint" and "restart from checkpoint" to test world determinism
+- Remember the playState and speed when resuming a saved game
+
 
 #Upcomming Releases
 

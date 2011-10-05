@@ -15,16 +15,6 @@ Reversible Transactions:
 	- User actions
 
 
-FIRST STEP:
-	- handle keystroke for "space" to Pause the game
-	- handle keystroke for "S" to Save Checkpoint
-	- handle keystroke for "Q" to Wuit and Save
-	- handle keystroke for "R" to Resume from checkpoint
-	- handle keystroke for "-/+" to accelerate or slow-down the game
-	- Ability to serialize and deserialize a complete world/stage state
-	- Make a predictable "save checkpoint" and "restart from checkpoint" to test world determinism
-
-
  */
 
 (function ($, _, undefined){
