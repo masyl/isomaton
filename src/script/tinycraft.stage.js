@@ -1,10 +1,18 @@
 /*
 Optimization:
+BASE
 	5 Entities
 	40 fps animé
 	80 fps sans anim
 	145 fps sans render
 	600 fps - no render, batched steps
+
+NEW
+	5 Entities
+	85 fps animé
+	? 80 fps sans anim
+	? 145 fps sans render
+	? 600 fps - no render, batched steps
 
 Optimizations:
 	- test run without delay... or raw setTimeout
@@ -121,7 +129,7 @@ Optimizations:
 			this.world = world;
 			this.options(options);
 			this.isograph = options.isograph;
-			this.isograph.stepSpeed = this.speed;
+			this.isograph.stepSpeed = this.speed / this.speedMultiplier;
 			stageOptions.start.call(this);
 			this.updateRegistry();
 			this.render();
@@ -147,6 +155,11 @@ Optimizations:
 				jQuery.fx.off = true;
 			}
 			this.speedMultiplier = this.speedMultiplier * 2;
+			if (this.speedMultiplier > 1024) {
+				this.speedMultiplier = 1024;
+			}
+			// update the speed of the isograph
+			this.isograph.stepSpeed = this.speed / this.speedMultiplier;
 		};
 
 		this.slower = function slower() {
@@ -154,6 +167,11 @@ Optimizations:
 				jQuery.fx.off = false;
 			}
 			this.speedMultiplier = this.speedMultiplier / 2;
+			if (this.speedMultiplier < 0.125) {
+				this.speedMultiplier = 0.125;
+			}
+			// update the speed of the isograph
+			this.isograph.stepSpeed = this.speed / this.speedMultiplier;
 		};
 
 		this.placeEntities = function (entities) {
