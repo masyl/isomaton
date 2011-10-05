@@ -3,16 +3,18 @@
 
 	// todo: replace the registry with a subclass of minidb
 	Tinycraft.Stage = function Stage(id, stageOptions) {
+		var stage = this;
+
 		this.blocks = [];
 		this.registry = {
 		};
 		this.entities = [];
 		this.world = null;
-		this.spawnCoords = new Tinycraft.Coord(0, 0, 1);
 		this.isograph = null;
 		this.time = 0;
 		this.speed = 10;
 		this._options = {};
+		this.playState = "pause";
 
 		this.init = function () {
 			this.options(stageOptions);
@@ -110,9 +112,16 @@
 			}
 		};
 
+		this.pause = function () {
+			this.playState = "pause";
+		};
+
+		this.resume = function () {
+			this.playState = "play";
+		};
+
 		this.step = function () {
-			var isValidMove, registryEntry, key, stage, entity, entityId;
-			stage = this;
+			var isValidMove, registryEntry, key, entity, entityId;
 
 			stage.updateRegistry();
 
@@ -181,14 +190,18 @@
 			// Step through the world options step (usually debugging)
 			this.world._options.step(stage, this.world);
 
-			// call next step
-			_.delay(function() {
-				stage.step();
-			}, stage.speed);
+			this.nextStep();
 		};
 
-		this.spawn = function (coord) {
-			this.spawnCoord = coord;
+		this.nextStep = function () {
+			// call next step
+			_.delay(function() {
+				if (stage.playState !== "pause") {
+					stage.step();
+				} else {
+					stage.nextStep();
+				}
+			}, stage.speed);
 		};
 
 		this.init();

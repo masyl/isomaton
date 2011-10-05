@@ -59,7 +59,7 @@
 			var stoneBlock = world.blockTypes["materials.stone"];
 			var yellowflowersBlock = world.blockTypes["decorations.yellowflowers"];
 			var shortweedsBlock = world.blockTypes["decorations.shortweeds"];
-			var groundArea = new Area(new Coord(0, 0, -2), worldOptions.width, worldOptions.height);
+			var groundArea = new Area(new Coord(1, 1, -2), worldOptions.width, worldOptions.height);
 
 			// place layer of stone
 			this.placeBlocks(builder.fill(stoneBlock, groundArea));
@@ -93,7 +93,6 @@
 
 			// place a gold block at random
 			var randomCoord = groundArea.randomCoord(this.random("goldBlock"));
-			console.log("random coord", randomCoord);
 			this.placeBlocks(tinycraft.builder.one(goldBlock, randomCoord));
 
 			// place 5 stones at random
@@ -111,8 +110,6 @@
 			var princess = new world.entityTypes.Princess(groundArea.randomCoord(this.random("princessCoord")));
 			this.placeEntities([princess]);
 
-			// set player spawn point at center
-			this.spawn(0, 0);
 		},
 		step: function () {
 		}

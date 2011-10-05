@@ -34,6 +34,7 @@
 - Serialize the world/stage into json
 - Save a serialized checkpoint and resume from this checkpoint
 - Ability to quit and resume a game where it was left
+- done: Control randomness with number generator and seed
 
 #Upcomming Releases
 
@@ -98,7 +99,6 @@
 
 
 ## Times Arrow
-- Control randomness with number generator and seed
 - Ability to pause the game
 - Control game speed: Slowdown, Fastforward
 - HTML5 persistance to stop/resume (persist blocks, entity state (position, inventory, health)

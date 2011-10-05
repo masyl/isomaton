@@ -16,10 +16,10 @@ Reversible Transactions:
 
 
 FIRST STEP:
+	- handle keystroke for "space" to Pause the game
 	- handle keystroke for "S" to Save Checkpoint
 	- handle keystroke for "Q" to Wuit and Save
 	- handle keystroke for "R" to Resume from checkpoint
-	- handle keystroke for "space" to Pause the game
 	- handle keystroke for "-/+" to accelerate or slow-down the game
 	- Ability to serialize and deserialize a complete world/stage state
 	- Make a predictable "save checkpoint" and "restart from checkpoint" to test world determinism
@@ -99,11 +99,13 @@ FIRST STEP:
 	}
 
 	function World(options) {
+		var world = this;
 		/**
 		 * Builder helper to easy the creation of block structures
 		 */
 		this.entityTypes = {};
 		this.stages = {};
+		this.currentStage = null;
 		this.blockSets = {};
 		this.blockTypes = {};
 		this._options = {};
@@ -143,12 +145,27 @@ FIRST STEP:
 			var options = this.options(_options);
 			console.log("Starting world...");
 			var stage;
-			stage = this.stages[options.stage];
+			world.currentStage = stage = this.stages[options.stage];
+			this.bindKeyboard();
 			console.log("Starting stage...");
 			stage.start(this, {
 				isograph: options.isograph
 			});
 			stage.step(this);
+
+		};
+
+		this.bindKeyboard = function () {
+			$(document).bind('keydown', 'space', function(e) {
+				e.preventDefault();
+				var stage = world.currentStage;
+				if (stage.playState !== "pause") {
+					stage.pause();
+				} else {
+					stage.resume();
+				}
+				return false;
+			});
 		};
 
 		this.init();
@@ -322,7 +339,6 @@ FIRST STEP:
 		var i, iSeed, coord, block, blocks = [];
 		for (i = 0; i < count; i = i + 1) {
 				iSeed = i + seed + "" + i;
-				console.log(iSeed);
 				coord = area.randomCoord(iSeed);
 				block = new Block(type, coord);
 				blocks.push(block);
