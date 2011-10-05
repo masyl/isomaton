@@ -1,11 +1,5 @@
 (function (tinycraft){
 
-	function random(items) {
-		var i;
-		i = Math.round(Math.random() * (items.length -0.5));
-		return items[i];
-	}
-
 	var world = tinycraft.worlds.common = new tinycraft.World(window.commonworld);
 
 	var Coord = Tinycraft.Coord;
@@ -15,11 +9,11 @@
 	world.entityTypes.Slime = tinycraft.EntityType("slime", {
 		label: "Slime",
 		blockType: world.blockTypes["actors.slime"],
-		step: function (stage, world) {
+		step: function (stage) {
 			var mod = stage.time % 8;
 			if (mod === 0) {
 				// Move at random
-				var direction = random([0, 1, 2, 3]);
+				var direction = stage.randomItem(this.id, [0, 1, 2, 3]);
 				this.nextCoord = this.coord.copy().move(direction);
 			}
 		}
@@ -29,11 +23,11 @@
 	world.entityTypes.Knight = tinycraft.EntityType("knight", {
 		label: "Knight",
 		blockType: world.blockTypes["actors.knight"],
-		step: function (stage, world) {
+		step: function (stage) {
 			var mod = stage.time % 4;
 			if (mod === 0) {
 				// Move at random
-				var direction = random([0, 1, 2, 3]);
+				var direction = stage.randomItem(this.id, [0, 1, 2, 3]);
 				this.nextCoord = this.coord.copy().move(direction);
 			}
 		}
@@ -42,11 +36,11 @@
 	world.entityTypes.Princess = tinycraft.EntityType("princess", {
 		label: "Princess",
 		blockType: world.blockTypes["actors.princess"],
-		step: function (stage, world) {
+		step: function (stage) {
 			// Move at random
 			var mod = stage.time % 6;
 			if (mod === 0) {
-				var direction = random([0, 1, 2, 3]);
+				var direction = stage.randomItem(this.id, [0, 1, 2, 3]);
 				this.nextCoord = this.coord.copy().move(direction);
 			}
 		}
@@ -54,6 +48,7 @@
 
 	world.stages.prairie = new Tinycraft.Stage("prairie", {
 		start: function () {
+			var world = this.world;
 			var worldOptions = world.options();
 			console.log("placing blocks...");
 
@@ -78,48 +73,48 @@
 			this.placeBlocks(builder.fill(grassBlock, groundArea));
 
 			// place random patches of dirt in the grass at random
-			var dirtPatchCount = Math.round(Math.random() * 9);
-			this.placeBlocks(tinycraft.builder.random(dirtBlock, groundArea, dirtPatchCount));
+			var dirtPatchCount = Math.round(this.random("dirtPatchCount") * 9);
+			this.placeBlocks(tinycraft.builder.random(this.random("dirtPatches"), dirtBlock, groundArea, dirtPatchCount));
 
 			// place random patches of water in the grass at random
-			var waterCount = Math.round(Math.random() * 9);
-			this.placeBlocks(tinycraft.builder.random(waterBlock, groundArea, waterCount));
+			var waterCount = Math.round(this.random("waterCount") * 9);
+			this.placeBlocks(tinycraft.builder.random(this.random("grasses"), waterBlock, groundArea, waterCount));
 
 			// Go up once to place stuff "on" the ground layer
 			groundArea.coord.up();
 
 			// place random yellow flowers
-			var flowersCount = Math.round(Math.random() * 9);
-			this.placeBlocks(tinycraft.builder.random(yellowflowersBlock, groundArea, flowersCount));
+			var flowersCount = Math.round(this.random("flowersCount") * 9);
+			this.placeBlocks(tinycraft.builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
 
 			// place random weeds
-			var weedCount = Math.round(Math.random() * 20);
-			this.placeBlocks(tinycraft.builder.random(shortweedsBlock, groundArea, weedCount));
+			var weedCount = Math.round(this.random("weedCount") * 20);
+			this.placeBlocks(tinycraft.builder.random(this.random("weeds"), shortweedsBlock, groundArea, weedCount));
 
 			// place a gold block at random
-			var randomCoord = groundArea.randomCoord();
+			var randomCoord = groundArea.randomCoord(this.random("goldBlock"));
 			console.log("random coord", randomCoord);
-			this.placeBlocks(tinycraft.builder.one(goldBlock, groundArea.randomCoord()));
+			this.placeBlocks(tinycraft.builder.one(goldBlock, randomCoord));
 
 			// place 5 stones at random
-			this.placeBlocks(tinycraft.builder.random(stoneBlock, groundArea, 25));
+			this.placeBlocks(tinycraft.builder.random(this.random("stones"), stoneBlock, groundArea, 25));
 
 			// place 1 slime
-			var slime = new world.entityTypes.Slime(groundArea.randomCoord());
+			var slime = new world.entityTypes.Slime(groundArea.randomCoord(this.random("slimeCoord")));
 			this.placeEntities([slime]);
 
 			// place 1 knight
-			var knight = new world.entityTypes.Knight(groundArea.randomCoord());
+			var knight = new world.entityTypes.Knight(groundArea.randomCoord(this.random("knightCoord")));
 			this.placeEntities([knight]);
 
 			// place 1 princess
-			var princess = new world.entityTypes.Princess(groundArea.randomCoord());
+			var princess = new world.entityTypes.Princess(groundArea.randomCoord(this.random("princessCoord")));
 			this.placeEntities([princess]);
 
 			// set player spawn point at center
 			this.spawn(0, 0);
 		},
-		step: function (world) {
+		step: function () {
 		}
 	});
 

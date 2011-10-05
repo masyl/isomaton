@@ -129,6 +129,7 @@ FIRST STEP:
 			return options;
 		};
 
+		this.random = fakeRandom;
 
 		this.serializer = function (json) {
 			if (json) {
@@ -144,7 +145,7 @@ FIRST STEP:
 			var stage;
 			stage = this.stages[options.stage];
 			console.log("Starting stage...");
-			stage.start({
+			stage.start(this, {
 				isograph: options.isograph
 			});
 			stage.step(this);
@@ -273,17 +274,17 @@ FIRST STEP:
 		};
 
 		// todo: function to turn clockwise and anti-clockwise
-	}
+	};
 
 	function Area(coord, width, height) {
 		this.coord = coord;
 		this.width = width;
 		this.height = height;
 
-		this.randomCoord = function () {
+		this.randomCoord = function (seed) {
 			var coord, newCoord, offsetX, offsetY;
-			offsetX = Math.round(Math.random() * (this.width-1));
-			offsetY = Math.round(Math.random() * (this.height-1));
+			offsetX = Math.round(fakeRandom(seed, "offsetX") * (this.width-1));
+			offsetY = Math.round(fakeRandom(seed, "offsetY") * (this.height-1));
 			coord = this.coord;
 			newCoord = new Tinycraft.Coord(coord.x + offsetX, coord.y + offsetY, coord.z);
 			return newCoord;
@@ -317,14 +318,30 @@ FIRST STEP:
 		return blocks;
 	}
 
-	function random(type, area, count) {
-		var i, coord, block, blocks = [];
+	function random(seed, type, area, count) {
+		var i, iSeed, coord, block, blocks = [];
 		for (i = 0; i < count; i = i + 1) {
-				coord = area.randomCoord();
+				iSeed = i + seed + "" + i;
+				console.log(iSeed);
+				coord = area.randomCoord(iSeed);
 				block = new Block(type, coord);
 				blocks.push(block);
 		}
 		return blocks;
 	}
 
+	function fakeRandom(seed, key) {
+		// todo: make better handling of key to prevent accidental duplicate results
+		var rnd, i;
+		rnd = (seed || 1) * Math.PI;
+		if (key) {
+			for (i = 0; i < key.length; i = i + 1) {
+				rnd = rnd * Math.PI * key.charCodeAt(i);
+				rnd = rnd - parseInt(rnd);
+			}
+		}
+		//console.log(rnd, seed, rnd, key);
+		return rnd;
+
+	}
 })(jQuery, _);

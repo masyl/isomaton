@@ -3,7 +3,7 @@
 		var $debug = $("#debug");
 		var $time = $debug.find(".time");
 
-		var tinycraft1x = {
+		var tinycraftOptions = {
 			spritesURL: "../src/worlds/common/tinycraft.png",
 			spritesOffsetX: 5,
 			spritesOffsetY: 0,
@@ -22,18 +22,13 @@
 			world: "common",
 			root: "#tinycraft",
 			stage: "prairie",
-			/*
-			width: 24,
-			height: 24,
-			*/
 			width: 20,
 			height: 20,
-			skin: tinycraft1x,
+			skin: tinycraftOptions,
 			step: function(stage, world) {
 				$time.html(stage.time);
 			}
 		});
 	});
-
 
 })(jQuery, _);

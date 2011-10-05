@@ -7,10 +7,11 @@
 		this.registry = {
 		};
 		this.entities = [];
+		this.world = null;
 		this.spawnCoords = new Tinycraft.Coord(0, 0, 1);
 		this.isograph = null;
 		this.time = 0;
-		this.speed = 200;
+		this.speed = 100;
 		this._options = {};
 
 		this.init = function () {
@@ -20,6 +21,16 @@
 		this.options = function (_options) {
 			_(this._options).extend(_options);
 			return this._options;
+		};
+
+		this.random = function (key) {
+			return this.world.random(this.time, key);
+		};
+
+		this.randomItem = function(key, items) {
+			var i;
+			i = parseInt((this.random(key)) * (items.length));
+			return items[i];
 		};
 
 		this.serializer = function (json) {
@@ -63,7 +74,8 @@
 			//console.log("registry updated", this.registry);
 		};
 
-		this.start = function(options) {
+		this.start = function(world, options) {
+			this.world = world;
 			this.options(options);
 			this.isograph = options.isograph;
 			this.isograph.stepSpeed = this.speed;
@@ -98,7 +110,7 @@
 			}
 		};
 
-		this.step = function (world) {
+		this.step = function () {
 			var isValidMove, registryEntry, key, stage, entity, entityId;
 			stage = this;
 
@@ -108,11 +120,11 @@
 			//console.log("_options: ", stage._options);
 
 			// Step through the stage logic
-			stage._options.step.call(stage, world);
+			stage._options.step.call(stage);
 
 			// Step through the entities logic
 			for (entityId in this.entities) {
-				this.entities[entityId].step(this, world);
+				this.entities[entityId].step(this);
 			}
 
 			// Test everyones move and see if there are collissions to resolve
@@ -167,14 +179,14 @@
 
 
 			// Step through the world options step (usually debugging)
-			world._options.step(stage, world);
+			this.world._options.step(stage, this.world);
 //			console.time("stage.render");
 			//stage.render();
 //			console.timeEnd("stage.render");
 
 			// call next step
 			_.delay(function() {
-				stage.step(world);
+				stage.step();
 			}, stage.speed);
 		};
 
