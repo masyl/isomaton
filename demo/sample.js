@@ -1,7 +1,6 @@
 (function ($, _, undefined){
 	$(function() {
 		var $debug = $("#debug");
-		var $time = $debug.find(".time");
 
 		var tinycraftOptions = {
 			spritesURL: "../src/worlds/common/tinycraft.png",
@@ -26,7 +25,9 @@
 			height: 20,
 			skin: tinycraftOptions,
 			step: function(stage, world) {
-				$time.html(stage.time);
+				$debug.find(".time").html(stage.time);
+				$debug.find(".speed").html(stage.speedMultiplier);
+				$debug.find(".playSate").html(stage.playState);
 			}
 		});
 	});

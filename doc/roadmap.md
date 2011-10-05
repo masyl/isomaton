@@ -33,6 +33,8 @@
 ## v0.4 - Remember when?
 - done: Control randomness with number generator and seed
 - done: handle keystroke for "space" to Pause the game
+- done: added chicken actor and egg item
+- Actors of same types must have unique ids to prevent them to move in synch with same procedural randomness
 - handle keystroke for "-/+" to accelerate or slow-down the game
 - Save a serialized checkpoint and resume from this checkpoint
 - Ability to quit and resume a game where it was left

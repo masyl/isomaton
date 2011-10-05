@@ -12,7 +12,8 @@
 		this.world = null;
 		this.isograph = null;
 		this.time = 0;
-		this.speed = 10;
+		this.speed = 200;
+		this.speedMultiplier = 1;
 		this._options = {};
 		this.playState = "pause";
 
@@ -98,6 +99,14 @@
 				_blocks.push(blocks[i]);
 			}
 			this.isograph.placeBlocks(blocks);
+		};
+
+		this.faster = function () {
+			this.speedMultiplier = this.speedMultiplier * 2;
+		};
+
+		this.slower = function () {
+			this.speedMultiplier = this.speedMultiplier / 2;
 		};
 
 		this.placeEntities = function (entities) {
@@ -201,7 +210,7 @@
 				} else {
 					stage.nextStep();
 				}
-			}, stage.speed);
+			}, stage.speed / stage.speedMultiplier);
 		};
 
 		this.init();

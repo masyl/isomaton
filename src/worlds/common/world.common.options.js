@@ -54,20 +54,28 @@ window.commonworld = {
 				"slime": {
 					"isSolid": true,
 					"offset": 2
+				},
+				"chicken": {
+					"isSolid": true,
+					"offset": 3
 				}
 			}
 		},
 		"items": {
-			"offset": 10,
+			"offset": 11,
 			"blocks": {
 				"sword": {
 					"isSolid": false,
 					"offset": 0
+				},
+				"egg": {
+					"isSolid": false,
+					"offset": 1
 				}
 			}
 		},
 		"decorations": {
-			"offset": 11,
+			"offset": 13,
 			"blocks": {
 				"yellowflowers": {
 					"isSolid": false,

@@ -154,7 +154,14 @@ Reversible Transactions:
 				} else {
 					stage.resume();
 				}
-				return false;
+			});
+			$(document).bind('keydown', 'right', function(e) {
+				e.preventDefault();
+				world.currentStage.faster();
+			});
+			$(document).bind('keydown', 'left', function(e) {
+				e.preventDefault();
+				world.currentStage.slower();
 			});
 		};
 

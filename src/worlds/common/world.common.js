@@ -19,6 +19,19 @@
 		}
 	});
 
+	world.entityTypes.Chicken = tinycraft.EntityType("chicken", {
+		label: "Chicken",
+		blockType: world.blockTypes["actors.chicken"],
+		step: function (stage) {
+			var mod = stage.time % 8;
+			if (mod === 0) {
+				// Move at random
+				var direction = stage.randomItem(this.id, [0, 1, 2, 3]);
+				this.nextCoord = this.coord.copy().move(direction);
+			}
+		}
+	});
+
 
 	world.entityTypes.Knight = tinycraft.EntityType("knight", {
 		label: "Knight",
@@ -101,6 +114,11 @@
 			// place 1 slime
 			var slime = new world.entityTypes.Slime(groundArea.randomCoord(this.random("slimeCoord")));
 			this.placeEntities([slime]);
+
+			// place 2 chickens
+			var chicken1 = new world.entityTypes.Chicken(groundArea.randomCoord(this.random("chickenCoord1")));
+			var chicken2 = new world.entityTypes.Chicken(groundArea.randomCoord(this.random("chickenCoord2")));
+			this.placeEntities([chicken1, chicken2]);
 
 			// place 1 knight
 			var knight = new world.entityTypes.Knight(groundArea.randomCoord(this.random("knightCoord")));
