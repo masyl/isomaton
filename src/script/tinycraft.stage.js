@@ -37,11 +37,17 @@
 		};
 
 		this.serializer = function (json) {
+			var obj = json || {};
 			if (json) {
-
+				// todo: deserialization
 			} else {
-
+				obj.speedMultiplier = this.speedMultiplier;
+				obj.time = this.time;
+				obj.playState = this.playState;
+				obj.entities = {};
+				obj.blocks = {};
 			}
+			return obj;
 		};
 
 		//todo: not optimal... registry should be live
@@ -147,7 +153,6 @@
 
 			// Test everyones move and see if there are collissions to resolve
 			// or rules to apply
-//			debugger;
 			for (entityId in this.entities) {
 				isValidMove = true;
 				entity = this.entities[entityId];
@@ -196,14 +201,16 @@
 			}
 
 
-			// Step through the world options step (usually debugging)
-			this.world._options.step(stage, this.world);
-
 			this.nextStep();
 		};
 
+		/**
+		 * Go through the next step event is the stage is paused or not.
+		 */
 		this.nextStep = function () {
-			// call next step
+			// Step through the world options step (usually debugging)
+			this.world._options.step(stage, this.world);
+
 			_.delay(function() {
 				if (stage.playState !== "pause") {
 					stage.step();

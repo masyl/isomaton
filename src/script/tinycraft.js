@@ -124,11 +124,13 @@ Reversible Transactions:
 		this.random = fakeRandom;
 
 		this.serializer = function (json) {
+			var obj = json || {};
 			if (json) {
-
+				// todo: deserialization
 			} else {
-
+				obj.currentStage = obj.currentStage.serializer()
 			}
+			return obj;
 		};
 
 		this.start = function(_options) {
@@ -143,6 +145,11 @@ Reversible Transactions:
 			});
 			stage.step(this);
 
+		};
+
+		this.save = function () {
+			var save = this.serializer();
+			return save;
 		};
 
 		this.bindKeyboard = function () {
@@ -162,6 +169,12 @@ Reversible Transactions:
 			$(document).bind('keydown', 'left', function(e) {
 				e.preventDefault();
 				world.currentStage.slower();
+			});
+			$(document).bind('keydown', 's', function(e) {
+				e.preventDefault();
+				var worldSave;
+				worldSave = world.save();
+				console.dir("worldSave: ", worldSave);
 			});
 		};
 

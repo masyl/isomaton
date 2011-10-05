@@ -27,7 +27,7 @@
 			step: function(stage, world) {
 				$debug.find(".time").html(stage.time);
 				$debug.find(".speed").html(stage.speedMultiplier);
-				$debug.find(".playSate").html(stage.playState);
+				$debug.find(".playState").html(stage.playState);
 			}
 		});
 	});
