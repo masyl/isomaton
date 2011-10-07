@@ -27,14 +27,20 @@
 - Prevent mouse cursor from touching/selecting html elements of the scenegraph
 - Actors dont all move at the same time
 
+## v0.4 - Random, Canvas and Time management
+- Control randomness with number generator and seed
+- handle keystroke for "space" to Pause the game
+- Added chicken actor and egg item
+- Handle keystroke for "-/+" to accelerate or slow-down the game
+- Render the isograph with canvas, usign raw canvas or easel.js http://easeljs.com/docs/
+
 
 #In Progress Release
 
-## v0.4 - Remember when?
-- done: Control randomness with number generator and seed
-- done: handle keystroke for "space" to Pause the game
-- done: added chicken actor and egg item
-- done: handle keystroke for "-/+" to accelerate or slow-down the game
+
+#Upcomming Releases
+
+## v0.? - Remember when?
 - Ability to serialize and deserialize a complete world/stage state
 - Save a serialized checkpoint and resume from this checkpoint
 - Ability to quit and resume a game where it was left
@@ -43,13 +49,9 @@
 - handle keystroke for "R" to Resume from checkpoint
 - Make a predictable "save checkpoint" and "restart from checkpoint" to test world determinism
 - Remember the playState and speed when resuming a saved game
-- Actors of same types must have unique ids to prevent them to move in synch with same procedural randomness
+- Actors (ex: chickens) of same types must have unique ids to prevent them to move in synch with same procedural randomness
 
-
-#Upcomming Releases
-
-## v0.5 - Some HTML5 Pezzaz!
-- Render the isograph with canvas, usign raw canvas or easel.js http://easeljs.com/docs/
+## v0.? - Some HTML5 Pezzaz!
 - Animated transitions using jstween instead of jquery: http://jstween.blogspot.com/
 - Remove dependency on jQuery
 
@@ -140,7 +142,6 @@
 - Figure out how item crafting play into the story and how it is done
 - Rotate the stage n, e, s, w. and show a compass rose or arrows for cardinal directions
 - Render block shadows and add property to "hasShadow"
-
 
 
 # Far Future Backlog
