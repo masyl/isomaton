@@ -9,8 +9,8 @@ BASE
 
 NEW
 	5 Entities
-	85 fps animé
-	? 80 fps sans anim
+	? fps animé
+	124 fps sans anim
 	? 145 fps sans render
 	? 600 fps - no render, batched steps
 
@@ -137,8 +137,7 @@ Optimizations:
 		};
 
 		this.render = function render() {
-//			console.log("rendering");
-			this.isograph.render();
+			this.isograph.setup();
 		};
 
 		this.placeBlocks = function (blocks) {
@@ -258,7 +257,7 @@ Optimizations:
 					if (entity.nextCoord) {
 						entity.coord = entity.nextCoord;
 						entity.block.coord = entity.coord;
-						stage.isograph.animate(entity.block);
+						stage.isograph.updateBlock(entity.block);
 						entity.nextCoord = null;
 					}
 				}

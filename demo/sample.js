@@ -11,7 +11,7 @@
 			spritesOffsetX: 5,
 			spritesOffsetY: 0,
 			spritesWidth: 40,
-			spritesHeight: 8,
+			spritesHeight: 40,
 			isoWidth: 14,
 			isoBlockHeight: 17,
 			isoTopHeight: 7,

@@ -16,7 +16,7 @@
 - World goes through steps
 - Debug info panel showing passing time
 - Show step number in debug
-- Add edslime actors with random movements
+- Added slime actors with random movements
 
 ## v0.3 - Watch your step
 - Rule to force actor to step of solid blocs
@@ -54,6 +54,10 @@
 - Remove dependency on jQuery
 
 ## v0.? - Rules, rules, rules
+- Make the knight hunt the slime, and the slime teleport when its touched
+- Implement A* pathfinding function with
+	http://www.briangrinstead.com/files/astar/
+	or http://www.matthewtrost.org/projects/astar/
 - Rule to allow actor to occupy same space as a non-solid block, with the proper overriding z-index
 - Detect/Control collisions between actors and blocks
 - When placing blocs, enforce cohesion rules (no two blocs, occupying)
@@ -130,7 +134,7 @@
 - Create a build script
 
 ## Features
-
+- Non solid block type should have a z priority, so that smoke appears over an egg, and the egg over the grass
 - Better choice of easing for actor animation... could even "hop" on the next coordinate
 - Water has two bloc states... water on top and water under another bloc (same situation elsewhere?)
 - Figure out how item crafting play into the story and how it is done

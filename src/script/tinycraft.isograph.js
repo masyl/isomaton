@@ -2,31 +2,21 @@
 (function TinycraftIsographPackage(Tinycraft, $, _, undefined){
 
 	Tinycraft.Isograph = function Isograph(options) {
+		var isograph = this;
+
 		this._options = {};
 		this.blocks = [];
 		this.currentFocus = null;
 		this.stepSpeed = 0;
+		this.sprites = null;
+		this.blockBitmaps = null;
 		window.dbBlocks = this.dbBlocks = new Minidb();
 
 		this.init = function () {
 			var isograph = this;
 			this.options(options);
 
-			var throttledMove = _.throttle(move, 10);
-			function move(e) {
-				var isocoord = isograph.translateToISO(e.pageX, e.pageY);
-				var pagecoord = isograph.translateFromISO(isocoord);
-				//console.log("block at : ", isocoord.x, isocoord.y);
-				var focusedBlock = isograph.dbBlocks.get({
-					"coord.x": isocoord.x,
-					"coord.y": isocoord.y,
-					"coord.z": 0
-				});
-				if (focusedBlock) {
-					isograph.focus(focusedBlock);
-				}
-			}
-			$(window).mousemove(throttledMove);
+			// todo: update how the focus and selection of blocks is done
 
 		};
 
@@ -35,61 +25,26 @@
 			return this._options;
 		};
 
-		this.animate = function (block) {
+		this.updateBlock = function (block) {
 			var $elem, speed, coord;
 			speed = this.stepSpeed * 0.8;
 			coord = this.translateFromISO(block.coord);
-			$elem = $("#" + block.toString());
-			this.animateElem($elem, coord.x, coord.y, coord.z, speed);
+			this.updateBlockBitmap(block.bitmap, coord.x, coord.y, coord.z, speed);
 		};
 
-		this.animateElem = function($elem, x, y, z, speed) {
-			var easing = "linear";
-			// If the block is lowering his z-index set it first
-			// Otherwise set it after
-			if ($elem.css("z-index") < z) {
-				$elem
-						.css({
-							"z-index": z
-						})
-						.animate({
-							left: x,
-							top: y
-						}, speed, easing);
-			} else {
-				$elem
-						.animate({
-							left: x,
-							top: y
-						}, speed, easing, function () {
-							$(this)
-									.css({
-										"z-index": z
-									})
-						});
-			}
+		this.updateBlockBitmap = function(bitmap, x, y, z, speed) {
+			bitmap.x = x;
+			bitmap.y = y;
+			bitmap.z = z;
+			this.updateZ();
 		};
 
-		this.focus = function (block) {
-			if (this.currentFocus) {
-				if (this.currentFocus.toString() === block.toString()) {
-					return;
-				}
-				id = "#" + this.currentFocus.toString();
-				$elems = $(id);
-				$elems.animate({
-					"margin-top": 0
-				}, 50);
-			}
-			var i, id, $elems;
-			id = "#" + block.toString();
-			$elems = $(id)
-					.animate({
-						"margin-top": -3
-					}, 50);
-			this.currentFocus = block;
-	//			console.log("$elems: ", $elems, ids);
+		this.updateZ = function() {
+			this.blockBitmaps.sortChildren(function (a, b) {
+				return a.z - b.z;
+			});
 		};
+
 
 
 		this.placeBlocks = function (blocks) {
@@ -136,7 +91,7 @@
 
 
 		/**
-		 * Convert pixel position to Isometric coordnates
+		 * Convert pixel position to Isometric coordinates
 		 * @param mouseX
 		 * @param mouseY
 		 */
@@ -145,7 +100,6 @@
 			skin = options.skin;
 
 			x = mouseX - skin.stageOffsetX - (skin.isoWidth);
-	//			y = mouseY - skin.stageOffsetY + (skin.isoBlockHeight);
 			y = mouseY - skin.stageOffsetY + 7;
 
 			y = y / (skin.isoTopHeight * 2);
@@ -158,31 +112,88 @@
 			return coord;
 		};
 
-		this.render = function() {
-			var i, block, blocks, $root, $blockElement;
+		/**
+		 * Setup the initiale stage of the stage by loading sprites, creating the stage,
+		 * containers and initial bitmaps
+		 */
+		this.setup = function() {
+			// todo: rename stage
+
+			var i, block, blocks, $root, $blockElement, canvas, stage;
 			blocks = this.blocks;
 			// todo: get root target from options
 			$root = $("#tinycraft");
-			$root
-					.empty()
-					.append("<div class='clickZone' style='width: 100%; height: 100%; z-index: 10000; position: absolute;'></div>");
-			for (i in blocks) {
-				block = blocks[i];
-				$blockElement = this.getElementFromBlock(block);
-				$root.append($blockElement);
+
+			// create stage and point it to the canvas:
+			canvas = $root.find("canvas.isograph")[0];
+			var blockBitmaps = new Container();
+			this.blockBitmaps = blockBitmaps;
+			stage = new Stage(canvas);
+			stage.addChild(blockBitmaps);
+			stage.mouseEnabled = true;
+
+/*
+			// attach mouse handlers directly to the source canvas:
+			stage.onmousemove = onMouseMove;
+			canvas.onmousedown = onMouseDown;
+			canvas.onmouseup = onMouseUp;
+*/
+
+			this.loadSprites(onSpritesLoaded);
+
+			function onSpritesLoaded() {
+				var bitmap, image, coord;
+
+				//console.log("Adding block bitmaps");
+				//console.log("sprites: ", isograph.sprites);
+				//console.log(isograph.spritesImage);
+
+				// Create all block bitmaps
+				for (i in blocks) {
+					block = blocks[i];
+					coord = isograph.translateFromISO(block.coord);
+					bitmap = new BitmapSequence(isograph.sprites);
+					bitmap.gotoAndStop(block.type.offset);
+					bitmap.x = coord.x;
+					bitmap.y = coord.y;
+					bitmap.z = coord.z;
+					block.bitmap = bitmap;
+					blockBitmaps.addChild(bitmap);
+				}
+
+				isograph.updateZ();
+				// todo: get the fps from options
+				Ticker.setFPS(5);		// in ms, so 20 fps
+
+				// assign a tick listener directly to this window:
+				Ticker.addListener({
+					tick: function () {
+						stage.update();
+					}
+				});
 			}
 		};
 
-
-		this.getElementFromBlock = function (block) {
-			var skin, coord, element;
+		this.loadSprites = function(callback) {
+			var image, skin;
 			skin = options.skin;
-			coord = this.translateFromISO(block.coord);
-
-			var bgOffsetX = -skin.spritesOffsetX - (block.type.offset * skin.spritesWidth);
-			var bgOffsetY = -skin.spritesHeight;
-			element = $("<div id='" + block.toString() + "' style='	position: absolute; overflow:  hidden; text-indent: -1000em; width: " + skin.isoSpriteWidth + "px; height: " + skin.isoSpriteHeight + "px; background-image: url(" + skin.spritesURL + "); background-position: " + bgOffsetX + "px " + bgOffsetY + "px; left:" + coord.x + "; top:" + coord.y + "; z-index:" + coord.z + "' class='block'>" + block.type.id + "</div>");
-			return element;
+			image = new Image();
+			
+			image.onload = function onload() {
+				var spriteCount, frameData;
+				// Create the spriteSheet
+				isograph.sprites = new SpriteSheet(
+					image,
+					skin.spritesWidth,
+					skin.spritesHeight
+				);
+				callback();
+			};
+			image.onerror = function onerror() {
+				console.error("Isograph: Sprites failed to load: ", this);
+			};
+			image.src = skin.spritesURL;
+			isograph.spritesImage = image;
 		};
 
 		this.init();
