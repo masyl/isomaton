@@ -101,11 +101,11 @@
 			groundArea.coord.up();
 
 			// place random yellow flowers
-			var flowersCount = Math.round(this.random("flowersCount") * 9);
+			var flowersCount = Math.round(this.random("flowersCount") * 9 + 3);
 			this.placeBlocks(tinycraft.builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
 
 			// place random weeds
-			var weedCount = Math.round(this.random("weedCount") * 20);
+			var weedCount = Math.round(this.random("weedCount") * 20 + 3);
 			this.placeBlocks(tinycraft.builder.random(this.random("weeds"), shortweedsBlock, groundArea, weedCount));
 
 			// place a gold block at random
