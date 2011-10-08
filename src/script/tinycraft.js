@@ -190,6 +190,7 @@ Reversible Transactions:
 		};
 		this.toIndex = function txoIndex() {
 			return {
+				"class": "Block",
 				"id": this.id,
 				"type.id": this.type.id,
 				"type.isSolid": this.type.isSolid,

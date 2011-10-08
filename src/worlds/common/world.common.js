@@ -1,10 +1,12 @@
-(function (tinycraft){
+(function (tinycraft, Tinycraft){
 
 	var world = tinycraft.worlds.common = new tinycraft.World(window.commonworld);
 
 	var Coord = Tinycraft.Coord;
 	var Area = tinycraft.Area;
 	var builder = tinycraft.builder;
+
+	var editModes = Tinycraft.editModes;
 
 	world.entityTypes.Slime = tinycraft.EntityType("slime", {
 		label: "Slime",
@@ -74,6 +76,8 @@
 			var shortweedsBlock = world.blockTypes["decorations.shortweeds"];
 			var groundArea = new Area(new Coord(1, 1, -2), worldOptions.width, worldOptions.height);
 
+			this.editMode(editModes.emptyFirst);
+
 			// place layer of stone
 			this.placeBlocks(builder.fill(stoneBlock, groundArea));
 
@@ -106,7 +110,7 @@
 
 			// place a gold block at random
 			var randomCoord = groundArea.randomCoord(this.random("goldBlock"));
-			this.placeBlocks(tinycraft.builder.one(goldBlock, randomCoord));
+			this.placeBlocks(tinycraft.builder.one(goldBlock, randomCoord), true);
 
 			// place 5 stones at random
 			this.placeBlocks(tinycraft.builder.random(this.random("stones"), stoneBlock, groundArea, 25));
@@ -136,4 +140,4 @@
 
 
 
-})(window.tinycraft);
+})(window.tinycraft, window.Tinycraft);

@@ -28,13 +28,36 @@ Optimizations:
  */
 (function TinycraftStagePackage(Tinycraft, $, _, undefined) {
 
+	// Constants for editModes
+	var editModes = Tinycraft.editModes = {
+		emptyFirst: "emptyFirst"
+	};
+	// todo: constants for playStates (rename to playbackMode ?  rewind, play, pause, or just an integer ?
+
+	
 	// todo: replace the registry with a subclass of minidb
 	Tinycraft.Stage = function Stage(id, stageOptions) {
-		var stage = this;
+
+		var
+				stage = this, // Self reference used inside deeper closures
+				_editMode; // The current edit mode when placing blocks and entities
+
+		var _value;
+		this.value = function(newValue, oldValue) {
+			if (newValue !== undefined) {
+				_value = (newValue === undefined) ? oldValue : newValue;
+			}
+			return _value;
+		};
+
+		// todo: use a factory to create such functionnal getter/setters
+		this.editMode = function (editMode) {
+			_editMode = this.value(editMode, _editMode);
+			return this;
+		};
 
 		this.blocks = [];
-		this.registry = {
-		};
+		this.registry = {};
 		this.entities = [];
 		this.world = null;
 		this.isograph = null;
@@ -59,8 +82,11 @@ Optimizations:
 			}
 		};
 
+
 		this.init = function init() {
-			this.options(stageOptions);
+			this
+					.editMode(editModes.emptyFirst)
+					.options(stageOptions);
 		};
 
 		this.options = function options(_options) {
@@ -94,8 +120,11 @@ Optimizations:
 
 		//todo: not optimal... registry should be live
 		this.updateRegistry = function updateRegistry() {
-			this.registry = {};
 			var i, key, block, entity, x, y, z;
+			//flush the registry
+			for (i in this.registry) {
+				delete this.registry[i];
+			}
 			for (i in this.blocks) {
 				block = this.blocks[i];
 				x = block.coord.x;
@@ -140,11 +169,28 @@ Optimizations:
 			this.isograph.setup();
 		};
 
-		this.placeBlocks = function (blocks) {
-			var i, _blocks;
-			_blocks = this.blocks;
+		//todo: Blocks collections/container should have this method instead of this procedural approach
+		this.removeBlocks = function removeBlocks(blocks) {
+
+		};
+
+		this.placeBlocks = function placeBlocks(blocks) {
+			var i, newBlocks, newBlock, existingBlocks, mode, key;
+			newBlocks = this.blocks;
+			mode = this.editMode().value();
+			window.registry = this.registry;
 			for (i in blocks) {
-				_blocks.push(blocks[i]);
+				newBlock = blocks[i];
+				if (mode === editModes.emptyFirst) {
+					key = newBlock.coord.x + "-" + newBlock.coord.y + "-" + newBlock.coord.z;
+					existingBlocks = this.registry[key]; // todo: use minidb
+					if (existingBlocks && existingBlocks.blocks) {
+						this.removeBlocks(existingBlocks.blocks);
+						this.isograph.removeBlocks(existingBlocks.blocks);
+					}
+				}
+				stage.updateRegistry(); // todo: remove this costly request by using minidb
+				newBlocks.push(newBlock);
 			}
 			this.isograph.placeBlocks(blocks);
 		};

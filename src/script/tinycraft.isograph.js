@@ -5,7 +5,6 @@
 		var isograph = this;
 
 		this._options = {};
-		this.blocks = [];
 		this.currentFocus = null;
 		this.stepSpeed = 0;
 		this.sprites = null;
@@ -13,8 +12,14 @@
 		window.dbBlocks = this.dbBlocks = new Minidb();
 
 		this.init = function () {
-			var isograph = this;
+			var canvas;
 			this.options(options);
+
+			// todo: get root target from options
+			// create stage and point it to the canvas:
+			canvas = $("#tinycraft").find("canvas.isograph")[0];
+			this.blockBitmaps = new Container();
+			this.stage = new Stage(canvas);
 
 			// todo: update how the focus and selection of blocks is done
 
@@ -50,12 +55,32 @@
 		this.placeBlocks = function (blocks) {
 			var
 					i,
-					block,
-					_blocks = this.blocks;
+					block;
 			for (i in blocks) {
 				block = blocks[i];
-				_blocks.push(block);
 				this.dbBlocks.add(block);
+			}
+		};
+
+		this.removeBlocks = function (blocks) {
+			var
+					i,
+					filter,
+					block,
+					isographBlock;
+			for (i in blocks) {
+				block = blocks[i];
+				filter = {
+					"x": block.coord.x,
+					"y": block.coord.y,
+					"z": block.coord.z
+				};
+				isographBlock = this.dbBlocks.get(filter);
+				if (isographBlock) {
+					// These blocks might or not be already drawn on the isograph
+					this.blockBitmaps.removeChild(block.bitmap);
+					this.dbBlocks.remove(block);
+				}
 			}
 		};
 
@@ -119,17 +144,14 @@
 		this.setup = function() {
 			// todo: rename stage
 
-			var i, block, blocks, $root, $blockElement, canvas, stage;
-			blocks = this.blocks;
-			// todo: get root target from options
-			$root = $("#tinycraft");
+			var i, block, blocks, $blockElement, canvas, stage;
+			blocks = this.dbBlocks.get({
+				"class": "Block"
+			});
 
-			// create stage and point it to the canvas:
-			canvas = $root.find("canvas.isograph")[0];
-			var blockBitmaps = new Container();
-			this.blockBitmaps = blockBitmaps;
-			stage = new Stage(canvas);
-			stage.addChild(blockBitmaps);
+			stage = this.stage;
+
+			stage.addChild(this.blockBitmaps);
 			stage.mouseEnabled = true;
 
 /*
@@ -158,7 +180,7 @@
 					bitmap.y = coord.y;
 					bitmap.z = coord.z;
 					block.bitmap = bitmap;
-					blockBitmaps.addChild(bitmap);
+					isograph.blockBitmaps.addChild(bitmap);
 				}
 
 				isograph.updateZ();

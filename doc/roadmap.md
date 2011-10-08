@@ -7,7 +7,7 @@
 
 ### v0.5 - Some basic expectations
 
-- Bug: Water and dirt blocks are generated one over the other and alternate during display
+- DONE: Bug: Water and dirt blocks are generated one over the other and alternate during display
 - Bug: Grass has disapeared
 - Bug: Actors dont walk into each-others
 - Blocks for material and entities have a directions. When actors move, they change their directions.

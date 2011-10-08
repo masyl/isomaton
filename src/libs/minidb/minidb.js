@@ -45,18 +45,27 @@
 			//console.log("addToIndex", obj, keys);
 		}
 
-		function removeFromIndex(obj, attrs) {
-
-		}
-
-		// Remove an items
-		/*
-		this.remove = function (item) {
-			var key = item.toString();
-			delete items[key];
+		// Remove an item
+		this.remove = function (obj) {
+			var item, keys, key;
+			key = obj.toString();
+			item = new Item(obj);
+			items[key] = item;
+			keys = keyValuePair(item.attrs);
+			removeFromIndex(obj, keys);
 			// todo: remove all the listed keys
 		};
-		*/
+
+		function removeFromIndex(obj, keys) {
+			var key, indexItem, i;
+			for (i in keys) {
+				key = keys[i];
+				indexItem = index[key];
+				if (indexItem !== undefined) {
+					delete indexItem[obj.toString()];
+				}
+			}
+		}
 
 		// Move an items from one coordinate to another in the matrix
 		/*
