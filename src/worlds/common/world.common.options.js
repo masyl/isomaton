@@ -49,10 +49,12 @@ window.commonworld = {
 					"offset": 0
 				},
 				"princess": {
+					"hasOwnSpriteSheet": true,
 					"isSolid": true,
 					"offset": 1
 				},
 				"slime": {
+					"hasOwnSpriteSheet": true,
 					"isSolid": true,
 					"offset": 2
 				},

@@ -1,11 +1,5 @@
 # Roadmap for Tinycraft
 
-## Bugs and Debts
-
-- Bug: Flowers, weeds and other blocks appear over water
-- Bug: Actors can spawn over solid blocks
-- Debt: block type should have their own class for their properties, not be read from property file
-
 ## In Progress Release
 
 ### v0.5 - Some basic expectations
@@ -18,9 +12,9 @@
 - DONE: Animated transitions using jstween instead of jquery: http://jstween.blogspot.com/
 - DONE: Added helper for 4x4 sets of blocks
 - DONE: Each block can now have its own extended spritesheet
+- DONE: Blocks for material and entities have a directions. When actors move, they change their directions.
 - Bug: Actors can walk into each-others
 - Actors dont walk on water
-- Blocks for material and entities have a directions. When actors move, they change their directions.
 
 
 ## Upcomming Releases
@@ -105,6 +99,13 @@
 
 ## Unplanned Backlog
 
+## Bugs and Debts
+
+- Bug: Flowers, weeds and other blocks appear over water
+- Bug: Actors can spawn over solid blocks
+- Bug: z-index clculation and ordering doesnt account for some cases during animation
+- Debt: block type should have their own class for their properties, not be read from property file
+
 ### Housekeeping and Architecture
 - Rename to minicraft
 - Bring back source PSD of common world into the project
@@ -112,6 +113,9 @@
 - Test long term playback: number limits, memory leaks
 
 ### Features
+- Entities represented by more than one block: princess with a tall crown, cow, girraf, elephant.
+- Have a global seed to change whole world
+- Have a stage seed to be changed as part of the gameplay.
 - Actors (ex: chickens) of same types must have unique ids to prevent them to move in synch with same procedural randomness
 - Non solid block type should have a z priority, so that smoke appears over an egg, and the egg over the grass
 - Better choice of easing for actor animation... could even "hop" on the next coordinate
