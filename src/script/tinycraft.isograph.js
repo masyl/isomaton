@@ -34,6 +34,9 @@
 			var speed, coord;
 			speed = this.stepSpeed * 0.8;
 			coord = this.translateFromISO(block.coord);
+			if (block.type.hasOwnSpriteSheet) {
+				block.bitmap.gotoAndStop(block.direction);
+			}
 			this.updateBlockBitmap(block.bitmap, coord.x, coord.y, coord.z, speed);
 		};
 
@@ -189,9 +192,6 @@
 				//console.log("sprites: ", isograph.sprites);
 				//console.log(isograph.spritesImage);
 
-
-				// todo: load from common spritesheet OR its own spreadsheet
-
 				// Create all block bitmaps
 				for (i in blocks) {
 					block = blocks[i];
@@ -202,7 +202,7 @@
 					if (type.hasOwnSpriteSheet) {
 						bitmap = new BitmapSequence(type.spritesheet);
 //						console.log("type.spritesheet", type.spritesheet, type, block);
-						bitmap.gotoAndStop(0);
+						bitmap.gotoAndStop(block.direction);
 					} else {
 						bitmap = new BitmapSequence(isograph.sprites);
 						bitmap.gotoAndStop(type.offset);
@@ -271,7 +271,6 @@
 						skin.spritesHeight
 					);
 					blockType.spritesheetReady = true;
-					//todo: check if done!
 					checkIfDone();
 				}
 

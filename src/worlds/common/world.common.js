@@ -43,6 +43,7 @@
 			if (mod === 0) {
 				// Move at random
 				var direction = stage.randomItem(this.id, [0, 1, 2, 3]);
+				this.block.direction = direction;
 				// todo: set direction on entity also
 				this.nextCoord = this.coord.copy().move(direction);
 			}
@@ -59,6 +60,7 @@
 			if (mod === 0) {
 				// Move at random
 				var direction = stage.randomItem(this.id, [0, 1, 2, 3]);
+				this.block.direction = direction;
 				this.nextCoord = this.coord.copy().move(direction);
 			}
 		}
@@ -73,6 +75,7 @@
 			if (mod === 0) {
 				// Move at random
 				var direction = stage.randomItem(this.id, [0, 1, 2, 3]);
+				this.block.direction = direction;
 				this.nextCoord = this.coord.copy().move(direction);
 			}
 		}
@@ -86,6 +89,7 @@
 			if (mod === 0) {
 				// Move at random
 				var direction = stage.randomItem(this.id, [0, 1, 2, 3]);
+				this.block.direction = direction;
 				this.nextCoord = this.coord.copy().move(direction);
 			}
 		}
@@ -99,6 +103,7 @@
 			var mod = stage.time % 6;
 			if (mod === 0) {
 				var direction = stage.randomItem(this.id, [0, 1, 2, 3]);
+				this.block.direction = direction;
 				this.nextCoord = this.coord.copy().move(direction);
 			}
 		}

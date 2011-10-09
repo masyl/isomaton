@@ -17,6 +17,7 @@
 - DONE: Remove dependency on jQuery for the isograph
 - DONE: Animated transitions using jstween instead of jquery: http://jstween.blogspot.com/
 - DONE: Added helper for 4x4 sets of blocks
+- DONE: Each block can now have its own extended spritesheet
 - Bug: Actors can walk into each-others
 - Actors dont walk on water
 - Blocks for material and entities have a directions. When actors move, they change their directions.

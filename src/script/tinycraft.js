@@ -190,6 +190,7 @@ Reversible Transactions:
 		this.type = type;
 		this.coord = coord;
 		this.nextCoord = null;
+		this.direction = 0; // Direction thoward which the block is facing
 
 		this.toString = function toString() {
 			return "Block-" + this.id;
@@ -222,8 +223,6 @@ Reversible Transactions:
 
 		// true is this block has its own spritesheet
 		this.hasOwnSpriteSheet = (options.hasOwnSpriteSheet !== undefined) ? options.hasOwnSpriteSheet : false;
-		if (id === "knight")
-				console.log("NEW typis is : ", this);
 	}
 
 	function BlockSet(id, options) {
