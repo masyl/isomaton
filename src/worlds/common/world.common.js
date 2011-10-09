@@ -8,20 +8,49 @@
 
 	var editModes = Tinycraft.editModes;
 
-	world.entityTypes.Slime = tinycraft.EntityType("slime", {
-		label: "Slime",
-		blockType: world.blockTypes["actors.slime"],
-		step: function slimeStep(stage) {
+
+	function Actor(coord, options) {
+		this.id = "blank";
+		this._options = {};
+		this.coord = coord;
+		this.nextCoord = null;
+		this.block = null;
+		this.label = "Blank";
+		this.blockType = world.blockTypes["blank.blank"];
+
+		this.init = function init() {
+			this.block = new tinycraft.Block(this.blockType, coord);
+		};
+
+		this.options = function fnOptions(_options) {
+			_(this._options).extend(_options);
+			return this._options;
+		};
+
+		this.step = function step(stage) {
+			/* you super class should contain the actors behavior */
+		};
+	}
+
+	world.Actors.Slime = function Slime(coord, options) {
+		Actor.apply(this, arguments); // Inherit from the Actor class
+		this.id = "slime";
+		this.label = "Slime";
+		this.blockType = world.blockTypes["actors.slime"];
+		this.step = function slimeStep(stage) {
 			var mod = stage.time % 8;
 			if (mod === 0) {
 				// Move at random
 				var direction = stage.randomItem(this.id, [0, 1, 2, 3]);
+				console.log("this is : ", this);
 				this.nextCoord = this.coord.copy().move(direction);
 			}
-		}
-	});
+		};
+		this.init();
+	};
 
-	world.entityTypes.Chicken = tinycraft.EntityType("chicken", {
+
+	world.Actors.Chicken = tinycraft.Actor("chicken", {
 		label: "Chicken",
 		blockType: world.blockTypes["actors.chicken"],
 		step: function chickenStep(stage) {
@@ -35,7 +64,7 @@
 	});
 
 
-	world.entityTypes.Knight = tinycraft.EntityType("knight", {
+	world.Actors.Knight = tinycraft.Actor("knight", {
 		label: "Knight",
 		blockType: world.blockTypes["actors.knight"],
 		step: function knightStep(stage) {
@@ -48,7 +77,20 @@
 		}
 	});
 
-	world.entityTypes.Princess = tinycraft.EntityType("princess", {
+	world.Actors.Sidekick = tinycraft.Actor("sidekick", {
+		label: "Sidekick",
+		blockType: world.blockTypes["actors.sidekick"],
+		step: function sidekickStep(stage) {
+			var mod = stage.time % 3;
+			if (mod === 0) {
+				// Move at random
+				var direction = stage.randomItem(this.id, [0, 1, 2, 3]);
+				this.nextCoord = this.coord.copy().move(direction);
+			}
+		}
+	});
+
+	world.Actors.Princess = tinycraft.Actor("princess", {
 		label: "Princess",
 		blockType: world.blockTypes["actors.princess"],
 		step: function princessStep(stage) {
@@ -116,20 +158,24 @@
 			this.placeBlocks(tinycraft.builder.random(this.random("stones"), stoneBlock, groundArea, 25));
 
 			// place 1 slime
-			var slime = new world.entityTypes.Slime(groundArea.randomCoord(this.random("slimeCoord")));
+			var slime = new world.Actors.Slime(groundArea.randomCoord(this.random("slimeCoord")));
 			this.placeEntities([slime]);
 
 			// place 2 chickens
-			var chicken1 = new world.entityTypes.Chicken(groundArea.randomCoord(this.random("chickenCoord1")));
-			var chicken2 = new world.entityTypes.Chicken(groundArea.randomCoord(this.random("chickenCoord2")));
+			var chicken1 = new world.Actors.Chicken(groundArea.randomCoord(this.random("chickenCoord1")));
+			var chicken2 = new world.Actors.Chicken(groundArea.randomCoord(this.random("chickenCoord2")));
 			this.placeEntities([chicken1, chicken2]);
 
 			// place 1 knight
-			var knight = new world.entityTypes.Knight(groundArea.randomCoord(this.random("knightCoord")));
+			var knight = new world.Actors.Knight(groundArea.randomCoord(this.random("knightCoord")));
 			this.placeEntities([knight]);
 
+			// place 1 sidekick
+			var sidekick = new world.Actors.Sidekick(groundArea.randomCoord(this.random("sidekickCoord")));
+			this.placeEntities([sidekick]);
+
 			// place 1 princess
-			var princess = new world.entityTypes.Princess(groundArea.randomCoord(this.random("princessCoord")));
+			var princess = new world.Actors.Princess(groundArea.randomCoord(this.random("princessCoord")));
 			this.placeEntities([princess]);
 
 		},

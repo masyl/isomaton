@@ -9,9 +9,14 @@
 
 - DONE: Bug: Water and dirt blocks are generated one over the other and alternate during display
 - FIXED: Bug: Grass has disapeared
+- DONE: Added a Smaller "sidekick" entity
+- DONE: Brought back animated and tweened movements of blocks between each steps
+- DONE: Remove dependency on jQuery for the isograph
+- DONE: Animated transitions using jstween instead of jquery: http://jstween.blogspot.com/
+
 - Bug: Actors can walk into each-others
-- Blocks for material and entities have a directions. When actors move, they change their directions.
 - Actors dont walk on water
+- Blocks for material and entities have a directions. When actors move, they change their directions.
 
 
 ## Upcomming Releases
@@ -25,10 +30,6 @@
 - handle keystroke for "R" to Resume from checkpoint
 - Make a predictable "save checkpoint" and "restart from checkpoint" to test world determinism
 - Remember the playState and speed when resuming a saved game
-
-### v0.? -  HTML5 Pezzaz!
-- Animated transitions using jstween instead of jquery: http://jstween.blogspot.com/
-- Remove dependency on jQuery
 
 ### v0.? - Rules, rules, rules
 - Make the knight hunt the slime, and the slime teleport when its touched
@@ -107,6 +108,7 @@
 - Rename to minicraft
 - Bring back source PSD of common world into the project
 - Create a build script
+- Test long term playback: number limits, memory leaks
 
 ### Features
 - Actors (ex: chickens) of same types must have unique ids to prevent them to move in synch with same procedural randomness

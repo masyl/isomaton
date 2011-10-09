@@ -29,7 +29,7 @@ Reversible Transactions:
 		 */
 		this.Block = Block;
 		this.Area = Area;
-		this.EntityType = EntityTypeFactory;
+		this.Actor = ActorFactory;
 		this.World = World;
 		this.worlds = {}; // Collection of available worlds
 		this.builder = {
@@ -42,7 +42,8 @@ Reversible Transactions:
 			console.log("Starting!");
 			var isograph, world;
 			isograph = new Tinycraft.Isograph({
-				skin: options.skin
+				skin: options.skin,
+				canvas: $("#tinycraft").find("canvas.isograph")[0]
 			});
 			world = this.worlds[options.world];
 			world.start({
@@ -60,8 +61,8 @@ Reversible Transactions:
 	window.Tinycraft = Tinycraft;
 
 
-	function EntityTypeFactory(id, typeOptions) {
-		function Entity(coord, options) {
+	function ActorFactory(id, typeOptions) {
+		function Actor(coord, options) {
 			this.id = id;
 			this._options = {};
 			this.coord = coord;
@@ -85,7 +86,7 @@ Reversible Transactions:
 
 			this.init();
 		}
-		return Entity;
+		return Actor;
 	}
 
 	function World(options) {
@@ -93,7 +94,7 @@ Reversible Transactions:
 		/**
 		 * Builder helper to easy the creation of block structures
 		 */
-		this.entityTypes = {};
+		this.Actors = {};
 		this.stages = {};
 		this.currentStage = null;
 		this.blockSets = {};

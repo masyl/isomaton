@@ -1,5 +1,5 @@
 
-(function TinycraftIsographPackage(Tinycraft, $, _, undefined){
+(function TinycraftIsographPackage(Tinycraft, _, undefined){
 
 	Tinycraft.Isograph = function Isograph(options) {
 		var isograph = this;
@@ -17,7 +17,7 @@
 
 			// todo: get root target from options
 			// create stage and point it to the canvas:
-			canvas = $("#tinycraft").find("canvas.isograph")[0];
+			canvas = options.canvas;
 			this.blockBitmaps = new Container();
 			this.stage = new Stage(canvas);
 
@@ -31,17 +31,36 @@
 		};
 
 		this.updateBlock = function (block) {
-			var $elem, speed, coord;
+			var speed, coord;
 			speed = this.stepSpeed * 0.8;
 			coord = this.translateFromISO(block.coord);
 			this.updateBlockBitmap(block.bitmap, coord.x, coord.y, coord.z, speed);
 		};
 
 		this.updateBlockBitmap = function(bitmap, x, y, z, speed) {
-			bitmap.x = x;
-			bitmap.y = y;
-			bitmap.z = z;
-			this.updateZ();
+			// If the bitmap if moving higher/forward the z index
+			// update the z-ordering first
+			if (z > bitmap.z) {
+				bitmap.z = z;
+				// todo: find a cheaper way to update the z-ordering
+				this.updateZ();
+				Tween.get(bitmap)
+					.to({z: z}, 0)
+					.to({
+							x: x,
+							y: y
+						}, speed);
+			} else {
+				Tween.get(bitmap)
+					.to({
+							x: x,
+							y: y
+						}, speed)
+					.to({z: z}, 0)
+					.call(function() {
+						isograph.updateZ();
+					});
+			}
 		};
 
 		this.updateZ = function() {
@@ -144,7 +163,7 @@
 		this.setup = function() {
 			// todo: rename stage
 
-			var i, block, blocks, $blockElement, canvas, stage;
+			var i, block, blocks, canvas, stage;
 			blocks = this.dbBlocks.get({
 				"class": "Block"
 			});
@@ -185,7 +204,7 @@
 
 				isograph.updateZ();
 				// todo: get the fps from options
-				Ticker.setFPS(5);		// in ms, so 20 fps
+				Ticker.setFPS(20);
 
 				// assign a tick listener directly to this window:
 				Ticker.addListener({
@@ -221,4 +240,4 @@
 		this.init();
 	}
 
-})(Tinycraft, jQuery, _);
+})(Tinycraft, _);

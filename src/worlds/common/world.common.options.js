@@ -55,14 +55,18 @@ window.commonworld = {
 					"isSolid": true,
 					"offset": 2
 				},
-				"chicken": {
+				"sidekick": {
 					"isSolid": true,
 					"offset": 3
+				},
+				"chicken": {
+					"isSolid": true,
+					"offset": 4
 				}
 			}
 		},
 		"items": {
-			"offset": 11,
+			"offset": 12,
 			"blocks": {
 				"sword": {
 					"isSolid": false,
@@ -75,7 +79,7 @@ window.commonworld = {
 			}
 		},
 		"decorations": {
-			"offset": 13,
+			"offset": 14,
 			"blocks": {
 				"yellowflowers": {
 					"isSolid": false,
