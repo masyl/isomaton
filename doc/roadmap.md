@@ -21,16 +21,6 @@
 
 ## Upcomming Releases
 
-### v0.? - Remember when?
-- Ability to serialize and deserialize a complete world/stage state
-- Save a serialized checkpoint and resume from this checkpoint
-- Ability to quit and resume a game where it was left
-- handle keystroke for "S" to Save Checkpoint
-- handle keystroke for "Q" to Quit and Save
-- handle keystroke for "R" to Resume from checkpoint
-- Make a predictable "save checkpoint" and "restart from checkpoint" to test world determinism
-- Remember the playState and speed when resuming a saved game
-
 ### v0.? - Rules, rules, rules
 - Make the knight hunt the slime, and the slime teleport when its touched
 - Implement A* pathfinding function with
@@ -44,14 +34,21 @@
 - Enforcing limits on the maximum width/height/tallness of the world
 
 
+### v0.? - Save, Quit and Resume
+- Ability to serialize and deserialize a complete world/stage state
+- Save a serialized checkpoint and resume from this checkpoint
+- Ability to quit and resume a game where it was left
+- handle keystroke for "S" to Save Checkpoint
+- handle keystroke for "Q" to Quit and Save
+- handle keystroke for "R" to Resume from checkpoint
+- Make a predictable "save checkpoint" and "restart from checkpoint" to test world determinism
+- Remember the playState and speed when resuming a saved game
+
 ### v0.? - Smooth moves
 - Isograph can be modified with difgram or changelog
-- Add orientation to actors, blocs (n, e, w, s)
+- Add direction/orientation to actors, blocs (n, e, w, s)
 - Add knight actor which looks for gold on its own
-- Actors should no try to move on a non-moving block, they should detect their move is no possible
-
-### v0.? - Control
-- Player commands knight with keyboard/mouse (attach, retreat, follow);
+- Actors should not try to move on a non-moving block, they should detect their move is no possible
 
 ### v0.? - Story log
 - Actors say/think stuff in a speech bubble

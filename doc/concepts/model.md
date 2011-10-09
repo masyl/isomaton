@@ -27,6 +27,36 @@ The isograph is the api used to render the isometric interface of a stage and it
 
 Actors are a type of entities which are presented to the user as bein part of the story. The material scene, props, items or other interactive elements such as water, levers and etc. are not actors. But animals, heroes, bad guys are. Actors might need to be interacted with and presented differently
 
+## Act
+
+An act, similar to a level or an episode, start at one point and sets objectives and goals to be acted out on the stage.
+
+Similar to entities, an act can interact with the stage at each steps. Being the main "controller" entity, the act has priority on other entities.
+
+The world contains multiple predefined acts and there is no specific order in which they are played out. Their order is defined by procedural generation. When selecting an act, the world will ask each available act if the current stage is appropriate for them to start. Each act can look at the stage state and decide if the required elements are present. From all that can occur on the stage, the game will select one that hasnt occured yet, or one that has occured less often.
+
+Once an act starts, a interstitial screen might appear and the UI will reflect this change. At any point forward, the act will decide when it is over and pass on the control over to the next act.
+
+An act also contains the necessary title, descriptions, achievements, role definitions so that a user knows how he can help to move things along and get the hero to achieve his goals.
+
+Acts must be available in enough number and variety that the game can move on from one to the other ideally without creating dead ends, stalemates or endless loops.
+
+Acts could also be polymorphic, adapting or changing their nature according to the conditions and the state of the stage or its actors. For example, a "kill the dragon" act could spawn a different dragon depending on the weather or the other actors on stage. If a princess is present it could be a dragon that kidnaps the princess, otherwise a dragon that steals a treasure.
+
+
+## Actor Role
+
+During an Act, some actors might play a leading roles, which will make them higlighted in the ui and easally accessible for interaction with the user.
+
+## Actor Mode
+
+As time goes by, an Actor will need to change its behavior according to the situation he is in. On basic way the actors do this is by going in and out of "modes". A knight in "explore" mode might not have any specific target and just wander from one spot of the stage to another in search of something interesting.
+
+Upon a specific stimulus, an actor will change from on mode to the other. For example, if a knight encounter an egg in "explore" mode, he might suddenly fall in "gathering" mode and start to pickup surrounding items until there is none left in sight. Another basic scenario is to have the knight enter in "battle" mode when encountering a Slime and start to attack any surrounding enemy.
+
+Obviously, some modes will have priority, such as not having the knight fall into "gathering" mode to pickup eggs when in the middle of an epic battle.
+
+
 ## Block Properties
 - entity :
 
