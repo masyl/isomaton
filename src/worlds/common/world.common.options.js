@@ -44,6 +44,7 @@ window.commonworld = {
 			"offset": 7,
 			"blocks": {
 				"knight": {
+					"hasOwnSpriteSheet": true,
 					"isSolid": true,
 					"offset": 0
 				},
@@ -88,6 +89,23 @@ window.commonworld = {
 				"shortweeds": {
 					"isSolid": false,
 					"offset": 1
+				}
+			}
+		},
+		"cursors": {
+			"offset": 16,
+			"blocks": {
+				"whiteframe": {
+					"isSolid": false,
+					"offset": 0
+				},
+				"blackframe": {
+					"isSolid": false,
+					"offset": 1
+				},
+				"whiteplaceholder": {
+					"isSolid": false,
+					"offset": 2
 				}
 			}
 		}

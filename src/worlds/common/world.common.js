@@ -16,6 +16,7 @@
 		this.nextCoord = null;
 		this.block = null;
 		this.label = "Blank";
+
 		this.blockType = world.blockTypes["blank.blank"];
 
 		this.init = function init() {
@@ -42,7 +43,7 @@
 			if (mod === 0) {
 				// Move at random
 				var direction = stage.randomItem(this.id, [0, 1, 2, 3]);
-				console.log("this is : ", this);
+				// todo: set direction on entity also
 				this.nextCoord = this.coord.copy().move(direction);
 			}
 		};
@@ -107,7 +108,7 @@
 		start: function start() {
 			var world = this.world;
 			var worldOptions = world.options();
-			console.log("placing blocks...");
+			//console.log("placing blocks...");
 
 			var grassBlock = world.blockTypes["materials.grass"];
 			var waterBlock = world.blockTypes["materials.water"];
@@ -117,6 +118,10 @@
 			var yellowflowersBlock = world.blockTypes["decorations.yellowflowers"];
 			var shortweedsBlock = world.blockTypes["decorations.shortweeds"];
 			var groundArea = new Area(new Coord(1, 1, -2), worldOptions.width, worldOptions.height);
+
+			var whiteFrameBlock = world.blockTypes["cursors.whiteplaceholder"];
+			var frameArea = new Area(new Coord(1, -3, 6), worldOptions.width, 1);
+			this.placeBlocks(builder.fill(whiteFrameBlock, frameArea));
 
 			this.editMode(editModes.emptyFirst);
 
@@ -137,7 +142,7 @@
 
 			// place random patches of water in the grass at random
 			var waterCount = Math.round(this.random("waterCount") * 9);
-			this.placeBlocks(tinycraft.builder.random(this.random("grasses"), waterBlock, groundArea, waterCount));
+			this.placeBlocks(tinycraft.builder.random4(this.random("water"), waterBlock, groundArea, waterCount));
 
 			// Go up once to place stuff "on" the ground layer
 			groundArea.coord.up();
@@ -177,6 +182,10 @@
 			// place 1 princess
 			var princess = new world.Actors.Princess(groundArea.randomCoord(this.random("princessCoord")));
 			this.placeEntities([princess]);
+
+			// place frame
+			this.placeBlocks(tinycraft.builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
+
 
 		},
 		step: function prairieStep() {

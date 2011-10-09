@@ -2,6 +2,9 @@
 
 ## Bugs and Debts
 
+- Bug: Flowers, weeds and other blocks appear over water
+- Bug: Actors can spawn over solid blocks
+- Debt: block type should have their own class for their properties, not be read from property file
 
 ## In Progress Release
 
@@ -13,7 +16,7 @@
 - DONE: Brought back animated and tweened movements of blocks between each steps
 - DONE: Remove dependency on jQuery for the isograph
 - DONE: Animated transitions using jstween instead of jquery: http://jstween.blogspot.com/
-
+- DONE: Added helper for 4x4 sets of blocks
 - Bug: Actors can walk into each-others
 - Actors dont walk on water
 - Blocks for material and entities have a directions. When actors move, they change their directions.

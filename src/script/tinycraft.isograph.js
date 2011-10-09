@@ -1,14 +1,13 @@
-
 (function TinycraftIsographPackage(Tinycraft, _, undefined){
 
 	Tinycraft.Isograph = function Isograph(options) {
 		var isograph = this;
 
 		this._options = {};
-		this.currentFocus = null;
 		this.stepSpeed = 0;
 		this.sprites = null;
 		this.blockBitmaps = null;
+		this.blockTypes = null;
 		window.dbBlocks = this.dbBlocks = new Minidb();
 
 		this.init = function () {
@@ -18,6 +17,7 @@
 			// todo: get root target from options
 			// create stage and point it to the canvas:
 			canvas = options.canvas;
+			this.blockTypes = options.blockTypes;
 			this.blockBitmaps = new Container();
 			this.stage = new Stage(canvas);
 
@@ -183,18 +183,30 @@
 			this.loadSprites(onSpritesLoaded);
 
 			function onSpritesLoaded() {
-				var bitmap, image, coord;
+				var bitmap, image, type, coord;
 
 				//console.log("Adding block bitmaps");
 				//console.log("sprites: ", isograph.sprites);
 				//console.log(isograph.spritesImage);
 
+
+				// todo: load from common spritesheet OR its own spreadsheet
+
 				// Create all block bitmaps
 				for (i in blocks) {
 					block = blocks[i];
+//					console.log("block!!!! ", block);
+					type = block.type;
 					coord = isograph.translateFromISO(block.coord);
-					bitmap = new BitmapSequence(isograph.sprites);
-					bitmap.gotoAndStop(block.type.offset);
+//					console.log("type.hasOwnSpriteSheet", type.hasOwnSpriteSheet, type.id);
+					if (type.hasOwnSpriteSheet) {
+						bitmap = new BitmapSequence(type.spritesheet);
+//						console.log("type.spritesheet", type.spritesheet, type, block);
+						bitmap.gotoAndStop(0);
+					} else {
+						bitmap = new BitmapSequence(isograph.sprites);
+						bitmap.gotoAndStop(type.offset);
+					}
 					bitmap.x = coord.x;
 					bitmap.y = coord.y;
 					bitmap.z = coord.z;
@@ -216,19 +228,72 @@
 		};
 
 		this.loadSprites = function(callback) {
-			var image, skin;
+			var
+					mainSpritesheetIsReady = false,
+					spritesheet,
+					blockType,
+					sprites,
+					image,
+					skin;
 			skin = options.skin;
+			sprites = [skin.spritesURL];
+
+
+			function checkIfDone() {
+				var isDone;
+				isDone = _(isograph.blockTypes).all(function (blockType) {
+					return blockType.spritesheetReady === true;
+				});
+				if (isDone && mainSpritesheetIsReady) {
+					callback();
+				}
+
+			}
+
+			// load block sprites
+			_(isograph.blockTypes).each(function(blockType) {
+				var spritesheetImage;
+
+				if (blockType.hasOwnSpriteSheet) {
+					spritesheetImage = blockType.spritesheetImage = new Image();
+					spritesheetImage.onload = ownSpritesheetLoaded;
+					spritesheetImage.onerror = ownSpritesheetError;
+					spritesheetImage.src = "../src/worlds/common/sprites/" + blockType.id + ".png";
+					blockType.spritesheetReady = false;
+				} else {
+					blockType.spritesheetReady = true;
+				}
+
+				function ownSpritesheetLoaded() {
+					blockType.spritesheet = new SpriteSheet(
+						spritesheetImage,
+						skin.spritesWidth,
+						skin.spritesHeight
+					);
+					blockType.spritesheetReady = true;
+					//todo: check if done!
+					checkIfDone();
+				}
+
+				function ownSpritesheetError () {
+					console.error("Isograph: Sprites failed to load: ", this);
+				}
+
+
+			});
+
+
+			// load the common spritesheet
 			image = new Image();
-			
 			image.onload = function onload() {
-				var spriteCount, frameData;
 				// Create the spriteSheet
 				isograph.sprites = new SpriteSheet(
 					image,
 					skin.spritesWidth,
 					skin.spritesHeight
 				);
-				callback();
+				mainSpritesheetIsReady = true;
+				checkIfDone();
 			};
 			image.onerror = function onerror() {
 				console.error("Isograph: Sprites failed to load: ", this);

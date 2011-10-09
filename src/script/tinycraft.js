@@ -35,17 +35,19 @@ Reversible Transactions:
 		this.builder = {
 			fill: fill,
 			one: one,
-			random: random
+			random: random,
+			random4: random4
 		};
 
 		this.start = function start(options) {
 			console.log("Starting!");
 			var isograph, world;
+			world = this.worlds[options.world];
 			isograph = new Tinycraft.Isograph({
 				skin: options.skin,
+				blockTypes: world.blockTypes,
 				canvas: $("#tinycraft").find("canvas.isograph")[0]
 			});
-			world = this.worlds[options.world];
 			world.start({
 				isograph: isograph,
 				stage: options.stage,
@@ -111,12 +113,14 @@ Reversible Transactions:
 			options = this._options;
 			_(options).extend(_options);
 
-			// Load the blockSet collections from the options
-			for (setId in options.blockSets) {
-				blockSet = new BlockSet(setId, options.blockSets[setId]);
-				this.blockSets[setId] = blockSet;
-				for (typeId in blockSet.blockTypes) {
-					this.blockTypes[setId + "." + typeId] = blockSet.blockTypes[typeId];
+			// If new blockSets are provided, Load the blockSet collections from the options
+			if (_options && _options.blockSets) {
+				for (setId in _options.blockSets) {
+					blockSet = new BlockSet(setId, _options.blockSets[setId]);
+					this.blockSets[setId] = blockSet;
+					for (typeId in blockSet.blockTypes) {
+						this.blockTypes[setId + "." + typeId] = blockSet.blockTypes[typeId];
+					}
 				}
 			}
 			return options;
@@ -180,6 +184,7 @@ Reversible Transactions:
 		this.init();
 	}
 
+	// Base class for blocks
 	function Block(type, coord) {
 		this.id = _.uniqueId();
 		this.type = type;
@@ -213,7 +218,12 @@ Reversible Transactions:
 	function BlockType(id, options) {
 		this.id = id;
 		this.offset = options.offset || 0;
-		this.isSolid = options.isSolid || true;
+		this.isSolid = this.isSolid = (options.isSolid !== undefined) ? options.isSolid : true;
+
+		// true is this block has its own spritesheet
+		this.hasOwnSpriteSheet = (options.hasOwnSpriteSheet !== undefined) ? options.hasOwnSpriteSheet : false;
+		if (id === "knight")
+				console.log("NEW typis is : ", this);
 	}
 
 	function BlockSet(id, options) {
@@ -352,6 +362,26 @@ Reversible Transactions:
 				coord = area.randomCoord(iSeed);
 				block = new Block(type, coord);
 				blocks.push(block);
+		}
+		return blocks;
+	}
+
+	function random4(seed, type, area, count) {
+		var i, iSeed, coord, block, blocks = [];
+		for (i = 0; i < count; i = i + 1) {
+			iSeed = i + seed + "" + i;
+			coord = area.randomCoord(iSeed);
+			block = new Block(type, coord);
+			blocks.push(block);
+			coord = coord.copy().north();
+			block = new Block(type, coord);
+			blocks.push(block);
+			coord = coord.copy().east();
+			block = new Block(type, coord);
+			blocks.push(block);
+			coord = coord.copy().south();
+			block = new Block(type, coord);
+			blocks.push(block);
 		}
 		return blocks;
 	}
