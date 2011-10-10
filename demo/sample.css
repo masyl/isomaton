@@ -11,7 +11,7 @@ body {
 	position: absolute;
 	top: -108px;
 	left: 250px;
-	background-image: url(bottle.png);
+	/*background-image: url(bottle.png);*/
 }
 
 #debug {

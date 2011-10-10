@@ -28,6 +28,27 @@
 			return this._options;
 		};
 
+		this.toString = function toString() {
+			return "Actor-" + this.id;
+		};
+
+		this.toIndex = function txoIndex() {
+			var index;
+			index = {
+				"class": "Actor",
+				"id": this.id,
+				"coord.x": this.coord.x,
+				"coord.y": this.coord.y,
+				"coord.z": this.coord.z
+			};
+			if (this.nextCoord) {
+				index["nextCoord.x"] = this.nextCoord.x;
+				index["nextCoord.y"] = this.nextCoord.y;
+				index["nextCoord.z"] = this.nextCoord.z;
+			}
+			return index;
+		};
+
 		this.step = function step(stage) {
 			/* you super class should contain the actors behavior */
 		};
@@ -44,7 +65,6 @@
 				// Move at random
 				var direction = stage.randomItem(this.id, [0, 1, 2, 3]);
 				this.block.direction = direction;
-				// todo: set direction on entity also
 				this.nextCoord = this.coord.copy().move(direction);
 			}
 		};
@@ -146,7 +166,7 @@
 			this.placeBlocks(isomaton.builder.random(this.random("dirtPatches"), dirtBlock, groundArea, dirtPatchCount));
 
 			// place random patches of water in the grass at random
-			var waterCount = Math.round(this.random("waterCount") * 29);
+			var waterCount = Math.round(this.random("waterCount") * 9);
 			this.placeBlocks(isomaton.builder.random4(this.random("water"), waterBlock, groundArea, waterCount));
 
 			// Go up once to place stuff "on" the ground layer
@@ -165,7 +185,7 @@
 			this.placeBlocks(isomaton.builder.one(goldBlock, randomCoord), true);
 
 			// place 5 stones at random
-			this.placeBlocks(isomaton.builder.random(this.random("stones"), stoneBlock, groundArea, 25));
+			this.placeBlocks(isomaton.builder.random(this.random("stones"), stoneBlock, groundArea, 5));
 
 			// place 1 slime
 			var slime = new world.Actors.Slime(groundArea.randomCoord(this.random("slimeCoord")));

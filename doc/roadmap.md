@@ -3,8 +3,11 @@
 ## In Progress Release
 
 ### v0.6 - Minidb Rules
-- Remove old egistry and use minidb
-- Stage and Isograph must share the same block db
+- DONE: Minidb now has a publish/subscribe pattern and is publishing on add, remove and update.
+- DONE: The old block registry has been replacd by a minidb
+- DONE: The isograph now share the same block minidb as the stage and subscribe to its events
+- DONE: Entities also have a minidb
+- Rename all "entity" vars to actor
 - Make the movement rules specific to each entity (bird, fish, snake, person have each different rules?)
 
 ### v0.7 - Rules, rules, rules
@@ -108,6 +111,7 @@
 
 ## Features
 
+- The terrain and its elements should be an entities
 - Entities represented by more than one block: princess with a tall crown, cow, girraf, elephant.
 - Have a global seed to change whole world
 - Have a stage seed to be changed as part of the gameplay.

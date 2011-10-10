@@ -5,10 +5,10 @@
 
 		this._options = {};
 		this.stepSpeed = 0;
+		this.blocks = null;
 		this.sprites = null;
 		this.blockBitmaps = null;
 		this.blockTypes = null;
-		window.dbBlocks = this.dbBlocks = new Minidb();
 
 		this.init = function () {
 			var canvas;
@@ -19,7 +19,7 @@
 			canvas = options.canvas;
 			this.blockTypes = options.blockTypes;
 			this.blockBitmaps = new Container();
-			this.stage = new Stage(canvas);
+			this.canvasStage = new Stage(canvas);
 
 			// todo: update how the focus and selection of blocks is done
 
@@ -48,7 +48,6 @@
 				// todo: find a cheaper way to update the z-ordering
 				this.updateZ();
 				Tween.get(bitmap)
-					.to({z: z}, 0)
 					.to({
 							x: x,
 							y: y
@@ -70,40 +69,6 @@
 			this.blockBitmaps.sortChildren(function (a, b) {
 				return a.z - b.z;
 			});
-		};
-
-
-
-		this.placeBlocks = function (blocks) {
-			var
-					i,
-					block;
-			for (i in blocks) {
-				block = blocks[i];
-				this.dbBlocks.add(block);
-			}
-		};
-
-		this.removeBlocks = function (blocks) {
-			var
-					i,
-					filter,
-					block,
-					isographBlock;
-			for (i in blocks) {
-				block = blocks[i];
-				filter = {
-					"x": block.coord.x,
-					"y": block.coord.y,
-					"z": block.coord.z
-				};
-				isographBlock = this.dbBlocks.get(filter);
-				if (isographBlock) {
-					// These blocks might or not be already drawn on the isograph
-					this.blockBitmaps.removeChild(block.bitmap);
-					this.dbBlocks.remove(block);
-				}
-			}
 		};
 
 		/**
@@ -159,6 +124,28 @@
 			return coord;
 		};
 
+		this.bind = function bind(blocks) {
+			this.blocks = blocks;
+			this.blocks.subscribe("add", function(blocks) {
+				// todo: create bitmap data
+				// todo: create bitmaps when added... not during setup
+			});
+			this.blocks.subscribe("remove", function(blocks) {
+				var i, block;
+				for (i in blocks) {
+					block = blocks[i];
+					isograph.blockBitmaps.removeChild(block.bitmap);
+				}
+			});
+			this.blocks.subscribe("update", function(blocks) {
+				var i, block;
+				for (i in blocks) {
+					block = blocks[i];
+					isograph.updateBlock(block);
+				}
+			});
+		};
+
 		/**
 		 * Setup the initiale stage of the stage by loading sprites, creating the stage,
 		 * containers and initial bitmaps
@@ -166,15 +153,14 @@
 		this.setup = function() {
 			// todo: rename stage
 
-			var i, block, blocks, canvas, stage;
-			blocks = this.dbBlocks.get({
+			var i, block, blocks, canvas, canvasStage;
+			blocks = this.blocks.get({
 				"class": "Block"
 			});
 
-			stage = this.stage;
-
-			stage.addChild(this.blockBitmaps);
-			stage.mouseEnabled = true;
+			canvasStage = this.canvasStage;
+			canvasStage.addChild(this.blockBitmaps);
+			canvasStage.mouseEnabled = true;
 
 /*
 			// attach mouse handlers directly to the source canvas:
@@ -221,7 +207,7 @@
 				// assign a tick listener directly to this window:
 				Ticker.addListener({
 					tick: function () {
-						stage.update();
+						canvasStage.update();
 					}
 				});
 			}

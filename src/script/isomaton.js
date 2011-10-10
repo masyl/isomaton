@@ -86,6 +86,27 @@ Reversible Transactions:
 				this._options.step.call(this, stage, world);
 			};
 
+			this.toString = function toString() {
+				return "Actor-" + this.id;
+			};
+
+			this.toIndex = function txoIndex() {
+				var index;
+				index = {
+					"class": "Actor",
+					"id": this.id,
+					"coord.x": this.coord.x,
+					"coord.y": this.coord.y,
+					"coord.z": this.coord.z
+				};
+				if (this.nextCoord) {
+					index["nextCoord.x"] = this.nextCoord.x;
+					index["nextCoord.y"] = this.nextCoord.y;
+					index["nextCoord.z"] = this.nextCoord.z;
+				}
+				return index;
+			};
+
 			this.init();
 		}
 		return Actor;
