@@ -2,35 +2,30 @@
 
 ## In Progress Release
 
-### v0.5 - Some basic expectations
+### v0.6 - Minidb Rules
+- Remove old egistry and use minidb
+- Stage and Isograph must share the same block db
+- Make the movement rules specific to each entity (bird, fish, snake, person have each different rules?)
 
-- DONE: Bug: Water and dirt blocks are generated one over the other and alternate during display
-- FIXED: Bug: Grass has disapeared
-- DONE: Added a Smaller "sidekick" entity
-- DONE: Brought back animated and tweened movements of blocks between each steps
-- DONE: Remove dependency on jQuery for the isograph
-- DONE: Animated transitions using jstween instead of jquery: http://jstween.blogspot.com/
-- DONE: Added helper for 4x4 sets of blocks
-- DONE: Each block can now have its own extended spritesheet
-- DONE: Blocks for material and entities have a directions. When actors move, they change their directions.
-- Bug: Actors can walk into each-others
-- Actors dont walk on water
-
-SYNC/BACKUP
-
-## Upcomming Releases
-
-### v0.? - Rules, rules, rules
-- Make the knight hunt the slime, and the slime teleport when its touched
-- Implement A* pathfinding function with
-	http://www.briangrinstead.com/files/astar/
-	or http://www.matthewtrost.org/projects/astar/
+### v0.7 - Rules, rules, rules
+- Ruel so that actors dont walk on water
 - Rule to allow actor to occupy same space as a non-solid block, with the proper overriding z-index
 - Detect/Control collisions between actors and blocks
 - When placing blocs, enforce cohesion rules (no two blocs, occupying)
 - Placing blocs in "replace", "dont-replace" mode
-- Placing blocs by layering them (falling from the sky until they touch ground
 - Enforcing limits on the maximum width/height/tallness of the world
+
+
+## Upcomming Releases
+
+
+### v0.? - Some real action
+- Placing blocs by layering them (falling from the sky until they touch ground
+- Make the knight hunt the slime, and the slime teleport when its touched
+- Implement A* pathfinding function with
+	http://www.briangrinstead.com/files/astar/
+	or http://www.matthewtrost.org/projects/astar/
+- Add knight actor which looks for gold on its own
 
 
 ### v0.? - Save, Quit and Resume
@@ -45,8 +40,6 @@ SYNC/BACKUP
 
 ### v0.? - Smooth moves
 - Isograph can be modified with difgram or changelog
-- Add direction/orientation to actors, blocs (n, e, w, s)
-- Add knight actor which looks for gold on its own
 - Actors should not try to move on a non-moving block, they should detect their move is no possible
 
 ### v0.? - Story log
@@ -70,12 +63,12 @@ SYNC/BACKUP
 
 ## Unplanned releases
 
-### Inventory Release
+### Inventory
 - "item" bloc types... pickable whe stepping on or next to them, floating a little
 - Actor grabs gold and puts in his inventory
 - Actor grabs sword and puts in his inventory
 
-### Chicken & Egg Release
+### Chicken & Egg
 - Chicken actor which lays eggs
 - Knight can pick up eggs and put in inventory
 - Knight eats egg from inventory to gain back health

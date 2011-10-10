@@ -143,6 +143,20 @@ Optimizations:
 				key = x + "-" + y + "-" + z;
 				if (!this.registry[key]) this.registry[key] = new RegistryEntry(key, entity.coord);
 				this.registry[key].entities.push(entity);
+				this.registry[key].blocks.push(entity.block);
+			}
+
+			for (i in this.entities) {
+				entity = this.blocks[i];
+				if (entity.nextCoord) {
+					x = entity.nextCoord.x;
+					y = entity.nextCoord.y;
+					z = entity.nextCoord.z;
+					key = "next-" + x + "-" + y + "-" + z;
+					if (!this.registry[key]) this.registry[key] = new RegistryEntry(key, entity.coord);
+					this.registry[key].entities.push(entity);
+					this.registry[key].blocks.push(entity.block);
+				}
 			}
 
 			function RegistryEntry(key, coord) {
@@ -171,7 +185,11 @@ Optimizations:
 
 		//todo: Blocks collections/container should have this method instead of this procedural approach
 		this.removeBlocks = function removeBlocks(blocks) {
-
+			_(blocks).each(function (block) {
+				var index = _(stage.blocks).indexOf(block);
+				stage.blocks.splice(index, 1);
+			});
+			this.updateRegistry();
 		};
 
 		this.placeBlocks = function placeBlocks(blocks) {
@@ -185,8 +203,8 @@ Optimizations:
 					key = newBlock.coord.x + "-" + newBlock.coord.y + "-" + newBlock.coord.z;
 					existingBlocks = this.registry[key]; // todo: use minidb
 					if (existingBlocks && existingBlocks.blocks) {
-						this.removeBlocks(existingBlocks.blocks);
 						this.isograph.removeBlocks(existingBlocks.blocks);
+						this.removeBlocks(existingBlocks.blocks);
 					}
 				}
 				stage.updateRegistry(); // todo: remove this costly request by using minidb
@@ -259,12 +277,14 @@ Optimizations:
 					this.entities[entityId].step(this);
 				}
 
+				stage.updateRegistry();
+				console.log(stage.registry);
+
 				// Test everyones move and see if there are collissions to resolve
 				// or rules to apply
 				for (entityId in this.entities) {
 					isValidMove = true;
 					entity = this.entities[entityId];
-
 
 					// todo: make rules specific to each actors
 					// a bird or fish doesnt move with the same rules as
@@ -280,10 +300,20 @@ Optimizations:
 							}
 						}
 
-						// Test if next move is on a solid block
-						key = entity.nextCoord.x + "-" + entity.nextCoord.y + "-" + (entity.nextCoord.z-1);
+						// Test if next move is into a space that WILL be occupied by a solid block
+						key = "next-" + entity.nextCoord.x + "-" + entity.nextCoord.y + "-" + entity.nextCoord.z;
 						registryEntry = stage.registry[key];
 						if (registryEntry) {
+							console.log("COLISION: ", registryEntry);
+							if (registryEntry.blocks[0].type.isSolid) {
+								isValidMove = false;
+							}
+						}
+
+						// Test if next move is a step on a solid block
+						key = entity.nextCoord.x + "-" + entity.nextCoord.y + "-" + (entity.nextCoord.z-1);
+						registryEntry = stage.registry[key];
+						if (registryEntry && registryEntry.blocks) {
 							if (!registryEntry.blocks[0].type.isSolid) {
 								isValidMove = false;
 							}
@@ -322,7 +352,6 @@ Optimizations:
 			// Step through the world options step (usually debugging)
 			this.world._options.step(this, this.world);
 
-//			this.fps.update();
 			setTimeout(function() {
 				if (stage.playState !== "pause") {
 					stage.step(stepCount);

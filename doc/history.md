@@ -1,6 +1,17 @@
 
 #Isomaton Version History
 
+## v0.5 - Some basic expectations
+- Fixed: Bug: Water and dirt blocks are generated one over the other and alternate during display
+- Fixed: Bug: Grass has disapeared
+- Added a Smaller "sidekick" entity
+- Brought back animated and tweened movements of blocks between each steps
+- Remove dependency on jQuery for the isograph
+- Animated transitions using jstween instead of jquery: http://jstween.blogspot.com/
+- Added helper for 4x4 sets of blocks
+- Each block can now have its own extended spritesheet
+- Blocks for material and entities have a directions. When actors move, they change their directions.
+
 ## v0.4 - Random, Canvas and Time management
 - Control randomness with number generator and seed
 - handle keystroke for "space" to Pause the game

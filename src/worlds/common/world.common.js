@@ -146,7 +146,7 @@
 			this.placeBlocks(isomaton.builder.random(this.random("dirtPatches"), dirtBlock, groundArea, dirtPatchCount));
 
 			// place random patches of water in the grass at random
-			var waterCount = Math.round(this.random("waterCount") * 9);
+			var waterCount = Math.round(this.random("waterCount") * 29);
 			this.placeBlocks(isomaton.builder.random4(this.random("water"), waterBlock, groundArea, waterCount));
 
 			// Go up once to place stuff "on" the ground layer
