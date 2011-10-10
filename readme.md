@@ -21,3 +21,8 @@ This game is built using HTML5 technologies such as Javascript and Canvas. It ha
 I also would like to have the game distributed on the Chrome Store eventually.
 
 
+# Documentation
+- [Development Roadmap](./doc/roadmap.md)
+- [Versions History](./doc/history.md)
+
+

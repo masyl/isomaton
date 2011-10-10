@@ -1,4 +1,4 @@
-# The Tinycraft Object Model
+# The Isomaton Object Model
 
 ## World
 

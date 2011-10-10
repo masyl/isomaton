@@ -17,13 +17,13 @@ Reversible Transactions:
 
  */
 
-(function TinycraftPackage($, _, undefined){
+(function IsomatonPackage($, _, undefined){
 
-	window.tinycraft = new Tinycraft({
+	window.isomaton = new Isomaton({
 		World: World
 	});
 
-	function Tinycraft(options) {
+	function Isomaton(options) {
 		/*
 		Main constructors
 		 */
@@ -43,10 +43,10 @@ Reversible Transactions:
 			console.log("Starting!");
 			var isograph, world;
 			world = this.worlds[options.world];
-			isograph = new Tinycraft.Isograph({
+			isograph = new Isomaton.Isograph({
 				skin: options.skin,
 				blockTypes: world.blockTypes,
-				canvas: $("#tinycraft").find("canvas.isograph")[0]
+				canvas: $("#isomaton").find("canvas.isograph")[0]
 			});
 			world.start({
 				isograph: isograph,
@@ -60,7 +60,7 @@ Reversible Transactions:
 
 	}
 
-	window.Tinycraft = Tinycraft;
+	window.Isomaton = Isomaton;
 
 
 	function ActorFactory(id, typeOptions) {
@@ -239,7 +239,7 @@ Reversible Transactions:
 		}
 	}
 
-	Tinycraft.Coord = function Coord(x, y, z) {
+	Isomaton.Coord = function Coord(x, y, z) {
 		/*
 		Directions:
 			0: North
@@ -254,7 +254,7 @@ Reversible Transactions:
 		this.z = z;
 
 		this.copy = function copy() {
-			return new Tinycraft.Coord(this.x, this.y, this.z);
+			return new Isomaton.Coord(this.x, this.y, this.z);
 		};
 
 
@@ -322,7 +322,7 @@ Reversible Transactions:
 			offsetX = Math.round(fakeRandom(seed, "offsetX") * (this.width-1));
 			offsetY = Math.round(fakeRandom(seed, "offsetY") * (this.height-1));
 			coord = this.coord;
-			newCoord = new Tinycraft.Coord(coord.x + offsetX, coord.y + offsetY, coord.z);
+			newCoord = new Isomaton.Coord(coord.x + offsetX, coord.y + offsetY, coord.z);
 			return newCoord;
 		};
 
@@ -342,11 +342,11 @@ Reversible Transactions:
 
 	function fill(type, area) {
 		var coord = area.coord;
-		var blockCoord = new Tinycraft.Coord(0, 0, 0);
+		var blockCoord = new Isomaton.Coord(0, 0, 0);
 		var x, y, z, block, blocks = [];
 		for (x = coord.x; x < coord.x + area.width; x = x + 1) {
 			for (y = coord.y; y < coord.y + area.height; y = y + 1) {
-				blockCoord = new Tinycraft.Coord(x, y, coord.z);
+				blockCoord = new Isomaton.Coord(x, y, coord.z);
 				block = new Block(type, blockCoord);
 				blocks.push(block);
 			}

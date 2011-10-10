@@ -1,6 +1,6 @@
-(function TinycraftIsographPackage(Tinycraft, _, undefined){
+(function IsomatonIsographPackage(Isomaton, _, undefined){
 
-	Tinycraft.Isograph = function Isograph(options) {
+	Isomaton.Isograph = function Isograph(options) {
 		var isograph = this;
 
 		this._options = {};
@@ -155,7 +155,7 @@
 			_y = parseInt((2 * y - x) / 2);
 			_x = parseInt(x + _y);
 
-			coord = new Tinycraft.Coord(_x, _y, 0);
+			coord = new Isomaton.Coord(_x, _y, 0);
 			return coord;
 		};
 
@@ -304,4 +304,4 @@
 		this.init();
 	}
 
-})(Tinycraft, _);
+})(Isomaton, _);

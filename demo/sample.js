@@ -6,8 +6,8 @@
 		var $playState = $debug.find(".playState");
 		var $fps = $debug.find(".fps");
 
-		var tinycraftOptions = {
-			spritesURL: "../src/worlds/common/tinycraft.png",
+		var isomatonOptions = {
+			spritesURL: "../src/worlds/common/isomaton.png",
 			spritesOffsetX: 5,
 			spritesOffsetY: 0,
 			spritesWidth: 40,
@@ -21,13 +21,13 @@
 			stageOffsetY: 120
 		};
 
-		tinycraft.start({
+		isomaton.start({
 			world: "common",
-			root: "#tinycraft",
+			root: "#isomaton",
 			stage: "prairie",
 			width: 20,
 			height: 20,
-			skin: tinycraftOptions,
+			skin: isomatonOptions,
 			step: function debugStep(stage, world) {
 				$time[0].innerHTML = stage.time;
 				$speedMultiplier[0].innerHTML = stage.speedMultiplier;

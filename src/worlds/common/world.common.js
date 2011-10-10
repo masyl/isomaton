@@ -1,12 +1,12 @@
-(function (tinycraft, Tinycraft){
+(function (isomaton, Isomaton){
 
-	var world = tinycraft.worlds.common = new tinycraft.World(window.commonworld);
+	var world = isomaton.worlds.common = new isomaton.World(window.commonworld);
 
-	var Coord = Tinycraft.Coord;
-	var Area = tinycraft.Area;
-	var builder = tinycraft.builder;
+	var Coord = Isomaton.Coord;
+	var Area = isomaton.Area;
+	var builder = isomaton.builder;
 
-	var editModes = Tinycraft.editModes;
+	var editModes = Isomaton.editModes;
 
 
 	function Actor(coord, options) {
@@ -20,7 +20,7 @@
 		this.blockType = world.blockTypes["blank.blank"];
 
 		this.init = function init() {
-			this.block = new tinycraft.Block(this.blockType, coord);
+			this.block = new isomaton.Block(this.blockType, coord);
 		};
 
 		this.options = function fnOptions(_options) {
@@ -52,7 +52,7 @@
 	};
 
 
-	world.Actors.Chicken = tinycraft.Actor("chicken", {
+	world.Actors.Chicken = isomaton.Actor("chicken", {
 		label: "Chicken",
 		blockType: world.blockTypes["actors.chicken"],
 		step: function chickenStep(stage) {
@@ -67,7 +67,7 @@
 	});
 
 
-	world.Actors.Knight = tinycraft.Actor("knight", {
+	world.Actors.Knight = isomaton.Actor("knight", {
 		label: "Knight",
 		blockType: world.blockTypes["actors.knight"],
 		step: function knightStep(stage) {
@@ -81,7 +81,7 @@
 		}
 	});
 
-	world.Actors.Sidekick = tinycraft.Actor("sidekick", {
+	world.Actors.Sidekick = isomaton.Actor("sidekick", {
 		label: "Sidekick",
 		blockType: world.blockTypes["actors.sidekick"],
 		step: function sidekickStep(stage) {
@@ -95,7 +95,7 @@
 		}
 	});
 
-	world.Actors.Princess = tinycraft.Actor("princess", {
+	world.Actors.Princess = isomaton.Actor("princess", {
 		label: "Princess",
 		blockType: world.blockTypes["actors.princess"],
 		step: function princessStep(stage) {
@@ -109,7 +109,7 @@
 		}
 	});
 
-	world.stages.prairie = new Tinycraft.Stage("prairie", {
+	world.stages.prairie = new Isomaton.Stage("prairie", {
 		start: function start() {
 			var world = this.world;
 			var worldOptions = world.options();
@@ -143,29 +143,29 @@
 
 			// place random patches of dirt in the grass at random
 			var dirtPatchCount = Math.round(this.random("dirtPatchCount") * 9);
-			this.placeBlocks(tinycraft.builder.random(this.random("dirtPatches"), dirtBlock, groundArea, dirtPatchCount));
+			this.placeBlocks(isomaton.builder.random(this.random("dirtPatches"), dirtBlock, groundArea, dirtPatchCount));
 
 			// place random patches of water in the grass at random
 			var waterCount = Math.round(this.random("waterCount") * 9);
-			this.placeBlocks(tinycraft.builder.random4(this.random("water"), waterBlock, groundArea, waterCount));
+			this.placeBlocks(isomaton.builder.random4(this.random("water"), waterBlock, groundArea, waterCount));
 
 			// Go up once to place stuff "on" the ground layer
 			groundArea.coord.up();
 
 			// place random yellow flowers
 			var flowersCount = Math.round(this.random("flowersCount") * 9 + 3);
-			this.placeBlocks(tinycraft.builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
+			this.placeBlocks(isomaton.builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
 
 			// place random weeds
 			var weedCount = Math.round(this.random("weedCount") * 20 + 3);
-			this.placeBlocks(tinycraft.builder.random(this.random("weeds"), shortweedsBlock, groundArea, weedCount));
+			this.placeBlocks(isomaton.builder.random(this.random("weeds"), shortweedsBlock, groundArea, weedCount));
 
 			// place a gold block at random
 			var randomCoord = groundArea.randomCoord(this.random("goldBlock"));
-			this.placeBlocks(tinycraft.builder.one(goldBlock, randomCoord), true);
+			this.placeBlocks(isomaton.builder.one(goldBlock, randomCoord), true);
 
 			// place 5 stones at random
-			this.placeBlocks(tinycraft.builder.random(this.random("stones"), stoneBlock, groundArea, 25));
+			this.placeBlocks(isomaton.builder.random(this.random("stones"), stoneBlock, groundArea, 25));
 
 			// place 1 slime
 			var slime = new world.Actors.Slime(groundArea.randomCoord(this.random("slimeCoord")));
@@ -189,7 +189,7 @@
 			this.placeEntities([princess]);
 
 			// place frame
-			this.placeBlocks(tinycraft.builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
+			this.placeBlocks(isomaton.builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
 
 
 		},
@@ -200,4 +200,4 @@
 
 
 
-})(window.tinycraft, window.Tinycraft);
+})(window.isomaton, window.Isomaton);

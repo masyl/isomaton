@@ -26,17 +26,17 @@ Optimizations:
 	- Option to render the isograph with canvas
 
  */
-(function TinycraftStagePackage(Tinycraft, $, _, undefined) {
+(function IsomatonStagePackage(Isomaton, $, _, undefined) {
 
 	// Constants for editModes
-	var editModes = Tinycraft.editModes = {
+	var editModes = Isomaton.editModes = {
 		emptyFirst: "emptyFirst"
 	};
 	// todo: constants for playStates (rename to playbackMode ?  rewind, play, pause, or just an integer ?
 
 	
 	// todo: replace the registry with a subclass of minidb
-	Tinycraft.Stage = function Stage(id, stageOptions) {
+	Isomaton.Stage = function Stage(id, stageOptions) {
 
 		var
 				stage = this, // Self reference used inside deeper closures
@@ -338,4 +338,4 @@ Optimizations:
 	};
 
 
-})(Tinycraft, jQuery, _);
+})(Isomaton, jQuery, _);

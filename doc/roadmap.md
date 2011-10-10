@@ -1,4 +1,4 @@
-# Roadmap for Tinycraft
+# Roadmap for Isomaton
 
 ## In Progress Release
 
@@ -98,7 +98,7 @@ SYNC/BACKUP
 - Each levels/acts separated by black screen with title
 
 
-## Unplanned Backlog
+# Unplanned Backlog
 
 ## Bugs and Debts
 
@@ -107,13 +107,14 @@ SYNC/BACKUP
 - Bug: z-index clculation and ordering doesnt account for some cases during animation
 - Debt: block type should have their own class for their properties, not be read from property file
 
-### Housekeeping and Architecture
-- Rename to minicraft
+## Housekeeping and Architecture
+- Rename to isomaton
 - Bring back source PSD of common world into the project
 - Create a build script
 - Test long term playback: number limits, memory leaks
 
-### Features
+## Features
+
 - Entities represented by more than one block: princess with a tall crown, cow, girraf, elephant.
 - Have a global seed to change whole world
 - Have a stage seed to be changed as part of the gameplay.
@@ -121,20 +122,25 @@ SYNC/BACKUP
 - Non solid block type should have a z priority, so that smoke appears over an egg, and the egg over the grass
 - Better choice of easing for actor animation... could even "hop" on the next coordinate
 - Water has two bloc states... water on top and water under another bloc (same situation elsewhere?)
-- Figure out how item crafting play into the story and how it is done
+- Figure out how item crafting/alchemy plays into the story and how it is done
 - Rotate the stage n, e, s, w. and show a compass rose or arrows for cardinal directions
 - Render block shadows and add property to "hasShadow"
 
 
 ## Far Future Backlog
+
 - Multiplayer Server/Gameplay
 - Rewind a game to any given point
 
+
 ## Abandonned ideas
+
 - Show a top-view map. The new concept doesnt require scrolling across a larger than viewport world.
 - Coord movements in 26 directions instead of 6 directions ? No. This would complexify any "push/pull" logic too much
 
+
 ## Ideas for Bloc Types and Items
+
 - Naturals
 	- Long grass
 	- Mushrooms
