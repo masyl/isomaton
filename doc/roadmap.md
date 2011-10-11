@@ -6,11 +6,14 @@
 - DONE: Minidb now has a publish/subscribe pattern and is publishing on add, remove and update.
 - DONE: The old block registry has been replacd by a minidb
 - DONE: The isograph now share the same block minidb as the stage and subscribe to its events
-- DONE: Entities also have a minidb
-- Rename all "entity" vars to actor
-- Make the movement rules specific to each entity (bird, fish, snake, person have each different rules?)
+- DONE: Actors also have a minidb
+- DONE: Rename all "entity" vars to actor
+- DONE: Movement rules specific to each entity (bird, fish, snake, person have each different rules?)
+- DONE: Movement rules are reusable across actors. Ex.: cantWalkOnEmptyOrNonSolid, cantWalkIntoSolids
+- Finish migration to the new Actor inheritance model
 
 ### v0.7 - Rules, rules, rules
+- bug: if the stage has 2 chickens, on chicken will be paralized by the others movements, because they have the same identity
 - Ruel so that actors dont walk on water
 - Rule to allow actor to occupy same space as a non-solid block, with the proper overriding z-index
 - Detect/Control collisions between actors and blocks
@@ -88,7 +91,7 @@
 - API for other time-based property changes (biorythm, seasons, weather);
 
 ### Storytelling
-- Show relevant actors/entities in the UI with label
+- Show relevant actors in the UI with label
 - Zoom scenegraph to show only a portion of the screen in more details/drama
 - During "setups", some blocs are added by falling from the sky
 - Each levels/acts separated by black screen with title
@@ -111,8 +114,8 @@
 
 ## Features
 
-- The terrain and its elements should be an entities
-- Entities represented by more than one block: princess with a tall crown, cow, girraf, elephant.
+- The terrain and its elements should be an actor
+- Actors represented by more than one block: princess with a tall crown, cow, girraf, elephant.
 - Have a global seed to change whole world
 - Have a stage seed to be changed as part of the gameplay.
 - Actors (ex: chickens) of same types must have unique ids to prevent them to move in synch with same procedural randomness

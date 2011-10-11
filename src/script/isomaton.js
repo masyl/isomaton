@@ -11,7 +11,7 @@ Fundamental questions:
 
 Reversible Transactions:
 	- Block add, remove, move
-	- Entity add, remove, move (eventual attrs)
+	- Actor add, remove, move (eventual attrs)
 	- User actions
 
 
@@ -72,6 +72,25 @@ Reversible Transactions:
 			this.block = new Block(typeOptions.blockType, coord);
 
 			this.label = "Anonymous";
+
+			this.movementRules = [
+				Rules.CantWalkOnEmptyOrNonSolid,
+				Rules.CantWalkIntoSolids
+			];
+
+			this.validateMove = function (stage) {
+				var i, rule, isValid;
+				isValid = true;
+				if (this.nextCoord) {
+					for (i = 0; i < this.movementRules; i = i + 1) {
+						isValid = this.movementRules[i].call(stage, this);
+						if (!isValid) break;
+					}
+					if (!isValid) {
+						this.nextCoord = null;
+					}
+				}
+			};
 
 			this.init = function init() {
 				this.options(typeOptions);
@@ -420,4 +439,65 @@ Reversible Transactions:
 		return rnd;
 
 	}
+
+	//todo: place Rules in a separate package
+	var Rules = Isomaton.Rules = {};
+	Rules.CantWalkOnEmptyOrNonSolid = function CantWalkOnEmptyOrNonSolid(actor) {
+		var coord, blocks, isValidMove;
+		isValidMove = true;
+		// Test if next move is a step on a solid block
+		blocks = this.blocks.select({
+			"coord.x": coord.x,
+			"coord.y": coord.y,
+			"coord.z": coord.z - 1
+		}).get();
+		if (blocks.length) {
+			//todo: handle case where multiple blocks occupy the same space
+			if (!blocks[0].type.isSolid) {
+				//console.log("stepping on non-solid!", blocks[0].type);
+				isValidMove = false;
+			}
+		} else {
+			//console.log("stepping on air!");
+			isValidMove = false;
+		}
+		return isValidMove;
+	};
+
+	Rules.CantWalkIntoSolids = function CantWalkIntoSolids(actor) {
+		var coord, blocks, isValidMove;
+		isValidMove = true;
+		console.log("stage: ", this);
+		// Test if next move is into a solid block
+		coord = actor.nextCoord;
+		blocks = this.blocks.select({
+			"coord.x": coord.x,
+			"coord.y": coord.y,
+			"coord.z": coord.z
+		}).get();
+		if (blocks.length) {
+			//todo: handle case where multiple blocks occupy the same space
+			if (blocks[0].type.isSolid) {
+				isValidMove = false;
+			}
+		}
+
+		// Test if next move is into a space that WILL be occupied by a solid block
+		blocks = this.blocks.select({
+			"nextCoord.x": coord.x,
+			"nextCoord.y": coord.y,
+			"nextCoord.z": coord.z
+		}).get();
+
+		if (blocks.length) {
+			//console.log("collision");
+			//todo: handle case where multiple blocks occupy the same space
+			if (blocks[0].type.isSolid) {
+				isValidMove = false;
+			}
+		}
+
+		return isValidMove;
+	};
+
 })(jQuery, _);

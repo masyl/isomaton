@@ -1,14 +1,14 @@
 /*
 Optimization:
 BASE
-	5 Entities
+	5 Actors
 	40 fps animé
 	80 fps sans anim
 	145 fps sans render
 	600 fps - no render, batched steps
 
 NEW
-	5 Entities
+	5 Actors
 	? fps animé
 	124 fps sans anim
 	? 145 fps sans render
@@ -40,7 +40,7 @@ Optimizations:
 
 		var
 				stage = this, // Self reference used inside deeper closures
-				_editMode; // The current edit mode when placing blocks and entities
+				_editMode; // The current edit mode when placing blocks and actors
 
 		var _value;
 		this.value = function(newValue, oldValue) {
@@ -57,14 +57,14 @@ Optimizations:
 		};
 
 		this.blocks =  new Minidb();
-		this.entities =  new Minidb();
+		this.actors =  new Minidb();
 		this.world = null;
 		this.isograph = null;
 		this.time = 0;
 		this.speed = 200;
 		this.speedMultiplier = 1;
 		this._options = {};
-		this.playState = "pause";
+		this.playState = "play";
 		this.fps = {
 			previous: 0,
 			current: 0,
@@ -111,7 +111,7 @@ Optimizations:
 				obj.speedMultiplier = this.speedMultiplier;
 				obj.time = this.time;
 				obj.playState = this.playState;
-				obj.entities = {};
+				obj.actors = {};
 				obj.blocks = {};
 			}
 			return obj;
@@ -192,12 +192,12 @@ Optimizations:
 			this.isograph.stepSpeed = this.speed / this.speedMultiplier;
 		};
 
-		this.placeEntities = function (entities) {
+		this.placeActors = function (actors) {
 			var i;
-			this.entities.add(entities);
-			for (i in entities) {
-				if (entities[i].block) {
-					this.blocks.add(entities[i].block);
+			this.actors.add(actors);
+			for (i in actors) {
+				if (actors[i].block) {
+					this.blocks.add(actors[i].block);
 				}
 			}
 		};
@@ -215,7 +215,7 @@ Optimizations:
 		 * @param stepCount The number of steps to do in a batch without applying a setTimout
 		 */
 		this.step = function step(stepCount) {
-			var isValidMove, key, entity, entityId, entities, blocks, coord;
+			var isValidMove, key, actor, actorId, actors, blocks, coord;
 			for (var i = 0; i < stepCount; i = i + 1) {
 
 				stage.time = stage.time + 1;
@@ -224,88 +224,33 @@ Optimizations:
 				// Step through the stage logic
 				stage._options.step.call(stage);
 
-				// Step through the entities logic
-				entities = this.entities.all().get();
+				// Step through the actor logic
+				actors = this.actors.all().get();
 
-				// Call the step of each entities
-				for (entityId in entities) {
-					entities[entityId].step(this);
+				// Call the step of each actors
+				for (actorId in actors) {
+					//todo: no nead to pass the stage as argument if it is aware of what stage it is on
+					actors[actorId].step(this);
 				}
 
-				// Test everyones move and see if there are collissions to resolve
-				// or rules to apply
-				for (entityId in entities) {
-					isValidMove = true;
-					entity = entities[entityId];
-
-					// todo: make rules specific to each actors
-					// a bird or fish doesnt move with the same rules as
-					// an ordinary knight!
-					if (entity.nextCoord) {
-
-						// Test if next move is into a solid block
-						coord = entity.nextCoord;
-						blocks = this.blocks.select({
-							"coord.x": coord.x,
-							"coord.y": coord.y,
-							"coord.z": coord.z
-						}).get();
-						if (blocks.length) {
-							//todo: handle case where multiple blocks occupy the same space
-							if (blocks[0].type.isSolid) {
-								isValidMove = false;
-							}
-						}
-
-
-						// Test if next move is into a space that WILL be occupied by a solid block
-						blocks = this.blocks.select({
-							"nextCoord.x": coord.x,
-							"nextCoord.y": coord.y,
-							"nextCoord.z": coord.z
-						}).get();
-						if (blocks.length) {
-							//console.log("collision");
-							//todo: handle case where multiple blocks occupy the same space
-							if (blocks[0].type.isSolid) {
-								isValidMove = false;
-							}
-						}
-
-						// Test if next move is a step on a solid block
-						blocks = this.blocks.select({
-							"coord.x": coord.x,
-							"coord.y": coord.y,
-							"coord.z": coord.z - 1
-						}).get();
-						if (blocks.length) {
-							//todo: handle case where multiple blocks occupy the same space
-							if (!blocks[0].type.isSolid) {
-								//console.log("stepping on non-solid!", blocks[0].type);
-								isValidMove = false;
-							}
-						} else {
-							//console.log("stepping on air!");
-							isValidMove = false;
-						}
-
-						// Invalidate the move if necessary
-						if (!isValidMove) {
-							entity.nextCoord = null;
-						}
-					}
-					// todo: test for collisions with "nextCoord" or other blocks and entities
+				// Test everyones move and see if there are collissions to resolve or rules to apply
+				for (actorId in actors) {
+					actor = actors[actorId];
+					// Ask actor to validate it's next move
+					//todo: no nead to pass the stage as argument if it is aware of what stage it is on
+					actor.validateMove(this);
 				}
+
 				// Process all remaining nextCoord's as valid moves
-				for (entityId in entities) {
-					entity = entities[entityId];
-					if (entity.nextCoord) {
-						entity.coord = entity.nextCoord;
-						entity.block.coord = entity.coord;
-						entity.nextCoord = null;
-						// Update the entity and block in the minidb
-						this.blocks.update(entity.block);
-						this.entities.update(entity);
+				for (actorId in actors) {
+					actor = actors[actorId];
+					if (actor.nextCoord) {
+						actor.coord = actor.nextCoord;
+						actor.block.coord = actor.coord;
+						actor.nextCoord = null;
+						// Update the actor and block indexes in the minidb
+						this.blocks.update(actor.block);
+						this.actors.update(actor);
 					}
 				}
 

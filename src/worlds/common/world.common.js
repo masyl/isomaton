@@ -4,6 +4,7 @@
 
 	var Coord = Isomaton.Coord;
 	var Area = isomaton.Area;
+	var Rules = Isomaton.Rules;
 	var builder = isomaton.builder;
 
 	var editModes = Isomaton.editModes;
@@ -16,6 +17,26 @@
 		this.nextCoord = null;
 		this.block = null;
 		this.label = "Blank";
+
+		this.movementRules = [
+			Rules.CantWalkOnEmptyOrNonSolid,
+			Rules.CantWalkIntoSolids
+		];
+
+		this.validateMove = function (stage) {
+			var i, rule, isValid;
+			isValid = true;
+			if (this.nextCoord) {
+//				console.log(this.movementRules);
+				for (i = 0; i < this.movementRules; i = i + 1) {
+					isValid = this.movementRules[i].call(stage, this);
+					if (!isValid) break;
+				}
+				if (!isValid) {
+					this.nextCoord = null;
+				}
+			}
+		};
 
 		this.blockType = world.blockTypes["blank.blank"];
 
@@ -189,24 +210,24 @@
 
 			// place 1 slime
 			var slime = new world.Actors.Slime(groundArea.randomCoord(this.random("slimeCoord")));
-			this.placeEntities([slime]);
+			this.placeActors([slime]);
 
 			// place 2 chickens
 			var chicken1 = new world.Actors.Chicken(groundArea.randomCoord(this.random("chickenCoord1")));
 			var chicken2 = new world.Actors.Chicken(groundArea.randomCoord(this.random("chickenCoord2")));
-			this.placeEntities([chicken1, chicken2]);
+			this.placeActors([chicken1, chicken2]);
 
 			// place 1 knight
 			var knight = new world.Actors.Knight(groundArea.randomCoord(this.random("knightCoord")));
-			this.placeEntities([knight]);
+			this.placeActors([knight]);
 
 			// place 1 sidekick
 			var sidekick = new world.Actors.Sidekick(groundArea.randomCoord(this.random("sidekickCoord")));
-			this.placeEntities([sidekick]);
+			this.placeActors([sidekick]);
 
 			// place 1 princess
 			var princess = new world.Actors.Princess(groundArea.randomCoord(this.random("princessCoord")));
-			this.placeEntities([princess]);
+			this.placeActors([princess]);
 
 			// place frame
 			this.placeBlocks(isomaton.builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));

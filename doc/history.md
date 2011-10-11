@@ -10,7 +10,7 @@
 - Animated transitions using jstween instead of jquery: http://jstween.blogspot.com/
 - Added helper for 4x4 sets of blocks
 - Each block can now have its own extended spritesheet
-- Blocks for material and entities have a directions. When actors move, they change their directions.
+- Blocks for material and actors have a directions. When actors move, they change their directions.
 
 ## v0.4 - Random, Canvas and Time management
 - Control randomness with number generator and seed

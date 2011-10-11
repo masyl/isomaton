@@ -8,13 +8,14 @@
 
 ## Time
 
-## Entity
 
-An entity is a base conceptual element which can act on each world step. Many other elements derive from this class. They are abstract, but can manifest themselves on stage by placing/moving blocks. A single entity might be composed of a single block are hundreds. A knight or slime are actor entities, but the decor is also an entity. Some entities could even be invisible to the user and exist only to make things happen in the game. Ex.: A "thunder god" entity could be active, invisible, but from time to time struck lightning by placing lighting blocks on stage.
+## Actors
+
+An Actor is a base conceptual element which can act on each world step. Many other elements derive from this class. They are abstract, but can manifest themselves on stage by placing/moving blocks. A single actor might be composed of a single block are hundreds. A knight or slime are actor entities, but the decor is also an entity. Some actors could even be invisible to the user and exist only to make things happen in the game. Ex.: A "thunder god" entity could be active, invisible, but from time to time struck lightning by placing lighting blocks on stage.
 
 ## Block
 
-Blocks are the material representation of entities. An entity can create and manipulate many blocks on stage. Block are rendered by the isograph.
+Blocks are the material representation of actors. An entity can create and manipulate many blocks on stage. Block are rendered by the isograph.
 
 ## Isograph
 
@@ -23,15 +24,11 @@ The isograph is the api used to render the isometric interface of a stage and it
 
 # FUTURE DEVELOPMENT
 
-## Actors
-
-Actors are a type of entities which are presented to the user as bein part of the story. The material scene, props, items or other interactive elements such as water, levers and etc. are not actors. But animals, heroes, bad guys are. Actors might need to be interacted with and presented differently
-
 ## Act
 
 An act, similar to a level or an episode, start at one point and sets objectives and goals to be acted out on the stage.
 
-Similar to entities, an act can interact with the stage at each steps. Being the main "controller" entity, the act has priority on other entities.
+Similar to actors, an act can interact with the stage at each steps. Being the main "controller" entity, the act has priority on other entities.
 
 The world contains multiple predefined acts and there is no specific order in which they are played out. Their order is defined by procedural generation. When selecting an act, the world will ask each available act if the current stage is appropriate for them to start. Each act can look at the stage state and decide if the required elements are present. From all that can occur on the stage, the game will select one that hasnt occured yet, or one that has occured less often.
 
@@ -58,7 +55,7 @@ Obviously, some modes will have priority, such as not having the knight fall int
 
 
 ## Block Properties
-- entity :
+- actor :
 
 ## Block Material Properties
 
@@ -78,7 +75,7 @@ Obviously, some modes will have priority, such as not having the knight fall int
 - isBreakable : Can be broken down by hitting it. (false)
 - isPushable : Can be pushed (false)
 - isPullable : Can be pulled (false)
-- isUsable : Can be used by an entity (false)
+- isUsable : Can be used by an actor (false)
 - chemistry: Chemical composition (false)
 - isStep : Can be walked on to go up or done (false)
 
@@ -92,23 +89,19 @@ Obviously, some modes will have priority, such as not having the knight fall int
 ## Block Events
 - place : An block has just been placed on the stage
 - removed : A block is removed from the stage
-- pick : An entity has picked up this item
-- hit : A block is hit by an entity with something
+- pick : An actor has picked up this item
+- hit : A block is hit by an actor with something
 - break : A block is broken after being hit hard enough and long enough
-- moved : An entity has pushed or pulled the block
-- step : An entity has stepped on a block
+- moved : An actor has pushed or pulled the block
+- step : An actor has stepped on a block
 - topped : Another block has been placed on it
-- collide : A collision occured between this block and another block or entity
+- collide : A collision occured between this block and another block or actor
 - share : This block is sharing space with another block
-- use : An entity is "using" this block
+- use : An actor is "using" this block
 
 
 
 
 To sort out....
-
-Actors derived from entities ?
-
-Or just actors with roles ? (with actors and entities being the same) ?
 
 NO NO NO... The notion of "actor" is only relevant when a script is in effect... in one script a skelleton might play an actors role, but in another he might be some anonymous prop.
