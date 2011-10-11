@@ -27,8 +27,7 @@
 			var i, rule, isValid;
 			isValid = true;
 			if (this.nextCoord) {
-//				console.log(this.movementRules);
-				for (i = 0; i < this.movementRules; i = i + 1) {
+				for (i = 0; i < this.movementRules.length; i = i + 1) {
 					isValid = this.movementRules[i].call(stage, this);
 					if (!isValid) break;
 				}

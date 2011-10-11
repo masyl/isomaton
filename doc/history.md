@@ -1,6 +1,16 @@
 
 #Isomaton Version History
 
+## v0.6 - Minidb Rules
+- Minidb now has a publish/subscribe pattern and is publishing on add, remove and update.
+- The old block registry has been replacd by a minidb
+- The isograph now share the same block minidb as the stage and subscribe to its events
+- Actors also have a minidb
+- Renamed all "entity" vars to actor
+- Movement rules specific to each entity (bird, fish, snake, person have each different rules?)
+- Movement rules are reusable across actors. Ex.: cantWalkOnEmptyOrNonSolid, cantWalkIntoSolids
+- FIXED: bug: rules not appling...
+
 ## v0.5 - Some basic expectations
 - Fixed: Bug: Water and dirt blocks are generated one over the other and alternate during display
 - Fixed: Bug: Grass has disapeared

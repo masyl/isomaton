@@ -2,17 +2,8 @@
 
 ## In Progress Release
 
-### v0.6 - Minidb Rules
-- DONE: Minidb now has a publish/subscribe pattern and is publishing on add, remove and update.
-- DONE: The old block registry has been replacd by a minidb
-- DONE: The isograph now share the same block minidb as the stage and subscribe to its events
-- DONE: Actors also have a minidb
-- DONE: Rename all "entity" vars to actor
-- DONE: Movement rules specific to each entity (bird, fish, snake, person have each different rules?)
-- DONE: Movement rules are reusable across actors. Ex.: cantWalkOnEmptyOrNonSolid, cantWalkIntoSolids
-- Finish migration to the new Actor inheritance model
-
 ### v0.7 - Rules, rules, rules
+- Finish migration to the new Actor inheritance model
 - bug: if the stage has 2 chickens, on chicken will be paralized by the others movements, because they have the same identity
 - Ruel so that actors dont walk on water
 - Rule to allow actor to occupy same space as a non-solid block, with the proper overriding z-index
@@ -103,7 +94,8 @@
 
 - Bug: Flowers, weeds and other blocks appear over water
 - Bug: Actors can spawn over solid blocks
-- Bug: z-index clculation and ordering doesnt account for some cases during animation
+- Bug: z-index calculation and ordering doesnt account for some cases during animation
+- bug: Isograph doesnt always work on safari iOS... requires reload
 - Debt: block type should have their own class for their properties, not be read from property file
 
 ## Housekeeping and Architecture

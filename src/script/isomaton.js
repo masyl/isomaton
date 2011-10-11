@@ -82,7 +82,7 @@ Reversible Transactions:
 				var i, rule, isValid;
 				isValid = true;
 				if (this.nextCoord) {
-					for (i = 0; i < this.movementRules; i = i + 1) {
+					for (i = 0; i < this.movementRules.length; i = i + 1) {
 						isValid = this.movementRules[i].call(stage, this);
 						if (!isValid) break;
 					}
@@ -445,6 +445,7 @@ Reversible Transactions:
 	Rules.CantWalkOnEmptyOrNonSolid = function CantWalkOnEmptyOrNonSolid(actor) {
 		var coord, blocks, isValidMove;
 		isValidMove = true;
+		coord = actor.nextCoord;
 		// Test if next move is a step on a solid block
 		blocks = this.blocks.select({
 			"coord.x": coord.x,
@@ -452,13 +453,14 @@ Reversible Transactions:
 			"coord.z": coord.z - 1
 		}).get();
 		if (blocks.length) {
+			// Stepping on non-solid
 			//todo: handle case where multiple blocks occupy the same space
 			if (!blocks[0].type.isSolid) {
 				//console.log("stepping on non-solid!", blocks[0].type);
 				isValidMove = false;
 			}
 		} else {
-			//console.log("stepping on air!");
+			// Stepping on empty
 			isValidMove = false;
 		}
 		return isValidMove;
@@ -467,7 +469,6 @@ Reversible Transactions:
 	Rules.CantWalkIntoSolids = function CantWalkIntoSolids(actor) {
 		var coord, blocks, isValidMove;
 		isValidMove = true;
-		console.log("stage: ", this);
 		// Test if next move is into a solid block
 		coord = actor.nextCoord;
 		blocks = this.blocks.select({
