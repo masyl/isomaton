@@ -3,87 +3,24 @@
 	var world = isomaton.worlds.common = new isomaton.World(window.commonworld);
 
 	var Coord = Isomaton.Coord;
+	var Actor = Isomaton.Actor;
 	var Area = isomaton.Area;
 	var Rules = Isomaton.Rules;
 	var builder = isomaton.builder;
+	var editModes = Isomaton.editModes; // Constants
 
-	var editModes = Isomaton.editModes;
 
-
-	function Actor(coord, options) {
-		this.id = "blank";
-		this._options = {};
-		this.coord = coord;
-		this.nextCoord = null;
-		this.block = null;
-		this.label = "Blank";
-
-		this.movementRules = [
-			Rules.CantWalkOnEmptyOrNonSolid,
-			Rules.CantWalkIntoSolids
-		];
-
-		this.validateMove = function (stage) {
-			var i, rule, isValid;
-			isValid = true;
-			if (this.nextCoord) {
-				for (i = 0; i < this.movementRules.length; i = i + 1) {
-					isValid = this.movementRules[i].call(stage, this);
-					if (!isValid) break;
-				}
-				if (!isValid) {
-					this.nextCoord = null;
-				}
-			}
-		};
-
-		this.blockType = world.blockTypes["blank.blank"];
-
-		this.init = function init() {
-			this.block = new isomaton.Block(this.blockType, coord);
-		};
-
-		this.options = function fnOptions(_options) {
-			_(this._options).extend(_options);
-			return this._options;
-		};
-
-		this.toString = function toString() {
-			return "Actor-" + this.id;
-		};
-
-		this.toIndex = function txoIndex() {
-			var index;
-			index = {
-				"class": "Actor",
-				"id": this.id,
-				"coord.x": this.coord.x,
-				"coord.y": this.coord.y,
-				"coord.z": this.coord.z
-			};
-			if (this.nextCoord) {
-				index["nextCoord.x"] = this.nextCoord.x;
-				index["nextCoord.y"] = this.nextCoord.y;
-				index["nextCoord.z"] = this.nextCoord.z;
-			}
-			return index;
-		};
-
-		this.step = function step(stage) {
-			/* you super class should contain the actors behavior */
-		};
-	}
 
 	world.Actors.Slime = function Slime(coord, options) {
 		Actor.apply(this, arguments); // Inherit from the Actor class
 		this.id = "slime";
 		this.label = "Slime";
 		this.blockType = world.blockTypes["actors.slime"];
-		this.step = function slimeStep(stage) {
-			var mod = stage.time % 8;
+		this.step = function slimeStep() {
+			var mod = this.stage.time % 8;
 			if (mod === 0) {
 				// Move at random
-				var direction = stage.randomItem(this.id, [0, 1, 2, 3]);
+				var direction = this.stage.randomItem(this.id, [0, 1, 2, 3]);
 				this.block.direction = direction;
 				this.nextCoord = this.coord.copy().move(direction);
 			}
@@ -92,62 +29,74 @@
 	};
 
 
-	world.Actors.Chicken = isomaton.Actor("chicken", {
-		label: "Chicken",
-		blockType: world.blockTypes["actors.chicken"],
-		step: function chickenStep(stage) {
-			var mod = stage.time % 8;
+	world.Actors.Chicken = function Chicken(coord, options) {
+		Actor.apply(this, arguments); // Inherit from the Actor class
+		this.id = "chicken";
+		this.label = "Chicken";
+		this.blockType = world.blockTypes["actors.chicken"];
+		this.step = function chickenStep() {
+			var mod = this.stage.time % 8;
 			if (mod === 0) {
 				// Move at random
-				var direction = stage.randomItem(this.id, [0, 1, 2, 3]);
+				var direction = this.stage.randomItem(this.id, [0, 1, 2, 3]);
 				this.block.direction = direction;
 				this.nextCoord = this.coord.copy().move(direction);
 			}
-		}
-	});
+		};
+		this.init();
+	};
 
 
-	world.Actors.Knight = isomaton.Actor("knight", {
-		label: "Knight",
-		blockType: world.blockTypes["actors.knight"],
-		step: function knightStep(stage) {
-			var mod = stage.time % 4;
+	world.Actors.Knight = function Knight(coord, options) {
+		Actor.apply(this, arguments); // Inherit from the Actor class
+		this.id = "knight";
+		this.label = "Knight";
+		this.blockType = world.blockTypes["actors.knight"];
+		this.step = function knightStep() {
+			var mod = this.stage.time % 4;
 			if (mod === 0) {
 				// Move at random
-				var direction = stage.randomItem(this.id, [0, 1, 2, 3]);
+				var direction = this.stage.randomItem(this.id, [0, 1, 2, 3]);
 				this.block.direction = direction;
 				this.nextCoord = this.coord.copy().move(direction);
 			}
-		}
-	});
+		};
+		this.init();
+	};
 
-	world.Actors.Sidekick = isomaton.Actor("sidekick", {
-		label: "Sidekick",
-		blockType: world.blockTypes["actors.sidekick"],
-		step: function sidekickStep(stage) {
-			var mod = stage.time % 3;
+	world.Actors.Sidekick = function Sidekick(coord, options) {
+		Actor.apply(this, arguments); // Inherit from the Actor class
+		this.id = "sidekick";
+		this.label = "Sidekick";
+		this.blockType = world.blockTypes["actors.sidekick"];
+		this.step = function sidekickStep() {
+			var mod = this.stage.time % 3;
 			if (mod === 0) {
 				// Move at random
-				var direction = stage.randomItem(this.id, [0, 1, 2, 3]);
+				var direction = this.stage.randomItem(this.id, [0, 1, 2, 3]);
 				this.block.direction = direction;
 				this.nextCoord = this.coord.copy().move(direction);
 			}
-		}
-	});
+		};
+		this.init();
+	};
 
-	world.Actors.Princess = isomaton.Actor("princess", {
-		label: "Princess",
-		blockType: world.blockTypes["actors.princess"],
-		step: function princessStep(stage) {
+	world.Actors.Princess = function Princess() {
+		Actor.apply(this, arguments); // Inherit from the Actor class
+		this.id = "princess";
+		this.label = "Princess";
+		this.blockType = world.blockTypes["actors.princess"];
+		this.step = function princessStep() {
 			// Move at random
-			var mod = stage.time % 6;
+			var mod = this.stage.time % 6;
 			if (mod === 0) {
-				var direction = stage.randomItem(this.id, [0, 1, 2, 3]);
+				var direction = this.stage.randomItem(this.id, [0, 1, 2, 3]);
 				this.block.direction = direction;
 				this.nextCoord = this.coord.copy().move(direction);
 			}
-		}
-	});
+		};
+		this.init();
+	};
 
 	world.stages.prairie = new Isomaton.Stage("prairie", {
 		start: function start() {
@@ -208,24 +157,24 @@
 			this.placeBlocks(isomaton.builder.random(this.random("stones"), stoneBlock, groundArea, 5));
 
 			// place 1 slime
-			var slime = new world.Actors.Slime(groundArea.randomCoord(this.random("slimeCoord")));
+			var slime = new world.Actors.Slime(groundArea.randomCoord(this.random("slimeCoord"))).bind(this);
 			this.placeActors([slime]);
 
 			// place 2 chickens
-			var chicken1 = new world.Actors.Chicken(groundArea.randomCoord(this.random("chickenCoord1")));
-			var chicken2 = new world.Actors.Chicken(groundArea.randomCoord(this.random("chickenCoord2")));
+			var chicken1 = new world.Actors.Chicken(groundArea.randomCoord(this.random("chickenCoord1"))).bind(this);
+			var chicken2 = new world.Actors.Chicken(groundArea.randomCoord(this.random("chickenCoord2"))).bind(this);
 			this.placeActors([chicken1, chicken2]);
 
 			// place 1 knight
-			var knight = new world.Actors.Knight(groundArea.randomCoord(this.random("knightCoord")));
+			var knight = new world.Actors.Knight(groundArea.randomCoord(this.random("knightCoord"))).bind(this);
 			this.placeActors([knight]);
 
 			// place 1 sidekick
-			var sidekick = new world.Actors.Sidekick(groundArea.randomCoord(this.random("sidekickCoord")));
+			var sidekick = new world.Actors.Sidekick(groundArea.randomCoord(this.random("sidekickCoord"))).bind(this);
 			this.placeActors([sidekick]);
 
 			// place 1 princess
-			var princess = new world.Actors.Princess(groundArea.randomCoord(this.random("princessCoord")));
+			var princess = new world.Actors.Princess(groundArea.randomCoord(this.random("princessCoord"))).bind(this);
 			this.placeActors([princess]);
 
 			// place frame

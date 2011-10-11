@@ -29,7 +29,6 @@ Reversible Transactions:
 		 */
 		this.Block = Block;
 		this.Area = Area;
-		this.Actor = ActorFactory;
 		this.World = World;
 		this.worlds = {}; // Collection of available worlds
 		this.builder = {
@@ -62,74 +61,6 @@ Reversible Transactions:
 
 	window.Isomaton = Isomaton;
 
-
-	function ActorFactory(id, typeOptions) {
-		function Actor(coord, options) {
-			this.id = id;
-			this._options = {};
-			this.coord = coord;
-			this.nextCoord = null;
-			this.block = new Block(typeOptions.blockType, coord);
-
-			this.label = "Anonymous";
-
-			this.movementRules = [
-				Rules.CantWalkOnEmptyOrNonSolid,
-				Rules.CantWalkIntoSolids
-			];
-
-			this.validateMove = function (stage) {
-				var i, rule, isValid;
-				isValid = true;
-				if (this.nextCoord) {
-					for (i = 0; i < this.movementRules.length; i = i + 1) {
-						isValid = this.movementRules[i].call(stage, this);
-						if (!isValid) break;
-					}
-					if (!isValid) {
-						this.nextCoord = null;
-					}
-				}
-			};
-
-			this.init = function init() {
-				this.options(typeOptions);
-			};
-
-			this.options = function fnOptions(_options) {
-				_(this._options).extend(_options);
-				return this._options;
-			};
-
-			this.step = function step(stage, world) {
-				this._options.step.call(this, stage, world);
-			};
-
-			this.toString = function toString() {
-				return "Actor-" + this.id;
-			};
-
-			this.toIndex = function txoIndex() {
-				var index;
-				index = {
-					"class": "Actor",
-					"id": this.id,
-					"coord.x": this.coord.x,
-					"coord.y": this.coord.y,
-					"coord.z": this.coord.z
-				};
-				if (this.nextCoord) {
-					index["nextCoord.x"] = this.nextCoord.x;
-					index["nextCoord.y"] = this.nextCoord.y;
-					index["nextCoord.z"] = this.nextCoord.z;
-				}
-				return index;
-			};
-
-			this.init();
-		}
-		return Actor;
-	}
 
 	function World(options) {
 		var world = this;
@@ -443,11 +374,12 @@ Reversible Transactions:
 	//todo: place Rules in a separate package
 	var Rules = Isomaton.Rules = {};
 	Rules.CantWalkOnEmptyOrNonSolid = function CantWalkOnEmptyOrNonSolid(actor) {
-		var coord, blocks, isValidMove;
+		var coord, blocks, isValidMove, stage;
 		isValidMove = true;
-		coord = actor.nextCoord;
+		coord = this.nextCoord;
+		stage = this.stage;
 		// Test if next move is a step on a solid block
-		blocks = this.blocks.select({
+		blocks = stage.blocks.select({
 			"coord.x": coord.x,
 			"coord.y": coord.y,
 			"coord.z": coord.z - 1
@@ -466,12 +398,13 @@ Reversible Transactions:
 		return isValidMove;
 	};
 
-	Rules.CantWalkIntoSolids = function CantWalkIntoSolids(actor) {
-		var coord, blocks, isValidMove;
+	Rules.CantWalkIntoSolids = function CantWalkIntoSolids() {
+		var coord, stage, blocks, isValidMove;
 		isValidMove = true;
 		// Test if next move is into a solid block
-		coord = actor.nextCoord;
-		blocks = this.blocks.select({
+		coord = this.nextCoord;
+		stage = this.stage;
+		blocks = stage.blocks.select({
 			"coord.x": coord.x,
 			"coord.y": coord.y,
 			"coord.z": coord.z
@@ -484,7 +417,7 @@ Reversible Transactions:
 		}
 
 		// Test if next move is into a space that WILL be occupied by a solid block
-		blocks = this.blocks.select({
+		blocks = stage.blocks.select({
 			"nextCoord.x": coord.x,
 			"nextCoord.y": coord.y,
 			"nextCoord.z": coord.z
@@ -500,5 +433,77 @@ Reversible Transactions:
 
 		return isValidMove;
 	};
+
+	Isomaton.Actor = function Actor(coord, options) {
+		this.id = "blank";
+		this._options = {};
+		this.coord = coord;
+		this.nextCoord = null;
+		this.block = null;
+		this.label = "Blank";
+		this.stage = null;
+
+		this.movementRules = [
+			Rules.CantWalkOnEmptyOrNonSolid,
+			Rules.CantWalkIntoSolids
+		];
+
+		this.validateMove = function () {
+			var i, rule, isValid;
+			isValid = true;
+			if (this.nextCoord) {
+				for (i = 0; i < this.movementRules.length; i = i + 1) {
+					isValid = this.movementRules[i].call(this);
+					if (!isValid) break;
+				}
+				if (!isValid) {
+					this.nextCoord = null;
+				}
+			}
+			return this;
+		};
+
+		this.blockType = null;
+
+		this.init = function init() {
+			this.block = new isomaton.Block(this.blockType, coord);
+			return this;
+		};
+
+		this.options = function fnOptions(_options) {
+			_(this._options).extend(_options);
+			return this._options;
+		};
+
+		this.toString = function toString() {
+			return "Actor-" + this.id;
+		};
+
+		this.toIndex = function txoIndex() {
+			var index;
+			index = {
+				"class": "Actor",
+				"id": this.id,
+				"coord.x": this.coord.x,
+				"coord.y": this.coord.y,
+				"coord.z": this.coord.z
+			};
+			if (this.nextCoord) {
+				index["nextCoord.x"] = this.nextCoord.x;
+				index["nextCoord.y"] = this.nextCoord.y;
+				index["nextCoord.z"] = this.nextCoord.z;
+			}
+			return index;
+		};
+
+		this.bind = function bind(stage) {
+			this.stage = stage;
+			return this;
+		};
+
+		this.step = function step() {
+			/* you super class should contain the actors behavior */
+		};
+	}
 
 })(jQuery, _);

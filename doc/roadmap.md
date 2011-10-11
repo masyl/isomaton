@@ -3,7 +3,7 @@
 ## In Progress Release
 
 ### v0.7 - Compulsory Mechanics
-- Finish migration to the new Actor inheritance model
+- DONE: Finish migration to the new Actor inheritance model
 - When a collision occur between two actors, emit a "collision" event
 - Compulsion mechanics for Actors
 - Make the knight follow a "hunt" compulsion when a slime within 10 blocks
@@ -13,6 +13,7 @@
 - Functions to get "distance" between two blocks
 
 ### v0.8 - Get the Slime!
+- Chicken and Sidekick should have exended spritesheets
 - Implement A* pathfinding function for knight to hunt slime
 	http://www.briangrinstead.com/files/astar/
 	or http://www.matthewtrost.org/projects/astar/
@@ -112,6 +113,10 @@
 - During "setups", some blocs are added by falling from the sky
 - Each levels/acts separated by black screen with title
 
+### Optimization
+- Cache Isoggraph Bitmap output by layers and chunks and update/redraw only when content has changes
+	Each layer is composed of slices of blocks ith depth-index between X and Y, And each layer is composed of rows of blocks of from the same z axe. So instead of multiple ticks of 1200 draws (20x20x3) you get a first pass of 1200 draws which is cached in (20x3) 60 rows grouped in 20 layers. Each subsequent unmodified tick only has between 20 draw, and up for re-caching. When coords are changed for a block, this invalidates the cached bitmap sets it is part of
+- Rethink how the depth-sorting is done, so that only the changed bitmaps need to be re-ordered
 
 # Unplanned Backlog
 
@@ -121,6 +126,8 @@
 - Bug: Actors can spawn over solid blocks
 - Bug: z-index calculation and ordering doesnt account for some cases during animation
 - Debt: block type should have their own class for their properties, not be read from property file
+- Debt: use constants for playStates (rename to playbackMode ?  rewind, play, pause, or just an integer ?
+- Debt: ability to instantiate an actor without a coordinate
 
 ## Housekeeping and Architecture
 - Bring back source PSD of common world into the project

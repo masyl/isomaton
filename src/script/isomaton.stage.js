@@ -32,10 +32,7 @@ Optimizations:
 	var editModes = Isomaton.editModes = {
 		emptyFirst: "emptyFirst"
 	};
-	// todo: constants for playStates (rename to playbackMode ?  rewind, play, pause, or just an integer ?
 
-	
-	// todo: replace the registry with a subclass of minidb
 	Isomaton.Stage = function Stage(id, stageOptions) {
 
 		var
