@@ -1,6 +1,6 @@
 # Isomaton
 
-Status: 0.4 - Alpha - Unstable & Incomplete
+Status: 0.6 - Alpha - Unstable & Incomplete
 
 ## About Isomaton
 
