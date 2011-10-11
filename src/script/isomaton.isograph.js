@@ -202,7 +202,7 @@
 
 				isograph.updateZ();
 				// todo: get the fps from options
-				Ticker.setFPS(20);
+				Ticker.setFPS(15);
 
 				// assign a tick listener directly to this window:
 				Ticker.addListener({

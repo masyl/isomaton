@@ -45,9 +45,9 @@ Acts could also be polymorphic, adapting or changing their nature according to t
 
 During an Act, some actors might play a leading roles, which will make them higlighted in the ui and easally accessible for interaction with the user.
 
-## Actor Mode
+## Actor Compulsions
 
-As time goes by, an Actor will need to change its behavior according to the situation he is in. On basic way the actors do this is by going in and out of "modes". A knight in "explore" mode might not have any specific target and just wander from one spot of the stage to another in search of something interesting.
+As time goes by, an Actor will need to change its behavior according to the situation he is in. One basic way the actors do this is by resolving the dominance of internal competing compulsions. A knight has the low priority compulsion to "explore"  and wanders from one spot of the stage to another in search of something interesting.
 
 Upon a specific stimulus, an actor will change from on mode to the other. For example, if a knight encounter an egg in "explore" mode, he might suddenly fall in "gathering" mode and start to pickup surrounding items until there is none left in sight. Another basic scenario is to have the knight enter in "battle" mode when encountering a Slime and start to attack any surrounding enemy.
 

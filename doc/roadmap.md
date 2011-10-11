@@ -2,27 +2,50 @@
 
 ## In Progress Release
 
-### v0.7 - Rules, rules, rules
+### v0.7 - Compulsory Mechanics
 - Finish migration to the new Actor inheritance model
+- When a collision occur between two actors, emit a "collision" event
+- Compulsion mechanics for Actors
+- Make the knight follow a "hunt" compulsion when a slime within 10 blocks
+- When the knight cant find the slime, it should fall back to his "explore" compulsion
 - bug: if the stage has 2 chickens, on chicken will be paralized by the others movements, because they have the same identity
-- Ruel so that actors dont walk on water
-- Rule to allow actor to occupy same space as a non-solid block, with the proper overriding z-index
-- Detect/Control collisions between actors and blocks
-- When placing blocs, enforce cohesion rules (no two blocs, occupying)
-- Placing blocs in "replace", "dont-replace" mode
-- Enforcing limits on the maximum width/height/tallness of the world
+- Simple calculation to move player "thoward" a target
+- Functions to get "distance" between two blocks
+
+### v0.8 - Get the Slime!
+- Implement A* pathfinding function for knight to hunt slime
+	http://www.briangrinstead.com/files/astar/
+	or http://www.matthewtrost.org/projects/astar/
+- Action mechanics: hit, pull, push, touch, etc.
+- When the knight is next to the slime he "hit" it
+- When the slime is hit, it teleports elsewhere
+- When an actor move farther than a single block, the transition is instant instead of animated
 
 
 ## Upcomming Releases
 
+### v0.? - Menage-à-Trois
+- Slime wandering: Picks a random destination and goes there.
+- Slime fleeing: moves away slowly when the knight get within 10 blocks
+- Slime attacking: attacks weak target when within 10 blocks (ex.: princess)
+- Slime teleporting: Slime teleports elsewhere if it is hit
+- Princess fleeing: moves away when a "monster" gets within 5 blocks
+- Princess wandering: moves randomly if nothing else occurs
+- Knight exploring: Picks a random destination and goes there.
+- Knight attacking: Attacks when a "monster" gets within 10 blocks.
 
-### v0.? - Some real action
-- Placing blocs by layering them (falling from the sky until they touch ground
-- Make the knight hunt the slime, and the slime teleport when its touched
-- Implement A* pathfinding function with
-	http://www.briangrinstead.com/files/astar/
-	or http://www.matthewtrost.org/projects/astar/
-- Add knight actor which looks for gold on its own
+### v0.? - Trivial Compulsions
+- Chicken fleas: moves away fast when someone else than another chicken comes near (2 blocks)
+- Chicken flocking: moves back thoward other chickens if he gets too far (3 blocks)
+- Chicken wandering: moves randomly if nothing else occurs
+- Sidekick following: moves thoward knight, but never too near.
+- Sidekick waiting: Stays put otherwise
+
+### v0.? - iOS Compatible ?
+- Disable animations and/or adapt fpd on ipad/iphone
+- bug: Isograph doesnt always work on safari iOS... requires reload
+- Support a touch-compatible ui of slowmo/fastforward, play, pause, etc.
+- Adapt the size of the viewport to match either fullscreen or 1:1
 
 
 ### v0.? - Save, Quit and Resume
@@ -44,11 +67,18 @@
 - A story log stores all the significant game actions and actor exclamations
 - Achievements and Inventory changes are logged to the story log
 
+### Chicken & Egg
+- Chicken actor which lays eggs
+- Chicken Compulsion: If chicken doesnt see other chicken or egg for too long he lays an egg, if egg isnt picked up in X steps, it spawns another chicken.
+- Slime compulsion: Attack chicken (along with princess)
+- Chicken dies/disapear if hit byt slime
+- Knight Compulsion: pick up eggs (or any item) and put in inventory
 
 ### v0.? - Health
 - Health meter for actors
 - knight looses healt when colliding with slime
 - Actor dies when he looses all his health
+- Knight eats egg from inventory to gain back health
 
 ### v0.? - Success or failure
 - "Knight kills slime" objective
@@ -65,11 +95,6 @@
 - Actor grabs gold and puts in his inventory
 - Actor grabs sword and puts in his inventory
 
-### Chicken & Egg
-- Chicken actor which lays eggs
-- Knight can pick up eggs and put in inventory
-- Knight eats egg from inventory to gain back health
-
 ### Let's fight
 - Knight attacks slime with bare hands
 - Knight finds sword
@@ -78,7 +103,7 @@
 
 ### Times Arrow
 - HTML5 persistance to stop/resume (persist blocks, entity state (position, inventory, health)
-- Day and night settings with ambiant decor (day, night, sun, moon, stars, clouds, etc)
+- Day and night settings/cycles with ambiant decor (day, night, sun, moon, stars, clouds, etc)
 - API for other time-based property changes (biorythm, seasons, weather);
 
 ### Storytelling
@@ -95,17 +120,23 @@
 - Bug: Flowers, weeds and other blocks appear over water
 - Bug: Actors can spawn over solid blocks
 - Bug: z-index calculation and ordering doesnt account for some cases during animation
-- bug: Isograph doesnt always work on safari iOS... requires reload
 - Debt: block type should have their own class for their properties, not be read from property file
 
 ## Housekeeping and Architecture
-- Rename to isomaton
 - Bring back source PSD of common world into the project
 - Create a build script
 - Test long term playback: number limits, memory leaks
 
 ## Features
-
+- Ambiant Soundtrack
+- Rename world for theater ?
+- Spritesheets and lighting adaptation to day/night cycle
+- Add knight actor which looks for gold on its own
+- When the slime teleports, it goes in a puff of smoke.
+- Chicken actor emits chicken sounds
+- Give actors the ability to move up and down one block denivelation
+- Placing blocs by layering them (falling from the sky until they touch ground
+- Enforcing limits on the maximum width/height/tallness of the world
 - The terrain and its elements should be an actor
 - Actors represented by more than one block: princess with a tall crown, cow, girraf, elephant.
 - Have a global seed to change whole world
@@ -116,7 +147,7 @@
 - Water has two bloc states... water on top and water under another bloc (same situation elsewhere?)
 - Figure out how item crafting/alchemy plays into the story and how it is done
 - Rotate the stage n, e, s, w. and show a compass rose or arrows for cardinal directions
-- Render block shadows and add property to "hasShadow"
+- Render block shadows and add property to "hasShadow" to blocks
 
 
 ## Far Future Backlog
