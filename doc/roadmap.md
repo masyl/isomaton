@@ -4,10 +4,10 @@
 
 ### v0.7 - Compulsory Mechanics
 - DONE: Finish migration to the new Actor inheritance model
-- When a collision occur between two actors, emit a "collision" event
-- Compulsion mechanics for Actors
+- DONE: Compulsion mechanics for Actors
 - Make the knight follow a "hunt" compulsion when a slime within 10 blocks
 - When the knight cant find the slime, it should fall back to his "explore" compulsion
+- When a collision occur between two actors, emit a "collision" event
 - bug: if the stage has 2 chickens, on chicken will be paralized by the others movements, because they have the same identity
 - Simple calculation to move player "thoward" a target
 - Functions to get "distance" between two blocks

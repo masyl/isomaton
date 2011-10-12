@@ -3,6 +3,7 @@
 	var world = isomaton.worlds.common = new isomaton.World(window.commonworld);
 
 	var Coord = Isomaton.Coord;
+	var Compulsions = Isomaton.Compulsions;
 	var Actor = Isomaton.Actor;
 	var Area = isomaton.Area;
 	var Rules = Isomaton.Rules;
@@ -16,15 +17,10 @@
 		this.id = "slime";
 		this.label = "Slime";
 		this.blockType = world.blockTypes["actors.slime"];
-		this.step = function slimeStep() {
-			var mod = this.stage.time % 8;
-			if (mod === 0) {
-				// Move at random
-				var direction = this.stage.randomItem(this.id, [0, 1, 2, 3]);
-				this.block.direction = direction;
-				this.nextCoord = this.coord.copy().move(direction);
-			}
-		};
+		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
+			importance: 1,
+			stepInterval: 8
+		});
 		this.init();
 	};
 
@@ -34,15 +30,10 @@
 		this.id = "chicken";
 		this.label = "Chicken";
 		this.blockType = world.blockTypes["actors.chicken"];
-		this.step = function chickenStep() {
-			var mod = this.stage.time % 8;
-			if (mod === 0) {
-				// Move at random
-				var direction = this.stage.randomItem(this.id, [0, 1, 2, 3]);
-				this.block.direction = direction;
-				this.nextCoord = this.coord.copy().move(direction);
-			}
-		};
+		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
+			importance: 1,
+			stepInterval: 5
+		});
 		this.init();
 	};
 
@@ -52,15 +43,10 @@
 		this.id = "knight";
 		this.label = "Knight";
 		this.blockType = world.blockTypes["actors.knight"];
-		this.step = function knightStep() {
-			var mod = this.stage.time % 4;
-			if (mod === 0) {
-				// Move at random
-				var direction = this.stage.randomItem(this.id, [0, 1, 2, 3]);
-				this.block.direction = direction;
-				this.nextCoord = this.coord.copy().move(direction);
-			}
-		};
+		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
+			importance: 1,
+			stepInterval: 4
+		});
 		this.init();
 	};
 
@@ -69,15 +55,10 @@
 		this.id = "sidekick";
 		this.label = "Sidekick";
 		this.blockType = world.blockTypes["actors.sidekick"];
-		this.step = function sidekickStep() {
-			var mod = this.stage.time % 3;
-			if (mod === 0) {
-				// Move at random
-				var direction = this.stage.randomItem(this.id, [0, 1, 2, 3]);
-				this.block.direction = direction;
-				this.nextCoord = this.coord.copy().move(direction);
-			}
-		};
+		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
+			importance: 1,
+			stepInterval: 5
+		});
 		this.init();
 	};
 
@@ -86,15 +67,10 @@
 		this.id = "princess";
 		this.label = "Princess";
 		this.blockType = world.blockTypes["actors.princess"];
-		this.step = function princessStep() {
-			// Move at random
-			var mod = this.stage.time % 6;
-			if (mod === 0) {
-				var direction = this.stage.randomItem(this.id, [0, 1, 2, 3]);
-				this.block.direction = direction;
-				this.nextCoord = this.coord.copy().move(direction);
-			}
-		};
+		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
+			importance: 1,
+			stepInterval: 8
+		});
 		this.init();
 	};
 

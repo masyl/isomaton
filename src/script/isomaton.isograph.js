@@ -34,10 +34,12 @@
 			var speed, coord;
 			speed = this.stepSpeed * 0.8;
 			coord = this.translateFromISO(block.coord);
-			if (block.type.hasOwnSpriteSheet) {
-				block.bitmap.gotoAndStop(block.direction);
+			if (block.bitmap) {
+				if (block.type.hasOwnSpriteSheet) {
+					block.bitmap.gotoAndStop(block.direction);
+				}
+				this.updateBlockBitmap(block.bitmap, coord.x, coord.y, coord.z, speed);
 			}
-			this.updateBlockBitmap(block.bitmap, coord.x, coord.y, coord.z, speed);
 		};
 
 		this.updateBlockBitmap = function(bitmap, x, y, z, speed) {
