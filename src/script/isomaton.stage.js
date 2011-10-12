@@ -62,6 +62,11 @@ Optimizations:
 		this.speedMultiplier = 1;
 		this._options = {};
 		this.playState = "play";
+
+		this.uid = function(prefix) {
+			return _.uniqueId(prefix);
+		};
+
 		this.fps = {
 			previous: 0,
 			current: 0,

@@ -4,16 +4,28 @@
 
 	Rules = Isomaton.Rules;
 
-	Isomaton.Actor = function Actor(coord, options) {
-		this.id = "blank";
+	Isomaton.Actor = function Actor(options) {
+		this.id = null;
 		this._options = {};
-		this.coord = coord;
+		this.coord = null;
 		this.nextCoord = null;
 		this.block = null;
 		this.label = "Blank";
 		this.stage = null;
 		this.compulsions = {};
 		this.blockType = null;
+
+		this.bind = function bind(stage, coord) {
+			// Which stage to bind to
+			this.stage = stage;
+			// Get a unique Id for this stage
+			this.id = this.id || stage.uid() + ""; // Unique Id must be a string
+			// Place where on stage
+			this.coord = coord;
+			// Create the block to represent the actor
+			this.block = new isomaton.Block(this.blockType, coord);
+			return this;
+		};
 
 		this.movementRules = [
 			Rules.CantWalkOnEmptyOrNonSolid,
@@ -59,7 +71,6 @@
 		};
 
 		this.init = function init() {
-			this.block = new isomaton.Block(this.blockType, coord);
 			return this;
 		};
 
@@ -75,8 +86,9 @@
 		this.toIndex = function txoIndex() {
 			var index;
 			index = {
-				"class": "Actor",
 				"id": this.id,
+				"class": "Actor",
+				"type": this.type,
 				"coord.x": this.coord.x,
 				"coord.y": this.coord.y,
 				"coord.z": this.coord.z
@@ -87,11 +99,6 @@
 				index["nextCoord.z"] = this.nextCoord.z;
 			}
 			return index;
-		};
-
-		this.bind = function bind(stage) {
-			this.stage = stage;
-			return this;
 		};
 	}
 

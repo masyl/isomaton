@@ -12,9 +12,9 @@
 
 
 
-	world.Actors.Slime = function Slime(coord, options) {
+	world.Actors.Slime = function Slime(options) {
 		Actor.apply(this, arguments); // Inherit from the Actor class
-		this.id = "slime";
+		this.type = "slime";
 		this.label = "Slime";
 		this.blockType = world.blockTypes["actors.slime"];
 		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
@@ -25,9 +25,9 @@
 	};
 
 
-	world.Actors.Chicken = function Chicken(coord, options) {
+	world.Actors.Chicken = function Chicken(options) {
 		Actor.apply(this, arguments); // Inherit from the Actor class
-		this.id = "chicken";
+		this.type = "chicken";
 		this.label = "Chicken";
 		this.blockType = world.blockTypes["actors.chicken"];
 		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
@@ -38,9 +38,9 @@
 	};
 
 
-	world.Actors.Knight = function Knight(coord, options) {
+	world.Actors.Knight = function Knight(options) {
 		Actor.apply(this, arguments); // Inherit from the Actor class
-		this.id = "knight";
+		this.type = "knight";
 		this.label = "Knight";
 		this.blockType = world.blockTypes["actors.knight"];
 		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
@@ -50,9 +50,9 @@
 		this.init();
 	};
 
-	world.Actors.Sidekick = function Sidekick(coord, options) {
+	world.Actors.Sidekick = function Sidekick(options) {
 		Actor.apply(this, arguments); // Inherit from the Actor class
-		this.id = "sidekick";
+		this.type = "sidekick";
 		this.label = "Sidekick";
 		this.blockType = world.blockTypes["actors.sidekick"];
 		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
@@ -62,9 +62,9 @@
 		this.init();
 	};
 
-	world.Actors.Princess = function Princess() {
+	world.Actors.Princess = function Princess(options) {
 		Actor.apply(this, arguments); // Inherit from the Actor class
-		this.id = "princess";
+		this.type = "princess";
 		this.label = "Princess";
 		this.blockType = world.blockTypes["actors.princess"];
 		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
@@ -76,6 +76,7 @@
 
 	world.stages.prairie = new Isomaton.Stage("prairie", {
 		start: function start() {
+			var coord;
 			var world = this.world;
 			var worldOptions = world.options();
 			//console.log("placing blocks...");
@@ -133,24 +134,30 @@
 			this.placeBlocks(isomaton.builder.random(this.random("stones"), stoneBlock, groundArea, 5));
 
 			// place 1 slime
-			var slime = new world.Actors.Slime(groundArea.randomCoord(this.random("slimeCoord"))).bind(this);
+			coord = groundArea.randomCoord(this.random("slimeCoord"));
+			var slime = new world.Actors.Slime().bind(this, coord);
 			this.placeActors([slime]);
 
 			// place 2 chickens
-			var chicken1 = new world.Actors.Chicken(groundArea.randomCoord(this.random("chickenCoord1"))).bind(this);
-			var chicken2 = new world.Actors.Chicken(groundArea.randomCoord(this.random("chickenCoord2"))).bind(this);
+			coord = groundArea.randomCoord(this.random("chickenCoord1"));
+			var chicken1 = new world.Actors.Chicken().bind(this, coord);
+			coord = groundArea.randomCoord(this.random("chickenCoord2"));
+			var chicken2 = new world.Actors.Chicken().bind(this, coord);
 			this.placeActors([chicken1, chicken2]);
 
 			// place 1 knight
-			var knight = new world.Actors.Knight(groundArea.randomCoord(this.random("knightCoord"))).bind(this);
+			coord = groundArea.randomCoord(this.random("knightCoord"));
+			var knight = new world.Actors.Knight(coord).bind(this, coord);
 			this.placeActors([knight]);
 
 			// place 1 sidekick
-			var sidekick = new world.Actors.Sidekick(groundArea.randomCoord(this.random("sidekickCoord"))).bind(this);
+			coord = groundArea.randomCoord(this.random("sidekickCoord"));
+			var sidekick = new world.Actors.Sidekick(coord).bind(this, coord);
 			this.placeActors([sidekick]);
 
 			// place 1 princess
-			var princess = new world.Actors.Princess(groundArea.randomCoord(this.random("princessCoord"))).bind(this);
+			coord = groundArea.randomCoord(this.random("princessCoord"));
+			var princess = new world.Actors.Princess().bind(this, coord);
 			this.placeActors([princess]);
 
 			// place frame
