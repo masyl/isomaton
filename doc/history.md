@@ -1,5 +1,20 @@
-
 #Isomaton Version History
+
+### v0.7 - Compulsory Mechanics
+- Finish migration to the new Actor inheritance model
+- Compulsion mechanics for Actors
+- bug: if the stage has 2 chickens, on chicken will be paralized by the others movements, because they have the same identity
+- Actors now have a type property and their IDs are unique within a stage
+- Added more chickens
+- Compulsion for chickens to flock together and flea non-chickens
+- Compulsion for princess to espace the slime and watch the chickens
+- Compulsion for the knight to hunt the slime
+- Compulsion for the sidekick to follow the knight at a respectable distance
+- Compulsion for the slime to hunt the princess and escape the knight
+- Compulsion behaviors are weighted according to each actors settings
+- Helper function to get the possible directions "thoward" a coord from another coord
+- Helper function to get "stepDistance" between two coord
+
 
 ## v0.6 - Minidb Rules
 - Minidb now has a publish/subscribe pattern and is publishing on add, remove and update.
