@@ -1,17 +1,15 @@
-
 # Roadmap for Isomaton
 
 ## In Progress Release
 
+
 ### v0.8 - Get the Slime!
 - Chicken and Sidekick should have exended spritesheets
-- Implement A* pathfinding function for knight to hunt slime
-	http://www.briangrinstead.com/files/astar/
-	or http://www.matthewtrost.org/projects/astar/
 - Action mechanics: hit, pull, push, touch, etc.
 - When the knight is next to the slime he "hit" it
 - When the slime is hit, it teleports elsewhere
 - When an actor move farther than a single block, the transition is instant instead of animated
+- Emit events for actors on "collidedOn", "gotCollided", "hitOn", "gotHit"
 
 
 ## Upcomming Releases
@@ -118,7 +116,6 @@
 - Bug: z-index calculation and ordering doesnt account for some cases during animation
 - Debt: block type should have their own class for their properties, not be read from property file
 - Debt: use constants for playStates (rename to playbackMode ?  rewind, play, pause, or just an integer ?
-- Debt: ability to instantiate an actor without a coordinate
 
 ## Housekeeping and Architecture
 - Bring back source PSD of common world into the project
@@ -126,6 +123,9 @@
 - Test long term playback: number limits, memory leaks
 
 ## Features
+- Implement A* pathfinding function for knight to hunt slime
+	http://www.briangrinstead.com/files/astar/
+	or http://www.matthewtrost.org/projects/astar/
 - Ambiant Soundtrack
 - Rename world for theater ?
 - Spritesheets and lighting adaptation to day/night cycle

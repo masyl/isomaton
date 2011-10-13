@@ -178,6 +178,7 @@ Reversible Transactions:
 			}
 		};
 
+
 		this.serializer = function (json) {
 			if (json) {
 
@@ -278,6 +279,53 @@ Reversible Transactions:
 			var offset = (_offset === undefined) ? 1 : _offset;
 			this.y = this.y - offset;
 			return this;
+		};
+
+
+		this.stepDistanceFrom = function stepDistanceFrom(coord) {
+			return Math.abs(this.x - coord.x) + Math.abs(this.y - coord.y);
+		};
+
+		this.directionsThoward = function directionsThoward(coord) {
+			var directions = [];
+			if (coord) {
+				if (this.x > coord.x) {
+					directions.push(2,2);
+				} else if (this.x < coord.x) {
+					directions.push(0,0);
+				} else {
+					directions.push(0, 2);
+				}
+				if (this.y > coord.y) {
+					directions.push(3,3);
+				} else if (this.y < coord.y) {
+					directions.push(1,1);
+				} else {
+					directions.push(1, 3);
+				}
+			}
+			return directions;
+		};
+
+		this.directionsAway = function directionsAway(coord) {
+			var directions = [];
+			if (coord) {
+				if (this.x > coord.x) {
+					directions.push(0);
+				} else if (this.x < coord.x) {
+					directions.push(2);
+				} else {
+					directions.push(0, 2);
+				}
+				if (this.y > coord.y) {
+					directions.push(1);
+				} else if (this.y < coord.y) {
+					directions.push(3);
+				} else {
+					directions.push(1, 3);
+				}
+			}
+			return directions;
 		};
 
 		// todo: function to turn clockwise and anti-clockwise
