@@ -18,8 +18,36 @@
 		this.label = "Slime";
 		this.blockType = world.blockTypes["actors.slime"];
 		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
-			importance: 1,
-			stepInterval: 8
+			weight: [1, 0],
+			stepInterval: 6
+		});
+		this.compulsions.Escape = new Compulsions.Escape(this, {
+			weight: [2, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
+			stepInterval: 3,
+			minDistance: 0,
+			maxDistance: 6,
+			resolvePrey: function resolvePrey(actor, distance) {
+				var weight = 0;
+				// Escape the knight
+				if (actor.type === "knight") {
+					weight = this.weightByDistance(distance);
+				}
+				return weight;
+			}
+		});
+		// Slime will start to follow  any princess that is within a distance between 1 and 16 blocks
+		this.compulsions.Follow = new Compulsions.Follow(this, {
+			weight: [1, 0.9],
+			stepInterval: 4,
+			minDistance: 1,
+			maxDistance: 16,
+			resolvePrey: function resolvePrey(actor, distance) {
+				var weight = 0;
+				if (actor.type === "princess") {
+					weight = this.weightByDistance(distance);
+				}
+				return weight;
+			}
 		});
 		this.init();
 	};
@@ -30,9 +58,38 @@
 		this.type = "chicken";
 		this.label = "Chicken";
 		this.blockType = world.blockTypes["actors.chicken"];
+		// Chicken will wander around randomly if nothing else to do
 		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
-			importance: 1,
+			weight: [1, 0],
 			stepInterval: 5
+		});
+		// Chicken will start to follow fast any chicken that is within a distance between 4 and 20 blocks
+		this.compulsions.Follow = new Compulsions.Follow(this, {
+			weight: [2, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
+			stepInterval: 2,
+			minDistance: 5,
+			maxDistance: 20,
+			resolvePrey: function resolvePrey(actor, distance) {
+				var weight = 0;
+				if (actor.type === "chicken") {
+					weight = this.weightByDistance(distance);
+				}
+				return weight;
+			}
+		});
+		// Chicken will escape fast if any actor that is not chicken moves within 4 blocks
+		this.compulsions.Escape = new Compulsions.Escape(this, {
+			weight: [3, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
+			stepInterval: 2,
+			maxDistance: 5,
+			resolvePrey: function resolvePrey(actor, distance) {
+				var weight = 0;
+				// Escape the knight
+				if (actor.type !== "chicken") {
+					weight = this.weightByDistance(distance);
+				}
+				return weight;
+			}
 		});
 		this.init();
 	};
@@ -44,8 +101,21 @@
 		this.label = "Knight";
 		this.blockType = world.blockTypes["actors.knight"];
 		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
-			importance: 1,
+			weight: [1, 0],
 			stepInterval: 4
+		});
+		this.compulsions.Follow = new Compulsions.Follow(this, {
+			weight: [1, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
+			stepInterval: 4,
+			minDistance: 1,
+			maxDistance: 16,
+			resolvePrey: function resolvePrey(actor, distance) {
+				var weight = 0;
+				if (actor.type === "slime") {
+					weight = this.weightByDistance(distance);
+				}
+				return weight;
+			}
 		});
 		this.init();
 	};
@@ -56,8 +126,21 @@
 		this.label = "Sidekick";
 		this.blockType = world.blockTypes["actors.sidekick"];
 		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
-			importance: 1,
+			weight: [1, 0],
 			stepInterval: 5
+		});
+		this.compulsions.Follow = new Compulsions.Follow(this, {
+			weight: [1, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
+			stepInterval: 4,
+			minDistance: 3,
+			maxDistance: 16,
+			resolvePrey: function resolvePrey(actor, distance) {
+				var weight = 0;
+				if (actor.type === "knight") {
+					weight = this.weightByDistance(distance);
+				}
+				return weight;
+			}
 		});
 		this.init();
 	};
@@ -68,8 +151,36 @@
 		this.label = "Princess";
 		this.blockType = world.blockTypes["actors.princess"];
 		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
-			importance: 1,
+			weight: [1, 0],
 			stepInterval: 8
+		});
+		// The princess will follow the chicken slowly from a distance of 5 blocks
+		this.compulsions.Follow = new Compulsions.Follow(this, {
+			weight: [2, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
+			stepInterval: 6,
+			minDistance: 6,
+			maxDistance: 20,
+			resolvePrey: function resolvePrey(actor, distance) {
+				var weight = 0;
+				if (actor.type === "chicken") {
+					weight = this.weightByDistance(distance);
+				}
+				return weight;
+			}
+		});
+		// Chicken will escape fast if any actor that is not chicken moves within 4 blocks
+		this.compulsions.Escape = new Compulsions.Escape(this, {
+			weight: [3, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
+			stepInterval: 3,
+			maxDistance: 6,
+			resolvePrey: function resolvePrey(actor, distance) {
+				var weight = 0;
+				// Escape the knight
+				if (actor.type !== "slime") {
+					weight = this.weightByDistance(distance);
+				}
+				return weight;
+			}
 		});
 		this.init();
 	};
@@ -138,12 +249,16 @@
 			var slime = new world.Actors.Slime().bind(this, coord);
 			this.placeActors([slime]);
 
-			// place 2 chickens
+			// place 4 chickens
 			coord = groundArea.randomCoord(this.random("chickenCoord1"));
 			var chicken1 = new world.Actors.Chicken().bind(this, coord);
 			coord = groundArea.randomCoord(this.random("chickenCoord2"));
 			var chicken2 = new world.Actors.Chicken().bind(this, coord);
-			this.placeActors([chicken1, chicken2]);
+			coord = groundArea.randomCoord(this.random("chickenCoord3"));
+			var chicken3 = new world.Actors.Chicken().bind(this, coord);
+			coord = groundArea.randomCoord(this.random("chickenCoord4"));
+			var chicken4 = new world.Actors.Chicken().bind(this, coord);
+			this.placeActors([chicken1, chicken2, chicken3, chicken4]);
 
 			// place 1 knight
 			coord = groundArea.randomCoord(this.random("knightCoord"));

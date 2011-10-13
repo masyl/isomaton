@@ -7,11 +7,17 @@
 - DONE: Compulsion mechanics for Actors
 - FIXED: bug: if the stage has 2 chickens, on chicken will be paralized by the others movements, because they have the same identity
 - DONE: Actors now have a type property and their IDs are unique within a stage
-- Make the knight follow a "hunt" compulsion when a slime within 10 blocks
-- When the knight cant find the slime, it should fall back to his "explore" compulsion
+- DONE: Added more chickens
+- DONE: Compulsion for chickens to flock together and flea non-chickens
+- DONE: Compulsion for princess to espace the slime and watch the chickens
+- DONE: Compulsion for the knight to hunt the slime
+- DONE: Compulsion for the sidekick to follow the knight at a respectable distance
+- DONE: Compulsion for the slime to hunt the princess and escape the knight
+- DONE: Compulsion behaviors are weighted according to each actors settings
+- Helper function to get the direction thoward "thoward" a coord from another coord
+- Helper function to get "distance" between two coord
 - When a collision occur between two actors, emit a "collision" event
-- Simple calculation to move player "thoward" a target
-- Functions to get "distance" between two blocks
+
 
 ### v0.8 - Get the Slime!
 - Chicken and Sidekick should have exended spritesheets
