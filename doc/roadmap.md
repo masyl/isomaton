@@ -4,6 +4,8 @@
 
 
 ### v0.8 - Get the Slime!
+- DONE: Bigger sprites for blocks
+- DONE: Sidekick has etended styleheet
 - Chicken and Sidekick should have exended spritesheets
 - Action mechanics: hit, pull, push, touch, etc.
 - When the knight is next to the slime he "hit" it
