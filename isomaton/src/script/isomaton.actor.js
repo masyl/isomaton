@@ -5,15 +5,22 @@
 	Rules = Isomaton.Rules;
 
 	Isomaton.Actor = function Actor(options) {
+		mixinPubSub(this);
+
+		var actor = this;
+
 		this.id = null;
 		this._options = {};
 		this.coord = null;
 		this.nextCoord = null;
+		this.prevCoord = null;
 		this.block = null;
 		this.label = "Blank";
 		this.stage = null;
 		this.compulsions = {};
 		this.blockType = null;
+		this.block = null;
+
 
 		this.bind = function bind(stage, coord) {
 			// Which stage to bind to
@@ -24,6 +31,7 @@
 			this.coord = coord;
 			// Create the block to represent the actor
 			this.block = new isomaton.Block(this.blockType, coord);
+			this.publish("bind");
 			return this;
 		};
 
@@ -31,6 +39,22 @@
 			Rules.CantWalkOnEmptyOrNonSolid,
 			Rules.CantWalkIntoSolids
 		];
+
+
+		this.goNext = function goNext(coord) {
+			this.nextCoord = coord;
+			this.block.goNext(coord);
+		};
+
+		this.go = function go() {
+			// todo: manage a better coord history queue
+			if (this.nextCoord) {
+				this.prevCoord = this.coord;
+				this.coord = this.nextCoord;
+				this.nextCoord = null;
+			}
+			this.block.go();
+		};
 
 		this.validateMove = function () {
 			var i, rule, isValid;
@@ -74,6 +98,16 @@
 			return this;
 		};
 
+		this.act = function act(action, subject, options) {
+			this.stage.act(action, this, subject, options);
+			return this;
+		};
+
+		this.react = function react(action, handler) {
+			this.stage.react(action, this, handler);
+			return this;
+		};
+
 		this.options = function fnOptions(_options) {
 			_(this._options).extend(_options);
 			return this._options;
@@ -100,6 +134,24 @@
 			}
 			return index;
 		};
+
+		this.subscribe("bind", function () {
+			this.react("respawn", function (source, options) {
+				var spawners, spawner;
+				// Find spawners
+				spawners = this.stage.actors.select({type:"spawner"}).get();
+				console.log("spawners", spawners);
+				// Pick own at random
+				spawner = this.stage.randomItem("randomSpawn-" + this.id, spawners);
+				// Teleport to it
+				if (spawner) {
+					console.log("spawning to: ", spawner);
+					this.act("respawnTo", spawner);
+				} else {
+					console.log("no spawn!");
+				}
+			});
+		});
 	}
 
 })(Isomaton, jQuery, _);

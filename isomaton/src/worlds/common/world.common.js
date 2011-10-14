@@ -11,6 +11,20 @@
 	var editModes = Isomaton.editModes; // Constants
 
 
+	world.Actors.Spawner = function Spawner(options) {
+		Actor.apply(this, arguments); // Inherit from the Actor class
+		this.type = "spawner";
+		this.label = "Spawner";
+		this.blockType = world.blockTypes["blank.empty"];
+		this.subscribe("bind", function () {
+			// When an actor teleports to this spawn point
+			this.react("respawnTo", function (source, options) {
+				source.nextCoord = this.coord.copy();
+
+			});
+		});
+		this.init();
+	};
 
 	world.Actors.Slime = function Slime(options) {
 		Actor.apply(this, arguments); // Inherit from the Actor class
@@ -26,7 +40,7 @@
 			stepInterval: 3,
 			minDistance: 0,
 			maxDistance: 6,
-			resolvePrey: function resolvePrey(actor, distance) {
+			resolveTarget: function resolveTarget(actor, distance) {
 				var weight = 0;
 				// Escape the knight
 				if (actor.type === "knight") {
@@ -41,13 +55,19 @@
 			stepInterval: 4,
 			minDistance: 1,
 			maxDistance: 16,
-			resolvePrey: function resolvePrey(actor, distance) {
+			resolveTarget: function resolveTarget(actor, distance) {
 				var weight = 0;
 				if (actor.type === "princess") {
 					weight = this.weightByDistance(distance);
 				}
 				return weight;
 			}
+		});
+		this.subscribe("bind", function () {
+			this.react("hit", function (source, options) {
+				this.act("respawn", this); // Slime teleports itself somewhere else
+
+			});
 		});
 		this.init();
 	};
@@ -69,7 +89,7 @@
 			stepInterval: 2,
 			minDistance: 5,
 			maxDistance: 20,
-			resolvePrey: function resolvePrey(actor, distance) {
+			resolveTarget: function resolveTarget(actor, distance) {
 				var weight = 0;
 				if (actor.type === "chicken") {
 					weight = this.weightByDistance(distance);
@@ -82,7 +102,7 @@
 			weight: [3, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
 			stepInterval: 2,
 			maxDistance: 5,
-			resolvePrey: function resolvePrey(actor, distance) {
+			resolveTarget: function resolveTarget(actor, distance) {
 				var weight = 0;
 				// Escape the knight
 				if (actor.type !== "chicken") {
@@ -106,10 +126,23 @@
 		});
 		this.compulsions.Follow = new Compulsions.Follow(this, {
 			weight: [1, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
-			stepInterval: 4,
+			stepInterval: 2,
 			minDistance: 1,
 			maxDistance: 16,
-			resolvePrey: function resolvePrey(actor, distance) {
+			resolveTarget: function resolveTarget(actor, distance) {
+				var weight = 0;
+				if (actor.type === "slime") {
+					weight = this.weightByDistance(distance);
+				}
+				return weight;
+			}
+		});
+		this.compulsions.Attack = new Compulsions.Attack(this, {
+			weight: [2, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
+			stepInterval: 2,
+			minDistance: 0,
+			maxDistance: 2,
+			resolveTarget: function resolveTarget(actor, distance) {
 				var weight = 0;
 				if (actor.type === "slime") {
 					weight = this.weightByDistance(distance);
@@ -134,7 +167,7 @@
 			stepInterval: 4,
 			minDistance: 3,
 			maxDistance: 16,
-			resolvePrey: function resolvePrey(actor, distance) {
+			resolveTarget: function resolveTarget(actor, distance) {
 				var weight = 0;
 				if (actor.type === "knight") {
 					weight = this.weightByDistance(distance);
@@ -160,7 +193,7 @@
 			stepInterval: 6,
 			minDistance: 6,
 			maxDistance: 20,
-			resolvePrey: function resolvePrey(actor, distance) {
+			resolveTarget: function resolveTarget(actor, distance) {
 				var weight = 0;
 				if (actor.type === "chicken") {
 					weight = this.weightByDistance(distance);
@@ -173,7 +206,7 @@
 			weight: [3, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
 			stepInterval: 3,
 			maxDistance: 6,
-			resolvePrey: function resolvePrey(actor, distance) {
+			resolveTarget: function resolveTarget(actor, distance) {
 				var weight = 0;
 				// Escape the knight
 				if (actor.type !== "slime") {
@@ -263,18 +296,27 @@
 
 			// place 1 knight
 			coord = groundArea.randomCoord(this.random("knightCoord"));
-			var knight = new world.Actors.Knight(coord).bind(this, coord);
+			var knight = new world.Actors.Knight().bind(this, coord);
 			this.placeActors([knight]);
 
 			// place 1 sidekick
 			coord = groundArea.randomCoord(this.random("sidekickCoord"));
-			var sidekick = new world.Actors.Sidekick(coord).bind(this, coord);
+			var sidekick = new world.Actors.Sidekick().bind(this, coord);
 			this.placeActors([sidekick]);
 
 			// place 1 princess
 			coord = groundArea.randomCoord(this.random("princessCoord"));
 			var princess = new world.Actors.Princess().bind(this, coord);
 			this.placeActors([princess]);
+
+			// place 12 spawn points
+			var i, spawners = [];
+			for (i = 0; i < 20; i = i + 1) {
+				coord = groundArea.randomCoord(this.random("spawnCoords-" + i));
+				spawners.push(new world.Actors.Spawner().bind(this, coord));
+			}
+			console.log("spawners added: ", spawners);
+			this.placeActors(spawners);
 
 			// place frame
 			this.placeBlocks(isomaton.builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));

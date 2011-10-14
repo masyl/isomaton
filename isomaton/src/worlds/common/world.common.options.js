@@ -5,14 +5,18 @@ window.commonworld = {
 		"blank": {
 			"offset": 0,
 			"blocks": {
+				"empty": {
+					"isSolid": false,
+					"offset": 0
+				},
 				"blank": {
 					"isSolid": true,
-					"offset": 0
+					"offset": 1
 				}
 			}
 		},
 		"materials": {
-			"offset": 1,
+			"offset": 2,
 			"blocks": {
 				"dirt": {
 					"isSolid": true,
@@ -41,7 +45,7 @@ window.commonworld = {
 			}
 		},
 		"actors": {
-			"offset": 7,
+			"offset": 8,
 			"blocks": {
 				"knight": {
 					"hasOwnSpriteSheet": true,
@@ -70,7 +74,7 @@ window.commonworld = {
 			}
 		},
 		"items": {
-			"offset": 12,
+			"offset": 13,
 			"blocks": {
 				"sword": {
 					"isSolid": false,
@@ -83,7 +87,7 @@ window.commonworld = {
 			}
 		},
 		"decorations": {
-			"offset": 14,
+			"offset": 15,
 			"blocks": {
 				"yellowflowers": {
 					"isSolid": false,
@@ -96,7 +100,7 @@ window.commonworld = {
 			}
 		},
 		"cursors": {
-			"offset": 16,
+			"offset": 17,
 			"blocks": {
 				"whiteframe": {
 					"isSolid": false,

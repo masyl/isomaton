@@ -32,8 +32,12 @@
 
 		this.updateBlock = function (block) {
 			var speed, coord;
-			speed = this.stepSpeed * 2;
 			coord = this.translateFromISO(block.coord);
+			if (block.coord.stepDistanceFrom(block.prevCoord) > 1) {
+				speed = 0;
+			} else {
+				speed = this.stepSpeed * 2;
+			}
 			if (block.bitmap) {
 				if (block.type.hasOwnSpriteSheet) {
 					block.bitmap.gotoAndStop(block.direction);

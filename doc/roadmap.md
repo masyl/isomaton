@@ -6,15 +6,35 @@
 ### v0.8 - Get the Slime!
 - DONE: Bigger sprites for blocks
 - DONE: Sidekick has etended styleheet
-- Chicken and Sidekick should have exended spritesheets
-- Action mechanics: hit, pull, push, touch, etc.
-- When the knight is next to the slime he "hit" it
-- When the slime is hit, it teleports elsewhere
-- When an actor move farther than a single block, the transition is instant instead of animated
+- DONE: Act/React mechanics and hit action.
+- DONE: When the knight is next to the slime he "hit" it
+- DONE: When the slime is hit, it teleports elsewhere
+- DONE: When an actor move farther than a single block, the transition is instant instead of animated
+- DONE: Mechanics for spawn points where actors can respawn from
 - Emit events for actors on "collidedOn", "gotCollided", "hitOn", "gotHit"
+- Chicken should be redrawn as a block and have exended spritesheets
 
+### v0.9 - HTML5 at all cost
+- Soundtrack
+- Sound effects
+- Persistance of current game
+- Button to restart
+- Complete deployment to the Chrome Store
+- "Whats new" inside the app
+- Offlining ?
+- In app purchase ?
 
 ## Upcomming Releases
+
+### v0.? - Story Time - Sheep and wolfs
+- Possibility to abandon an act ?
+- Wolf actor
+- Sheep actor based on chicken
+- Keep the sheeps act
+- Action to break mature sheep in 3 smaller sheep
+- Compulsion for sheep to turn into evil sheep when too much sheeps
+- Young sheeps grown into adult sheeps
+-
 
 ### v0.? - Menage-à-Trois
 - Slime wandering: Picks a random destination and goes there.
@@ -128,7 +148,7 @@
 - Implement A* pathfinding function for knight to hunt slime
 	http://www.briangrinstead.com/files/astar/
 	or http://www.matthewtrost.org/projects/astar/
-- Ambiant Soundtrack
+- The hero can transform into another type of entity. By eating something, carying an item, casting a magic spell, drinking a potion, etc.
 - Rename world for theater ?
 - Spritesheets and lighting adaptation to day/night cycle
 - Add knight actor which looks for gold on its own

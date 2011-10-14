@@ -9,9 +9,10 @@
 		// is the addition factor
 		var weightFactors = this.weightFactors = this.options.weight || [1,0];
 
-		this.stepInterval = this.options.stepInterval || 1;
-		this.minDistance = this.options.minDistance || 1;
-		this.maxDistance = this.options.maxDistance || 10;
+		this.actor = actor;
+		this.stepInterval = (this.options.stepInterval !== undefined) ? this.options.stepInterval : 1;
+		this.minDistance = (this.options.stepInterval !== undefined) ? this.options.minDistance : 1;
+		this.maxDistance = (this.options.stepInterval !== undefined) ? this.options.maxDistance : 10;
 
 		this.weight = function () {
 			return 1;
@@ -33,6 +34,24 @@
 		}
 	}
 
+	function relativeWeightByMinMaxDistance () {
+		var i, targets, target, targetWeight, bestTarget, bestTargetWeight, distance;
+		targets = this.actor.stage.actors.all().get();
+		targetWeight = 0;
+		bestTargetWeight = 0;
+		// Find a prey to follow
+		for (i = 0; i < targets.length; i = i + 1) {
+			target = targets[i];
+			distance = this.actor.coord.stepDistanceFrom(target.coord);
+			targetWeight = this.resolveTarget(target, distance);
+			if (targetWeight > bestTargetWeight) {
+				bestTarget = target;
+				bestTargetWeight = targetWeight;
+			}
+		}
+		this.target = bestTarget;
+		return bestTargetWeight;
+	}
 
 	Compulsions.WanderAtRandom = function WanderAtRandom(actor, _options) {
 		Compulsion.apply(this, arguments); // Inherit from the Compulsion class
@@ -44,7 +63,7 @@
 				// Move at random
 				var direction = actor.stage.randomItem(actor.id, [0, 1, 2, 3]);
 				actor.block.direction = direction;
-				actor.nextCoord = actor.coord.copy().move(direction);
+				actor.goNext(actor.coord.copy().move(direction));
 			}
 		};
 	};
@@ -53,34 +72,17 @@
 		Compulsion.apply(this, arguments); // Inherit from the Compulsion class
 		var options, minDistance, maxDistance;
 
-		this.resolvePrey = this.options.resolvePrey;
+		this.resolveTarget = this.options.resolveTarget;
 		this.target = null;
 
-		this.weight = function () {
-			var i, targets, target, targetWeight, bestTarget, bestTargetWeight, distance;
-			targets = actor.stage.actors.all().get();
-			targetWeight = 0;
-			bestTargetWeight = 0;
-			// Find a prey to follow
-			for (i = 0; i < targets.length; i = i + 1) {
-				target = targets[i];
-				distance = actor.coord.stepDistanceFrom(target.coord);
-				targetWeight = this.resolvePrey(target, distance);
-				if (targetWeight > bestTargetWeight) {
-					bestTarget = target;
-					bestTargetWeight = targetWeight;
-				}
-			}
-			this.target = bestTarget;
-			return bestTargetWeight;
-		};
+		this.weight = relativeWeightByMinMaxDistance;
 
 		this.act = function () {
 			var mod = actor.stage.time % this.stepInterval;
 			if (mod === 0) {
 				var directions = actor.coord.directionsThoward(this.target.coord);
 				actor.block.direction = actor.stage.randomItem(actor.id, directions);
-				actor.nextCoord = actor.coord.copy().move(actor.block.direction);
+				actor.goNext(actor.coord.copy().move(actor.block.direction));
 			}
 		};
 	};
@@ -89,34 +91,38 @@
 		Compulsion.apply(this, arguments); // Inherit from the Compulsion class
 		var options;
 
-		this.resolvePrey = this.options.resolvePrey;
+		this.resolveTarget = this.options.resolveTarget;
 		this.target = null;
 
-		this.weight = function () {
-			var i, targets, target, targetWeight, bestTarget, bestTargetWeight, distance;
-			targets = actor.stage.actors.all().get();
-			targetWeight = 0;
-			bestTargetWeight = 0;
-			// Find a prey to follow
-			for (i = 0; i < targets.length; i = i + 1) {
-				target = targets[i];
-				distance = actor.coord.stepDistanceFrom(target.coord);
-				targetWeight = this.resolvePrey(target, distance);
-				if (targetWeight > bestTargetWeight) {
-					bestTarget = target;
-					bestTargetWeight = targetWeight;
-				}
-			}
-			this.target = bestTarget;
-			return bestTargetWeight;
-		};
+		this.weight = relativeWeightByMinMaxDistance;
 
 		this.act = function () {
 			var mod = actor.stage.time % this.stepInterval;
 			if (mod === 0) {
 				var directions = actor.coord.directionsAway(this.target.coord);
 				actor.block.direction = actor.stage.randomItem(actor.id, directions);
-				actor.nextCoord = actor.coord.copy().move(actor.block.direction);
+				actor.goNext(actor.coord.copy().move(actor.block.direction));
+			}
+		};
+	};
+
+
+	Compulsions.Attack = function Attack(actor, _options) {
+		Compulsion.apply(this, arguments); // Inherit from the Compulsion class
+		var options, minDistance, maxDistance;
+
+		this.resolveTarget = this.options.resolveTarget;
+		this.target = null;
+
+		this.weight = relativeWeightByMinMaxDistance;
+
+		this.act = function () {
+			// todo: find a better pattern than repeating the "mod" on stepInterval
+			var mod = actor.stage.time % this.stepInterval;
+			if (mod === 0) {
+				this.actor.act("hit", this.target, {
+					force: 1
+				});
 			}
 		};
 	};

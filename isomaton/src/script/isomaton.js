@@ -157,11 +157,26 @@ Reversible Transactions:
 
 	// Base class for blocks
 	function Block(type, coord) {
+		//todo: become a pubSub and publish on update to the miniDb for blocks
 		this.id = _.uniqueId();
 		this.type = type;
 		this.coord = coord;
 		this.nextCoord = null;
+		this.prevCoord = null;
 		this.direction = 0; // Direction thoward which the block is facing
+
+		this.goNext = function goNext(coord) {
+			this.nextCoord = coord;
+		};
+
+		this.go = function go(coord) {
+			// todo: manage a better coord history queue
+			if (this.nextCoord) {
+				this.prevCoord = this.coord;
+				this.coord = this.nextCoord;
+				this.nextCoord = null;
+			}
+		};
 
 		this.toString = function toString() {
 			return "Block-" + this.id;
@@ -211,6 +226,7 @@ Reversible Transactions:
 		}
 	}
 
+	//todo: move into separate package
 	Isomaton.Coord = function Coord(x, y, z) {
 		/*
 		Directions:
@@ -280,7 +296,6 @@ Reversible Transactions:
 			this.y = this.y - offset;
 			return this;
 		};
-
 
 		this.stepDistanceFrom = function stepDistanceFrom(coord) {
 			return Math.abs(this.x - coord.x) + Math.abs(this.y - coord.y);

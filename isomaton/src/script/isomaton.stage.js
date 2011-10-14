@@ -34,6 +34,7 @@ Optimizations:
 	};
 
 	Isomaton.Stage = function Stage(id, stageOptions) {
+		mixinPubSub(this);
 
 		var
 				stage = this, // Self reference used inside deeper closures
@@ -246,11 +247,11 @@ Optimizations:
 				// Process all remaining nextCoord's as valid moves
 				for (actorId in actors) {
 					actor = actors[actorId];
+
 					if (actor.nextCoord) {
-						actor.coord = actor.nextCoord;
-						actor.block.coord = actor.coord;
-						actor.nextCoord = null;
+						actor.go();
 						// Update the actor and block indexes in the minidb
+						// todo: use pubsub for updates
 						this.blocks.update(actor.block);
 						this.actors.update(actor);
 					}
@@ -280,6 +281,19 @@ Optimizations:
 
 			return this;
 		};
+
+		this.act = function act(action, actor, subject, options) {
+			subject.publish("reaction-" + action, [actor, options]);
+			return this;
+		};
+
+		this.react = function react(action, subject, handler) {
+			subject.subscribe("reaction-" + action, function (actor, options) {
+				handler.call(subject, actor, options);
+			});
+			return this;
+		};
+
 
 		this.init();
 	};
