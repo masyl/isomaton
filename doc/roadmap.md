@@ -11,6 +11,7 @@
 - DONE: When the slime is hit, it teleports elsewhere
 - DONE: When an actor move farther than a single block, the transition is instant instead of animated
 - DONE: Mechanics for spawn points where actors can respawn from
+- bug: actor moves one last step after being told to teleport
 - Emit events for actors on "collidedOn", "gotCollided", "hitOn", "gotHit"
 - Chicken should be redrawn as a block and have exended spritesheets
 

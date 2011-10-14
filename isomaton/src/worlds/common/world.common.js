@@ -19,8 +19,8 @@
 		this.subscribe("bind", function () {
 			// When an actor teleports to this spawn point
 			this.react("respawnTo", function (source, options) {
-				source.nextCoord = this.coord.copy();
-
+				source.goNext(this.coord.copy());
+				source.stage.sounds.pop.play();
 			});
 		});
 		this.init();

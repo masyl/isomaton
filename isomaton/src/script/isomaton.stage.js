@@ -129,6 +129,26 @@ Optimizations:
 			stageOptions.start.call(this);
 			this.render();
 			stage.step(1);
+
+			soundManager.url = '../src/libs/soundmanager-297a/swf/';
+			soundManager.flashVersion = 9; // optional: shiny features (default = 8)
+			soundManager.useFlashBlock = false; // optionally, enable when you're ready to dive in
+			soundManager.useHTML5Audio = true;
+			soundManager.onready(function() {
+				var sounds = stage.sounds = {};
+				sounds.soundTrack = soundManager.createSound({
+					id:'soundtrack',
+					url: "../../sounds/Nurykabe - Arrivée distante.mp3"
+				});
+				sounds.soundTrack.play();
+				sounds.pop = soundManager.createSound({
+					id:'pop',
+					url: "../../sounds/pop.mp3"
+				});
+
+			});
+
+
 		};
 
 		this.render = function render() {
