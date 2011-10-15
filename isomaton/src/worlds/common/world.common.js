@@ -19,8 +19,15 @@
 		this.subscribe("bind", function () {
 			// When an actor teleports to this spawn point
 			this.react("respawnTo", function (source, options) {
+				var stage = source.stage;
 				source.goNext(this.coord.copy());
-				source.stage.sounds.pop.play();
+				stage.sounds.pop.play();
+
+				var puffBlock = world.blockTypes["effects.puff"];
+				var block = builder.one(puffBlock, source.coord.copy());
+				stage
+						.editMode(editModes.normal)
+						.placeBlocks([block]);
 			});
 		});
 		this.init();
@@ -66,7 +73,6 @@
 		this.subscribe("bind", function () {
 			this.react("hit", function (source, options) {
 				this.act("respawn", this); // Slime teleports itself somewhere else
-
 			});
 		});
 		this.init();
@@ -88,7 +94,7 @@
 			weight: [2, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
 			stepInterval: 2,
 			minDistance: 5,
-			maxDistance: 20,
+			maxDistance: 16,
 			resolveTarget: function resolveTarget(actor, distance) {
 				var weight = 0;
 				if (actor.type === "chicken") {
@@ -97,10 +103,34 @@
 				return weight;
 			}
 		});
+
+		this.compulsions.FollowAndQuack = new Compulsions.Follow(this, {
+			weight: [2, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
+			stepInterval: 3,
+			minDistance: 16,
+			maxDistance: 30,
+			sound: "chicken",
+			act: function () {
+				var sound = this.actor.stage.sounds[this.options.sound];
+				if (sound) {
+					sound.play()
+				}
+			},
+			resolveTarget: function resolveTarget(actor, distance) {
+				var weight = 0;
+				if (actor.type === "chicken") {
+					weight = this.weightByDistance(distance);
+				}
+				return weight;
+			}
+		});
+
+
 		// Chicken will escape fast if any actor that is not chicken moves within 4 blocks
 		this.compulsions.Escape = new Compulsions.Escape(this, {
 			weight: [3, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
 			stepInterval: 2,
+			minDistance: 1,
 			maxDistance: 5,
 			resolveTarget: function resolveTarget(actor, distance) {
 				var weight = 0;
@@ -111,6 +141,7 @@
 				return weight;
 			}
 		});
+
 		this.init();
 	};
 
@@ -222,6 +253,7 @@
 		start: function start() {
 			var coord;
 			var world = this.world;
+
 			var worldOptions = world.options();
 			//console.log("placing blocks...");
 
@@ -315,7 +347,6 @@
 				coord = groundArea.randomCoord(this.random("spawnCoords-" + i));
 				spawners.push(new world.Actors.Spawner().bind(this, coord));
 			}
-			console.log("spawners added: ", spawners);
 			this.placeActors(spawners);
 
 			// place frame

@@ -75,6 +75,7 @@
 				}
 				selection = objs;
 			}
+
 			for (i = 0; i < objs.length; i = i + 1) {
 				obj = objs[i];
 				// Find the item to delete
@@ -91,7 +92,7 @@
 				}
 
 				// Add the removed item to the output
-				removed.push(objs);
+				removed.push(obj);
 			}
 			if (!silentEvent && removed.length) this.publish("remove", [removed]);
 			return this;

@@ -207,6 +207,8 @@ Reversible Transactions:
 		this.id = id;
 		this.offset = options.offset || 0;
 		this.isSolid = this.isSolid = (options.isSolid !== undefined) ? options.isSolid : true;
+		this.isAnimated = this.isAnimated = (options.isAnimated !== undefined) ? options.isAnimated : true;
+		this.frames = this.frames = (options.frames !== undefined) ? options.frames : true;
 
 		// true is this block has its own spritesheet
 		this.hasOwnSpriteSheet = (options.hasOwnSpriteSheet !== undefined) ? options.hasOwnSpriteSheet : false;

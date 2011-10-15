@@ -84,12 +84,14 @@
 				actor.block.direction = actor.stage.randomItem(actor.id, directions);
 				actor.goNext(actor.coord.copy().move(actor.block.direction));
 			}
+			if (this.options.act) {
+				this.options.act.call(this);
+			}
 		};
 	};
 
 	Compulsions.Escape = function Escape(actor, _options) {
 		Compulsion.apply(this, arguments); // Inherit from the Compulsion class
-		var options;
 
 		this.resolveTarget = this.options.resolveTarget;
 		this.target = null;
@@ -105,7 +107,7 @@
 			}
 		};
 	};
-
+	
 
 	Compulsions.Attack = function Attack(actor, _options) {
 		Compulsion.apply(this, arguments); // Inherit from the Compulsion class
@@ -123,6 +125,9 @@
 				this.actor.act("hit", this.target, {
 					force: 1
 				});
+			}
+			if (this.options.act) {
+				this.options.act.call(this);
 			}
 		};
 	};

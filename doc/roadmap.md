@@ -11,13 +11,22 @@
 - DONE: When the slime is hit, it teleports elsewhere
 - DONE: When an actor move farther than a single block, the transition is instant instead of animated
 - DONE: Mechanics for spawn points where actors can respawn from
-- bug: actor moves one last step after being told to teleport
+- DONE: Soundtrack
+- DONE: Sound effects
+- DONE: Animated Puff effect when character re-spawn
+- FIXED: bug: actor moves one last step after being told to teleport
+- DONE: Chicken sounds
 - Emit events for actors on "collidedOn", "gotCollided", "hitOn", "gotHit"
 - Chicken should be redrawn as a block and have exended spritesheets
+- Variation on compulsion for events that dont need to compete for exclusivity (sounds, exclamations)
+- bug: Sometimes, the pop sound doesnt playback correctly
+- bug: actors can move two on the same spot in some cases!
+- bug: must remove "puff" block effect when its finished ... after x steps
+- bug: respawning can create multiple puff blocks one over the other
+-
 
 ### v0.9 - HTML5 at all cost
-- Soundtrack
-- Sound effects
+- Use HTML5 Sound API
 - Persistance of current game
 - Button to restart
 - Complete deployment to the Chrome Store

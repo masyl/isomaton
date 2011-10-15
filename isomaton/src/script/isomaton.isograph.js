@@ -130,17 +130,49 @@
 			return coord;
 		};
 
+		this.renderBlock = function renderBlock(block) {
+			var bitmap, type, coord;
+			type = block.type;
+			coord = isograph.translateFromISO(block.coord);
+			if (type.hasOwnSpriteSheet) {
+				bitmap = new BitmapSequence(type.spritesheet);
+				if (type.isAnimated) {
+					// todo: animation for each directions
+					console.log("play!", type);
+					bitmap.gotoAndPlay(0);
+				} else {
+					bitmap.gotoAndStop(block.direction);
+				}
+			} else {
+				bitmap = new BitmapSequence(isograph.sprites);
+				bitmap.gotoAndStop(type.offset);
+			}
+			bitmap.x = coord.x;
+			bitmap.y = coord.y;
+			bitmap.z = coord.z;
+			block.bitmap = bitmap;
+			isograph.blockBitmaps.addChild(bitmap);
+		};
+
+
 		this.bind = function bind(blocks) {
 			this.blocks = blocks;
 			this.blocks.subscribe("add", function(blocks) {
-				// todo: create bitmap data
-				// todo: create bitmaps when added... not during setup
+				var i, block;
+				for (i in blocks) {
+					block = blocks[i];
+					isograph.renderBlock(block);
+				}
 			});
 			this.blocks.subscribe("remove", function(blocks) {
 				var i, block;
 				for (i in blocks) {
 					block = blocks[i];
-					isograph.blockBitmaps.removeChild(block.bitmap);
+					if (block.bitmap) {
+						isograph.blockBitmaps.removeChild(block.bitmap);
+					} else {
+						console.log("block is missing bitmap", block, block.id, block.toString(), block.bitmap);
+					}
 				}
 			});
 			this.blocks.subscribe("update", function(blocks) {
@@ -156,66 +188,27 @@
 		 * Setup the initiale stage of the stage by loading sprites, creating the stage,
 		 * containers and initial bitmaps
 		 */
-		this.setup = function() {
-			// todo: rename stage
+		this.setup = function(callback) {
 
-			var i, block, blocks, canvas, canvasStage;
-			blocks = this.blocks.get({
-				"class": "Block"
-			});
-
+			var canvasStage;
 			canvasStage = this.canvasStage;
 			canvasStage.addChild(this.blockBitmaps);
 			canvasStage.mouseEnabled = true;
 
-/*
-			// attach mouse handlers directly to the source canvas:
-			stage.onmousemove = onMouseMove;
-			canvas.onmousedown = onMouseDown;
-			canvas.onmouseup = onMouseUp;
-*/
-
 			this.loadSprites(onSpritesLoaded);
 
 			function onSpritesLoaded() {
-				var bitmap, image, type, coord;
-
-				//console.log("Adding block bitmaps");
-				//console.log("sprites: ", isograph.sprites);
-				//console.log(isograph.spritesImage);
-
-				// Create all block bitmaps
-				for (i in blocks) {
-					block = blocks[i];
-//					console.log("block!!!! ", block);
-					type = block.type;
-					coord = isograph.translateFromISO(block.coord);
-//					console.log("type.hasOwnSpriteSheet", type.hasOwnSpriteSheet, type.id);
-					if (type.hasOwnSpriteSheet) {
-						bitmap = new BitmapSequence(type.spritesheet);
-//						console.log("type.spritesheet", type.spritesheet, type, block);
-						bitmap.gotoAndStop(block.direction);
-					} else {
-						bitmap = new BitmapSequence(isograph.sprites);
-						bitmap.gotoAndStop(type.offset);
-					}
-					bitmap.x = coord.x;
-					bitmap.y = coord.y;
-					bitmap.z = coord.z;
-					block.bitmap = bitmap;
-					isograph.blockBitmaps.addChild(bitmap);
-				}
-
+				// Update the depth indexing
 				isograph.updateZ();
-				// todo: get the fps from options
-				Ticker.setFPS(15);
-
+				// Set the desired FPS
+				Ticker.setFPS(12); // todo: get the fps from options
 				// assign a tick listener directly to this window:
 				Ticker.addListener({
 					tick: function () {
 						canvasStage.update();
 					}
 				});
+				callback();
 			}
 		};
 
@@ -248,7 +241,9 @@
 
 				if (blockType.hasOwnSpriteSheet) {
 					spritesheetImage = blockType.spritesheetImage = new Image();
-					spritesheetImage.onload = ownSpritesheetLoaded;
+					spritesheetImage.onload = function () {
+						ownSpritesheetLoaded(blockType);
+					};
 					spritesheetImage.onerror = ownSpritesheetError;
 					spritesheetImage.src = "../src/worlds/common/sprites/" + blockType.id + ".png";
 					blockType.spritesheetReady = false;
@@ -256,12 +251,21 @@
 					blockType.spritesheetReady = true;
 				}
 
-				function ownSpritesheetLoaded() {
+				function ownSpritesheetLoaded(blockType) {
+					var frameData, loop;
+					loop = false;
+					console.log("blockType: ", blockType);
+					if (blockType.isAnimated) {
+						frameData = [0, blockType.frames, 0];
+						console.log("animated sprite: ", frameData);
+					}
 					blockType.spritesheet = new SpriteSheet(
 						spritesheetImage,
 						skin.spritesWidth,
-						skin.spritesHeight
+						skin.spritesHeight,
+						frameData
 					);
+					blockType.spritesheet.loop = loop;
 					blockType.spritesheetReady = true;
 					checkIfDone();
 				}

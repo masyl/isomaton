@@ -30,6 +30,7 @@ Optimizations:
 
 	// Constants for editModes
 	var editModes = Isomaton.editModes = {
+		normal: "normal",
 		emptyFirst: "emptyFirst"
 	};
 
@@ -121,38 +122,52 @@ Optimizations:
 		};
 
 		this.start = function start(world, options) {
-			this.world = world;
-			this.options(options);
-			this.isograph = options.isograph;
-			this.isograph.stepSpeed = this.speed / this.speedMultiplier;
-			this.isograph.bind(this.blocks);
-			stageOptions.start.call(this);
-			this.render();
-			stage.step(1);
 
+			// Setup sound
+
+			var sounds = stage.sounds = {};
 			soundManager.url = '../src/libs/soundmanager-297a/swf/';
+			soundManager.debugMode = false;
 			soundManager.flashVersion = 9; // optional: shiny features (default = 8)
 			soundManager.useFlashBlock = false; // optionally, enable when you're ready to dive in
 			soundManager.useHTML5Audio = true;
 			soundManager.onready(function() {
-				var sounds = stage.sounds = {};
+				soundManager.preferFlash = false;
 				sounds.soundTrack = soundManager.createSound({
+					autoLoad: true,
 					id:'soundtrack',
-					url: "../../sounds/Nurykabe - Arrivée distante.mp3"
+					url: "../../sounds/Nurykabe-Arrivee-distante.ogg"
 				});
-				sounds.soundTrack.play();
+				sounds.soundTrack.play({
+					loops: 3
+				});
 				sounds.pop = soundManager.createSound({
+					autoLoad: true,
 					id:'pop',
-					url: "../../sounds/pop.mp3"
+					url: "../../sounds/pop.ogg",
+					multiShot: true
+				});
+				sounds.chicken = soundManager.createSound({
+					autoLoad: true,
+					id:'chicken',
+					url: "../../sounds/chicken.ogg",
+					multiShot: true
 				});
 
 			});
 
+			this.world = world;
+			this.options(options);
+			this.isograph = options.isograph;
+			this.isograph.stepSpeed = this.speed / this.speedMultiplier;
+			this.isograph.setup(onSetup);
+			this.isograph.bind(this.blocks);
 
-		};
-
-		this.render = function render() {
-			this.isograph.setup();
+			function onSetup() {
+				// todo: find a better way than calling from options
+				stageOptions.start.call(stage);
+				stage.step(1);
+			}
 		};
 
 		//todo: Blocks collections/container should have this method instead of this procedural approach

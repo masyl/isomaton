@@ -140,15 +140,11 @@
 				var spawners, spawner;
 				// Find spawners
 				spawners = this.stage.actors.select({type:"spawner"}).get();
-				console.log("spawners", spawners);
 				// Pick own at random
 				spawner = this.stage.randomItem("randomSpawn-" + this.id, spawners);
 				// Teleport to it
 				if (spawner) {
-					console.log("spawning to: ", spawner);
 					this.act("respawnTo", spawner);
-				} else {
-					console.log("no spawn!");
 				}
 			});
 		});

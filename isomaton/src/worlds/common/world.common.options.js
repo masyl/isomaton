@@ -115,6 +115,17 @@ window.commonworld = {
 					"offset": 2
 				}
 			}
+		},
+		"effects": {
+			"offset": 999,
+			"blocks": {
+				"puff": {
+					"isAnimated": true,
+					"frames": 8,
+					"hasOwnSpriteSheet": true,
+					"isSolid": false
+				}
+			}
 		}
 	}
 };
