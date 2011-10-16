@@ -11,18 +11,19 @@
 - DONE: Slime loses 1 health point when hit
 - DONE: hitProtection scheme to prevent multiple close hits
 - DONE: Slime dies and disapear in a puff when health goes down to 0
-
 - DONE: Added mouse events for mouseover, mouseout, mousedown, mouseup, mousemove.
+- DONE: Added focus and blur events on blocks and actors
 
-- bug: invalid moves are animated before they get invalidated or rolled back!!! make weird results
 - Display character status in the isograph
 - Health meter in the character status
 - New slime respawns after 10 steps
 - Chicken have 2 health points
 - "Hit" sound when a actor is hit
 - Slime attacks chickens instead of hunting the princess when they are near enough
+
 - bug: the soundtrack doesn loop properly
 - bug: on first draw, the depth ordering is wrong
+- bug: invalid moves are animated before they get invalidated or rolled back!!! make weird results
 
 
 ### Spawner

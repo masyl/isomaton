@@ -43,13 +43,13 @@
 			var offset = new Point();
 
 			// if we were dragging, but are not anymore, call mouseOut with the old target:
-			if (!this.dragStarted && mouseTarget) {
+			if (!this.mouseIsDown && mouseTarget) {
 				this.onMouseOut(mouseTarget);
-				this.dragStarted = false;
+				this.mouseIsDown = false;
 			}
 
 			// if we're not currently dragging, and have valid mouseX and mouseY values, check for objects under mouse:
-			if (!this.dragStarted && this.mouseX && this.mouseY) {
+			if (!this.mouseIsDown && this.mouseX && this.mouseY) {
 				// when running local files, most browsers throw a security error when reading pixel data
 				// (which getObjectUnderPoint uses) so we'll put it in a try/catch block:
 
@@ -96,20 +96,18 @@
 			isograph.mouseY = e.pageY - this.offsetTop;
 		};
 		this.onMouseDown = function onMouseDown(e) {
-			console.log("onMouseDown");
 			if (!e) { e = window.event; }
-			this.dragStarted = true;
+			this.mouseIsDown = true;
 		};
 		this.onMouseUp = function onMouseUp(e) {
-			console.log("onMouseUp");
 			if (!e) { e = window.event; }
-			this.dragStarted = false;
+			this.mouseIsDown = false;
 		};
 		this.onMouseOver = function onMouseOver(bitmap) {
-			console.log("in:", bitmap);
+			bitmap.block.focus();
 		};
 		this.onMouseOut = function onMouseOut(bitmap) {
-			console.log("out:", bitmap);
+			bitmap.block.blur();
 		};
 
 
@@ -233,6 +231,8 @@
 				bitmap = new BitmapSequence(isograph.sprites);
 				bitmap.gotoAndStop(type.offset);
 			}
+			// Add a reference to its block (for later use on focus/blur events)
+			bitmap.block = block;
 			bitmap.x = coord.x;
 			bitmap.y = coord.y;
 			bitmap.z = coord.z;

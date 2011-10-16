@@ -27,6 +27,7 @@ Reversible Transactions:
 		/*
 		Main constructors
 		 */
+		this.actor = null; // The controlling actor of this block
 		this.Block = Block;
 		this.Area = Area;
 		this.World = World;
@@ -198,6 +199,17 @@ Reversible Transactions:
 			return index;
 		};
 
+		this.blur = function blur() {
+			if (this.actor) {
+				this.actor.blur();
+			}
+		};
+
+		this.focus = function focus() {
+			if (this.actor) {
+				this.actor.focus();
+			}
+		};
 
 		this.serializer = function (json) {
 			if (json) {

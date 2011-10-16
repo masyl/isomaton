@@ -34,6 +34,7 @@
 			this.coord = coord;
 			// Create the block to represent the actor
 			this.block = new isomaton.Block(this.blockType, coord);
+			this.block.actor = this;
 			this.publish("bind");
 			return this;
 		};
@@ -139,6 +140,15 @@
 				index["nextCoord.z"] = this.nextCoord.z;
 			}
 			return index;
+		};
+
+
+		this.blur = function blur() {
+			console.log("actor: blur", this);
+		};
+
+		this.focus = function focus() {
+			console.log("actor: focus", this);
 		};
 
 		this.subscribe("bind", function () {
