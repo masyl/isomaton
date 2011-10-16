@@ -23,7 +23,7 @@
 - bug: actors can move two on the same spot in some cases!
 - bug: must remove "puff" block effect when its finished ... after x steps
 - bug: respawning can create multiple puff blocks one over the other
--
+- bug: on first draw, the depth ordering is wrong
 
 ### v0.9 - HTML5 at all cost
 - Use HTML5 Sound API

@@ -39,8 +39,11 @@ window.commonworld = {
 					"offset": 4
 				},
 				"water": {
+					"isAnimated": false,
+					"frames": 18,
+					"hasOwnSpriteSheet": true,
 					"isSolid": false,
-					"offset": 5
+					"loop": true
 				}
 			}
 		},
@@ -68,6 +71,7 @@ window.commonworld = {
 					"offset": 3
 				},
 				"chicken": {
+					"hasOwnSpriteSheet": true,
 					"isSolid": true,
 					"offset": 4
 				}
@@ -121,9 +125,10 @@ window.commonworld = {
 			"blocks": {
 				"puff": {
 					"isAnimated": true,
-					"frames": 8,
+					"frames": 9,
 					"hasOwnSpriteSheet": true,
-					"isSolid": false
+					"isSolid": false,
+					"loop": false
 				}
 			}
 		}

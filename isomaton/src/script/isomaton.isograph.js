@@ -138,8 +138,7 @@
 				bitmap = new BitmapSequence(type.spritesheet);
 				if (type.isAnimated) {
 					// todo: animation for each directions
-					console.log("play!", type);
-					bitmap.gotoAndPlay(0);
+					bitmap.gotoAndPlay("main");
 				} else {
 					bitmap.gotoAndStop(block.direction);
 				}
@@ -252,11 +251,14 @@
 				}
 
 				function ownSpritesheetLoaded(blockType) {
-					var frameData, loop;
+					var frameData, loop, loopString;
 					loop = false;
 					console.log("blockType: ", blockType);
 					if (blockType.isAnimated) {
-						frameData = [0, blockType.frames, 0];
+						loopString = (blockType.loop) ? "main" : false;
+						frameData = {
+								main: [0, blockType.frames - 1, loopString]
+						};
 						console.log("animated sprite: ", frameData);
 					}
 					blockType.spritesheet = new SpriteSheet(
@@ -265,7 +267,6 @@
 						skin.spritesHeight,
 						frameData
 					);
-					blockType.spritesheet.loop = loop;
 					blockType.spritesheetReady = true;
 					checkIfDone();
 				}

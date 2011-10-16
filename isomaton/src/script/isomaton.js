@@ -206,8 +206,10 @@ Reversible Transactions:
 	function BlockType(id, options) {
 		this.id = id;
 		this.offset = options.offset || 0;
+		// todo: use an extend method instead of this idiotic approach...
 		this.isSolid = this.isSolid = (options.isSolid !== undefined) ? options.isSolid : true;
-		this.isAnimated = this.isAnimated = (options.isAnimated !== undefined) ? options.isAnimated : true;
+		this.isAnimated = this.isAnimated = (options.isAnimated !== undefined) ? options.isAnimated : false;
+		this.loop = this.loop = (options.loop !== undefined) ? options.loop : false;
 		this.frames = this.frames = (options.frames !== undefined) ? options.frames : true;
 
 		// true is this block has its own spritesheet
