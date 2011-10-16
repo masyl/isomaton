@@ -32,17 +32,20 @@
 
 		this.updateBlock = function (block) {
 			var speed, coord;
-			coord = this.translateFromISO(block.coord);
-			if (block.coord.stepDistanceFrom(block.prevCoord) > 1) {
-				speed = 0;
-			} else {
-				speed = this.stepSpeed * 2;
-			}
-			if (block.bitmap) {
-				if (block.type.hasOwnSpriteSheet) {
-					block.bitmap.gotoAndStop(block.direction);
+			if (block.coord !== block.animatedCoord) {
+				block.animatedCoord = block.coord;
+				coord = this.translateFromISO(block.coord);
+				if (block.coord.stepDistanceFrom(block.prevCoord) > 1) {
+					speed = 0;
+				} else {
+					speed = this.stepSpeed * 2;
 				}
-				this.updateBlockBitmap(block.bitmap, coord.x, coord.y, coord.z, speed);
+				if (block.bitmap) {
+					if (block.type.hasOwnSpriteSheet) {
+						block.bitmap.gotoAndStop(block.coord.direction);
+					}
+					this.updateBlockBitmap(block.bitmap, coord.x, coord.y, coord.z, speed);
+				}
 			}
 		};
 
@@ -140,7 +143,7 @@
 					// todo: animation for each directions
 					bitmap.gotoAndPlay("main");
 				} else {
-					bitmap.gotoAndStop(block.direction);
+					bitmap.gotoAndStop(block.coord.direction);
 				}
 			} else {
 				bitmap = new BitmapSequence(isograph.sprites);
@@ -251,15 +254,12 @@
 				}
 
 				function ownSpritesheetLoaded(blockType) {
-					var frameData, loop, loopString;
-					loop = false;
-					console.log("blockType: ", blockType);
+					var frameData, loopString;
 					if (blockType.isAnimated) {
 						loopString = (blockType.loop) ? "main" : false;
 						frameData = {
 								main: [0, blockType.frames - 1, loopString]
 						};
-						console.log("animated sprite: ", frameData);
 					}
 					blockType.spritesheet = new SpriteSheet(
 						spritesheetImage,

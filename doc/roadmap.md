@@ -16,17 +16,24 @@
 - DONE: Animated Puff effect when character re-spawn
 - FIXED: bug: actor moves one last step after being told to teleport
 - DONE: Chicken sounds
+
+- DONE: Block animations can be dynamic
+- DONE: Chicken should be redrawn as a block and have exended spritesheets
+- DONE: Princess has a been redrawn an has a crown
+
 - Emit events for actors on "collidedOn", "gotCollided", "hitOn", "gotHit"
-- Chicken should be redrawn as a block and have exended spritesheets
 - Variation on compulsion for events that dont need to compete for exclusivity (sounds, exclamations)
+
+- bug: the soundtrack doesn loop properly
 - bug: Sometimes, the pop sound doesnt playback correctly
 - bug: actors can move two on the same spot in some cases!
 - bug: must remove "puff" block effect when its finished ... after x steps
 - bug: respawning can create multiple puff blocks one over the other
 - bug: on first draw, the depth ordering is wrong
+- bug: pausing the game doesnt pause the rendering... still using cpu at max
 
 ### v0.9 - HTML5 at all cost
-- Use HTML5 Sound API
+- DONE: Use HTML5 Sound API
 - Persistance of current game
 - Button to restart
 - Complete deployment to the Chrome Store
@@ -155,6 +162,7 @@
 - Test long term playback: number limits, memory leaks
 
 ## Features
+- On click, show the actor or block stats
 - Implement A* pathfinding function for knight to hunt slime
 	http://www.briangrinstead.com/files/astar/
 	or http://www.matthewtrost.org/projects/astar/
@@ -178,7 +186,7 @@
 - Figure out how item crafting/alchemy plays into the story and how it is done
 - Rotate the stage n, e, s, w. and show a compass rose or arrows for cardinal directions
 - Render block shadows and add property to "hasShadow" to blocks
-
+- Tree entity that grows and drop apples blocks or other fruits. Starts with a sappling, and grows to a 5 blocks high tree. All vegetable eaters should have the impulse to pick the fruits.
 
 ## Far Future Backlog
 

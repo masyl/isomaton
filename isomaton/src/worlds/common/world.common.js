@@ -274,11 +274,13 @@
 			this.editMode(editModes.emptyFirst);
 
 			// place layer of stone
-			this.placeBlocks(builder.fill(stoneBlock, groundArea));
+			// todo: bring back this layer once isograph is optimized
+//			this.placeBlocks(builder.fill(stoneBlock, groundArea));
 
 			// place layer of dirt
 			groundArea.coord.up();
-			this.placeBlocks(builder.fill(dirtBlock, groundArea));
+			// todo: bring back this layer once isograph is optimized
+//			this.placeBlocks(builder.fill(dirtBlock, groundArea));
 
 			// place layer of grass
 			groundArea.coord.up();

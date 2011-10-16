@@ -163,7 +163,6 @@ Reversible Transactions:
 		this.coord = coord;
 		this.nextCoord = null;
 		this.prevCoord = null;
-		this.direction = 0; // Direction thoward which the block is facing
 
 		this.goNext = function goNext(coord) {
 			this.nextCoord = coord;
@@ -182,7 +181,7 @@ Reversible Transactions:
 			return "Block-" + this.id;
 		};
 		this.toIndex = function txoIndex() {
-			return {
+			var index = {
 				"class": "Block",
 				"id": this.id,
 				"type.id": this.type.id,
@@ -190,7 +189,13 @@ Reversible Transactions:
 				"coord.x": this.coord.x,
 				"coord.y": this.coord.y,
 				"coord.z": this.coord.z
+			};
+			if (this.nextCoord) {
+				index["nextCoord.x"] = this.nextCoord.x;
+				index["nextCoord.y"] = this.nextCoord.y;
+				index["nextCoord.z"] = this.nextCoord.z;
 			}
+			return index;
 		};
 
 
@@ -231,7 +236,7 @@ Reversible Transactions:
 	}
 
 	//todo: move into separate package
-	Isomaton.Coord = function Coord(x, y, z) {
+	Isomaton.Coord = function Coord(x, y, z, direction) {
 		/*
 		Directions:
 			0: North
@@ -244,9 +249,10 @@ Reversible Transactions:
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		this.direction = (direction !== undefined) ? direction : 0;
 
 		this.copy = function copy() {
-			return new Isomaton.Coord(this.x, this.y, this.z);
+			return new Isomaton.Coord(this.x, this.y, this.z, this.direction);
 		};
 
 
@@ -302,7 +308,11 @@ Reversible Transactions:
 		};
 
 		this.stepDistanceFrom = function stepDistanceFrom(coord) {
-			return Math.abs(this.x - coord.x) + Math.abs(this.y - coord.y);
+			var distance = 0;
+			if (coord) {
+				distance = Math.abs(this.x - coord.x) + Math.abs(this.y - coord.y);
+			}
+			return distance;
 		};
 
 		this.directionsThoward = function directionsThoward(coord) {
@@ -466,7 +476,7 @@ Reversible Transactions:
 	};
 
 	Rules.CantWalkIntoSolids = function CantWalkIntoSolids() {
-		var coord, stage, blocks, isValidMove;
+		var i, block, coord, stage, blocks, isValidMove;
 		isValidMove = true;
 		// Test if next move is into a solid block
 		coord = this.nextCoord;
@@ -490,11 +500,15 @@ Reversible Transactions:
 			"nextCoord.z": coord.z
 		}).get();
 
-		if (blocks.length) {
+//		console.log("future blocks:", blocks);
+
+		for (i = 0; i < blocks.length; i = i + 1) {
 			//console.log("collision");
 			//todo: handle case where multiple blocks occupy the same space
-			if (blocks[0].type.isSolid) {
+			block = blocks[i];
+			if (block.type.isSolid && block !== this.block) {
 				isValidMove = false;
+				//console.log("invalid move");
 			}
 		}
 

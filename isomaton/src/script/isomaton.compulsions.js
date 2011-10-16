@@ -62,7 +62,7 @@
 			if (mod === 0) {
 				// Move at random
 				var direction = actor.stage.randomItem(actor.id, [0, 1, 2, 3]);
-				actor.block.direction = direction;
+				actor.block.coord.direction = direction;
 				actor.goNext(actor.coord.copy().move(direction));
 			}
 		};
@@ -81,8 +81,8 @@
 			var mod = actor.stage.time % this.stepInterval;
 			if (mod === 0) {
 				var directions = actor.coord.directionsThoward(this.target.coord);
-				actor.block.direction = actor.stage.randomItem(actor.id, directions);
-				actor.goNext(actor.coord.copy().move(actor.block.direction));
+				actor.block.coord.direction = actor.stage.randomItem(actor.id, directions);
+				actor.goNext(actor.coord.copy().move(actor.block.coord.direction));
 			}
 			if (this.options.act) {
 				this.options.act.call(this);
@@ -102,8 +102,8 @@
 			var mod = actor.stage.time % this.stepInterval;
 			if (mod === 0) {
 				var directions = actor.coord.directionsAway(this.target.coord);
-				actor.block.direction = actor.stage.randomItem(actor.id, directions);
-				actor.goNext(actor.coord.copy().move(actor.block.direction));
+				actor.block.coord.direction = actor.stage.randomItem(actor.id, directions);
+				actor.goNext(actor.coord.copy().move(actor.block.coord.direction));
 			}
 		};
 	};

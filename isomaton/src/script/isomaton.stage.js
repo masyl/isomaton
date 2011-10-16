@@ -267,18 +267,21 @@ Optimizations:
 
 				// Call the step of each actors
 				for (actorId in actors) {
+					actor = actors[actorId];
 					//todo: no nead to pass the stage as argument if it is aware of what stage it is on
-					actors[actorId].step(this);
+					actor.step(this);
+					actor.validateMove(this);
 				}
-
+/*
 				// Test everyones move and see if there are collissions to resolve or rules to apply
 				for (actorId in actors) {
 					actor = actors[actorId];
 					// Ask actor to validate it's next move
 					//todo: no nead to pass the stage as argument if it is aware of what stage it is on
-					actor.validateMove(this);
+//					actor.validateMove(this);
 				}
-
+*/
+				
 				// Process all remaining nextCoord's as valid moves
 				for (actorId in actors) {
 					actor = actors[actorId];
@@ -286,9 +289,9 @@ Optimizations:
 					if (actor.nextCoord) {
 						actor.go();
 						// Update the actor and block indexes in the minidb
-						// todo: use pubsub for updates
-						this.blocks.update(actor.block);
-						this.actors.update(actor);
+						// todo: use pubsub for updates ... should not update all blocks in batch
+//						this.blocks.update(actor.block);
+//						this.actors.update(actor);
 					}
 				}
 

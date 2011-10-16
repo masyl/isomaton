@@ -44,6 +44,13 @@
 		this.goNext = function goNext(coord) {
 			this.nextCoord = coord;
 			this.block.goNext(coord);
+			this.updateIndex();
+		};
+
+		this.updateIndex = function updateIndex(coord) {
+			this.stage.actors.update(this);
+			// todo: refactor, the actor should not be responsible to update the blocks indexes
+			this.stage.blocks.update(this.block);
 		};
 
 		this.go = function go() {
@@ -54,6 +61,7 @@
 				this.nextCoord = null;
 			}
 			this.block.go();
+			this.updateIndex();
 		};
 
 		this.validateMove = function () {
