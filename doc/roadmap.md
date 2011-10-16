@@ -7,12 +7,14 @@
 - FIXED: bug: pausing the game doesnt pause the rendering... still using cpu at max
 - DONE: Canvas is now 16x9 and resizes to page width
 - REMOVE: Chickens sound for now
-
 - DONE: Slime has 3 health points
 - DONE: Slime loses 1 health point when hit
 - DONE: hitProtection scheme to prevent multiple close hits
 - DONE: Slime dies and disapear in a puff when health goes down to 0
 
+- DONE: Added mouse events for mouseover, mouseout, mousedown, mouseup, mousemove.
+
+- bug: invalid moves are animated before they get invalidated or rolled back!!! make weird results
 - Display character status in the isograph
 - Health meter in the character status
 - New slime respawns after 10 steps
@@ -154,6 +156,7 @@
 
 ## Housekeeping and Architecture
 - Sound effects should be configurable just like sprites with a declarative model
+- Give names to all anonymous functions for better profiling
 - Resegment big packages into smaller packages
 - Use declarative FrameData so that spritesheets are decoupled from code
 - Use mixxins in addition to inheritance to compound actor properties and behaviors (prevent multiple inheritance)

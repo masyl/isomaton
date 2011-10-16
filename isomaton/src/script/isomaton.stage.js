@@ -266,50 +266,31 @@ Optimizations:
 		this.step = function step(stepCount) {
 			var isValidMove, key, actor, actorId, actors, blocks, coord;
 			for (var i = 0; i < stepCount; i = i + 1) {
-
+				// Increment the time marker by one
 				stage.time = stage.time + 1;
-				//console.log("_options: ", stage._options);
-
 				// Step through the stage logic
 				stage._options.step.call(stage);
-
-				// Step through the actor logic
+				// Obtain the collection of stage actors
 				actors = this.actors.all().get();
-
-				// Call the step of each actors
+				// Call the step handler of each actors
 				for (actorId in actors) {
 					actor = actors[actorId];
 					//todo: no nead to pass the stage as argument if it is aware of what stage it is on
 					actor.step(this);
+					// Ask the actor to validate his move
+					// todo: validateMove should be handled by the actor ?
 					actor.validateMove(this);
 				}
-/*
-				// Test everyones move and see if there are collissions to resolve or rules to apply
-				for (actorId in actors) {
-					actor = actors[actorId];
-					// Ask actor to validate it's next move
-					//todo: no nead to pass the stage as argument if it is aware of what stage it is on
-//					actor.validateMove(this);
-				}
-*/
-				
+
 				// Process all remaining nextCoord's as valid moves
 				for (actorId in actors) {
-					actor = actors[actorId];
-
-					if (actor.nextCoord) {
-						actor.go();
-						// Update the actor and block indexes in the minidb
-						// todo: use pubsub for updates ... should not update all blocks in batch
-//						this.blocks.update(actor.block);
-//						this.actors.update(actor);
-					}
+					actors[actorId].go();
 				}
-
+				// Update the fps counter (for debug usage)
 				this.fps.update();
 			}
+			// Move to the next step
 			this.nextStep(stepCount);
-
 			return this;
 		};
 
@@ -317,16 +298,22 @@ Optimizations:
 		 * Go through the next step event is the stage is paused or not.
 		 */
 		this.nextStep = function nextStep(stepCount) {
-			// Step through the world options step (usually debugging)
+			// Step through the world options step (usually for debugging)
 			this.world._options.step(this, this.world);
 
-			setTimeout(function() {
-				if (stage.playState !== "pause") {
+			// If not on pause call the next step after the required interval,
+			// otherwise do the next check after 1 second
+			if (stage.playState !== "pause") {
+				setTimeout(function() {
+					// Call the next step
 					stage.step(stepCount);
-				} else {
+				}, stage.speed / stage.speedMultiplier);
+			} else {
+				setTimeout(function() {
+					// Check again in 1 second
 					stage.nextStep(stepCount);
-				}
-			}, stage.speed / stage.speedMultiplier);
+				}, 1000);
+			}
 
 			return this;
 		};

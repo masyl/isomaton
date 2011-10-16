@@ -19,7 +19,6 @@
 - Princess has a been redrawn an has a crown
 - FIXED: bug: actors can move two on the same spot in some cases!
 
-
 ### v0.7 - Compulsory Mechanics
 
 - Finish migration to the new Actor inheritance model

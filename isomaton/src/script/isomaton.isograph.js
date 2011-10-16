@@ -11,7 +11,7 @@
 		this.blockTypes = null;
 
 		this.init = function () {
-			var canvas;
+			var canvasStage, canvas;
 			this.options(options);
 
 			// todo: get root target from options
@@ -19,7 +19,15 @@
 			canvas = options.canvas;
 			this.blockTypes = options.blockTypes;
 			this.blockBitmaps = new Container();
-			this.canvasStage = new Stage(canvas);
+
+			canvasStage = this.canvasStage = new Stage(canvas);
+			this.canvas = canvas;
+			canvasStage.mouseEnabled = true;
+
+			// attach mouse handlers directly to the source canvas:
+			canvas.onmousemove = this.onMouseMove;
+			canvas.onmousedown = this.onMouseDown;
+			canvas.onmouseup = this.onMouseUp;
 
 			// todo: update how the focus and selection of blocks is done
 
@@ -29,6 +37,82 @@
 			_(options).extend(this._options);
 			return this._options;
 		};
+
+		this.mouseTick = function mouseTick () {
+			var mouseTarget;
+			var offset = new Point();
+
+			// if we were dragging, but are not anymore, call mouseOut with the old target:
+			if (!this.dragStarted && mouseTarget) {
+				this.onMouseOut(mouseTarget);
+				this.dragStarted = false;
+			}
+
+			// if we're not currently dragging, and have valid mouseX and mouseY values, check for objects under mouse:
+			if (!this.dragStarted && this.mouseX && this.mouseY) {
+				// when running local files, most browsers throw a security error when reading pixel data
+				// (which getObjectUnderPoint uses) so we'll put it in a try/catch block:
+
+				var t = (new Date()).getTime();
+				mouseTarget = this.canvasStage.getObjectUnderPoint(this.mouseX, this.mouseY);
+				try {
+					// this will return the top-most display object under the mouse position:
+				} catch (e) {
+					Ticker.removeListener(window);
+					alert("An error occurred because this browser does not support reading pixel data in local files. Please read 'SECURITY_ERROR_README.txt' included with the EaselJS for details");
+				}
+				if (mouseTarget && mouseTarget !== this.mouseTarget) {
+					// if we found a target, call mouseOver with it:
+					var oldMouseTarget = this.mouseTarget;
+					this.mouseTarget = mouseTarget;
+					if (oldMouseTarget) {
+						this.onMouseOut(oldMouseTarget);
+					}
+					if (mouseTarget) {
+						this.onMouseOver(mouseTarget);
+					}
+					/*
+					offset.x = mouseTarget.x - this.mouseX;
+					offset.y = mouseTarget.y - this.mouseY;
+					*/
+				}
+			}
+
+			// if we're currently dragging something, update it's x/y:
+			/*
+			if (this.dragStarted && mouseTarget) {
+				// pop it to the top of the display list:
+				this.canvasStage.addChild(mouseTarget);
+				mouseTarget.x = this.mouseX + offset.x;
+				mouseTarget.y = this.mouseY + offset.y;
+			}
+			*/
+
+		};
+
+		this.onMouseMove = function onMouseMove(e) {
+			if (!e) { e = window.event; }
+			isograph.mouseX = e.pageX - this.offsetLeft;
+			isograph.mouseY = e.pageY - this.offsetTop;
+		};
+		this.onMouseDown = function onMouseDown(e) {
+			console.log("onMouseDown");
+			if (!e) { e = window.event; }
+			this.dragStarted = true;
+		};
+		this.onMouseUp = function onMouseUp(e) {
+			console.log("onMouseUp");
+			if (!e) { e = window.event; }
+			this.dragStarted = false;
+		};
+		this.onMouseOver = function onMouseOver(bitmap) {
+			console.log("in:", bitmap);
+		};
+		this.onMouseOut = function onMouseOut(bitmap) {
+			console.log("out:", bitmap);
+		};
+
+
 
 		this.updateBlock = function (block) {
 			var speed, coord;
@@ -207,11 +291,16 @@
 				// assign a tick listener directly to this window:
 				Ticker.addListener({
 					tick: function () {
-						canvasStage.update();
+						isograph.tick();
 					}
 				});
 				callback();
 			}
+		};
+
+		this.tick = function tick() {
+			this.mouseTick();
+			this.canvasStage.update();
 		};
 
 		this.loadSprites = function(callback) {
