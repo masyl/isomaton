@@ -10,7 +10,8 @@
 		var actor = this;
 
 		this.id = null;
-		this._options = {};
+		this.options = this.options || {};
+		_(this.options).extend(options);
 		this.coord = null;
 		this.nextCoord = null;
 		this.prevCoord = null;
@@ -20,6 +21,8 @@
 		this.compulsions = {};
 		this.blockType = null;
 		this.block = null;
+		this.defaultLife = this.defaultLife || this.options.defaultLife || 10;
+		this.life = this.life || this.defaultLife;
 
 
 		this.bind = function bind(stage, coord) {
@@ -116,11 +119,6 @@
 			return this;
 		};
 
-		this.options = function fnOptions(_options) {
-			_(this._options).extend(_options);
-			return this._options;
-		};
-
 		this.toString = function toString() {
 			return "Actor-" + this.id;
 		};
@@ -144,6 +142,10 @@
 		};
 
 		this.subscribe("bind", function () {
+			this.react("die", function (source, options) {
+				this.act("respawn", source, options);
+			});
+
 			this.react("respawn", function (source, options) {
 				var spawners, spawner;
 				// Find spawners

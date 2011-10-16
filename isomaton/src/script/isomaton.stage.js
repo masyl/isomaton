@@ -153,6 +153,12 @@ Optimizations:
 					url: "../../sounds/chicken.ogg",
 					multiShot: true
 				});
+				sounds.hit = soundManager.createSound({
+					autoLoad: true,
+					id:'hit',
+					url: "../../sounds/hit.ogg",
+					multiShot: true
+				});
 
 			});
 

@@ -11,10 +11,11 @@
 	var editModes = Isomaton.editModes; // Constants
 
 
-	world.Actors.Spawner = function Spawner(options) {
+	world.Actors.SpawnPoint = function SpawnPoint(options) {
 		Actor.apply(this, arguments); // Inherit from the Actor class
-		this.type = "spawner";
-		this.label = "Spawner";
+		this.type = "spawnPoint";
+		this.label = "Spawn point";
+		// todo: use a functionnal getter for block types (with fallbacks)
 		this.blockType = world.blockTypes["blank.empty"];
 		this.subscribe("bind", function () {
 			// When an actor teleports to this spawn point
@@ -34,6 +35,9 @@
 	};
 
 	world.Actors.Slime = function Slime(options) {
+		// todo: better handling of default options and default values when inheriting
+		this.defaultLife = 3;
+
 		Actor.apply(this, arguments); // Inherit from the Actor class
 		this.type = "slime";
 		this.label = "Slime";
@@ -70,9 +74,30 @@
 				return weight;
 			}
 		});
+		// todo: generalize this behavior as life/living mixin
 		this.subscribe("bind", function () {
+			// todo: get re-Hit protection limit from setting
+			var hitProtectionLength = 10;
 			this.react("hit", function (source, options) {
-				this.act("respawn", this); // Slime teleports itself somewhere else
+				if (!this.lastHit) {
+					// Initialize a lastHit marker to calculate the hitProtection scheme
+					this.lastHit = this.stage.time - (hitProtectionLength + 1);
+				}
+				if (this.stage.time - this.lastHit > hitProtectionLength) {
+					// Play the "hit" sound effect
+					this.stage.sounds.hit.play();
+					// Decrease life by 1
+					// todo: strength of hit should be flexible
+					this.life = this.life - 1;
+					// Keep a lastHit marker to calculate the hitProtection scheme
+					this.lastHit = this.stage.time;
+					// Actor doesnt have any life left, he dies
+					if (this.life <= 0) {
+						this.act("die", this);
+						// todo: actor shouldn gain back life here
+						this.life = this.defaultLife;
+					}
+				}
 			});
 		});
 		this.init();
@@ -94,28 +119,7 @@
 			weight: [2, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
 			stepInterval: 2,
 			minDistance: 5,
-			maxDistance: 16,
-			resolveTarget: function resolveTarget(actor, distance) {
-				var weight = 0;
-				if (actor.type === "chicken") {
-					weight = this.weightByDistance(distance);
-				}
-				return weight;
-			}
-		});
-
-		this.compulsions.FollowAndQuack = new Compulsions.Follow(this, {
-			weight: [2, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
-			stepInterval: 3,
-			minDistance: 16,
 			maxDistance: 30,
-			sound: "chicken",
-			act: function () {
-				var sound = this.actor.stage.sounds[this.options.sound];
-				if (sound) {
-					sound.play()
-				}
-			},
 			resolveTarget: function resolveTarget(actor, distance) {
 				var weight = 0;
 				if (actor.type === "chicken") {
@@ -344,12 +348,12 @@
 			this.placeActors([princess]);
 
 			// place 12 spawn points
-			var i, spawners = [];
+			var i, spawnPoints = [];
 			for (i = 0; i < 20; i = i + 1) {
 				coord = groundArea.randomCoord(this.random("spawnCoords-" + i));
-				spawners.push(new world.Actors.Spawner().bind(this, coord));
+				spawnPoints.push(new world.Actors.SpawnPoint().bind(this, coord));
 			}
-			this.placeActors(spawners);
+			this.placeActors(spawnPoints);
 
 			// place frame
 			this.placeBlocks(isomaton.builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));

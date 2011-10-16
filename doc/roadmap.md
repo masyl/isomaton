@@ -5,12 +5,16 @@
 ### v0.9 - Health
 - DONE: Music stops on pause
 - FIXED: bug: pausing the game doesnt pause the rendering... still using cpu at max
-- Canvas is now 16x9 and resizes to page width
-- Display character status inthe isograph
+- DONE: Canvas is now 16x9 and resizes to page width
+- REMOVE: Chickens sound for now
+
+- DONE: Slime has 3 health points
+- DONE: Slime loses 1 health point when hit
+- DONE: hitProtection scheme to prevent multiple close hits
+- DONE: Slime dies and disapear in a puff when health goes down to 0
+
+- Display character status in the isograph
 - Health meter in the character status
-- Slime has 3 health points
-- Slime loses 1 health point when hit
-- Slime dies and disapear in a puff when health goes down to 0
 - New slime respawns after 10 steps
 - Chicken have 2 health points
 - "Hit" sound when a actor is hit
@@ -149,10 +153,14 @@
 - Debt: use constants for playStates (rename to playbackMode ?  rewind, play, pause, or just an integer ?
 
 ## Housekeeping and Architecture
-- Use mixxins to compound actor properties
+- Sound effects should be configurable just like sprites with a declarative model
+- Resegment big packages into smaller packages
+- Use declarative FrameData so that spritesheets are decoupled from code
+- Use mixxins in addition to inheritance to compound actor properties and behaviors (prevent multiple inheritance)
 - Bring back source PSD of common world into the project
 - Create a build script
 - Test long term playback: number limits, memory leaks
+- Clean todos in code
 
 ## Features
 
