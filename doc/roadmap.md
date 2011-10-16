@@ -20,17 +20,7 @@
 - DONE: Block animations can be dynamic
 - DONE: Chicken should be redrawn as a block and have exended spritesheets
 - DONE: Princess has a been redrawn an has a crown
-
-- Emit events for actors on "collidedOn", "gotCollided", "hitOn", "gotHit"
-- Variation on compulsion for events that dont need to compete for exclusivity (sounds, exclamations)
-
-- bug: the soundtrack doesn loop properly
-- bug: Sometimes, the pop sound doesnt playback correctly
-- bug: actors can move two on the same spot in some cases!
-- bug: must remove "puff" block effect when its finished ... after x steps
-- bug: respawning can create multiple puff blocks one over the other
-- bug: on first draw, the depth ordering is wrong
-- bug: pausing the game doesnt pause the rendering... still using cpu at max
+- FIXED: bug: actors can move two on the same spot in some cases!
 
 ### v0.9 - HTML5 at all cost
 - DONE: Use HTML5 Sound API
@@ -153,15 +143,26 @@
 - Bug: Flowers, weeds and other blocks appear over water
 - Bug: Actors can spawn over solid blocks
 - Bug: z-index calculation and ordering doesnt account for some cases during animation
+- bug: the soundtrack doesn loop properly
+- bug: Sometimes, the pop sound doesnt playback correctly
+- bug: must remove "puff" block effect when its finished ... after x steps
+- bug: respawning can create multiple puff blocks one over the other
+- bug: on first draw, the depth ordering is wrong
+- bug: pausing the game doesnt pause the rendering... still using cpu at max
+- bug: The depth ordering isnt always correct during animations
 - Debt: block type should have their own class for their properties, not be read from property file
 - Debt: use constants for playStates (rename to playbackMode ?  rewind, play, pause, or just an integer ?
 
 ## Housekeeping and Architecture
+
 - Bring back source PSD of common world into the project
 - Create a build script
 - Test long term playback: number limits, memory leaks
 
 ## Features
+
+- Emit events for actors on "collidedOn", "gotCollided", "hitOn", "gotHit"
+- Variation on compulsion for events that dont need to compete for exclusivity (sounds, exclamations)
 - On click, show the actor or block stats
 - Implement A* pathfinding function for knight to hunt slime
 	http://www.briangrinstead.com/files/astar/
@@ -192,12 +193,6 @@
 
 - Multiplayer Server/Gameplay
 - Rewind a game to any given point
-
-
-## Abandonned ideas
-
-- Show a top-view map. The new concept doesnt require scrolling across a larger than viewport world.
-- Coord movements in 26 directions instead of 6 directions ? No. This would complexify any "push/pull" logic too much
 
 
 ## Ideas for Bloc Types and Items

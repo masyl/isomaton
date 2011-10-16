@@ -500,11 +500,7 @@ Reversible Transactions:
 			"nextCoord.z": coord.z
 		}).get();
 
-//		console.log("future blocks:", blocks);
-
 		for (i = 0; i < blocks.length; i = i + 1) {
-			//console.log("collision");
-			//todo: handle case where multiple blocks occupy the same space
 			block = blocks[i];
 			if (block.type.isSolid && block !== this.block) {
 				isValidMove = false;
