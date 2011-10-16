@@ -242,10 +242,15 @@ Optimizations:
 
 		this.pause = function pause() {
 			this.playState = "pause";
+			Ticker.setFPS(1);
+			soundManager.pauseAll();
 		};
 
 		this.resume = function resume() {
 			this.playState = "play";
+			soundManager.resumeAll();
+			// todo: get fps value from settings
+			Ticker.setFPS(12);
 		};
 
 		/**

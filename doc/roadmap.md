@@ -3,6 +3,9 @@
 ## In Progress Release
 
 ### v0.9 - Health
+- DONE: Music stops on pause
+- FIXED: bug: pausing the game doesnt pause the rendering... still using cpu at max
+- Canvas is now 16x9 and resizes to page width
 - Display character status inthe isograph
 - Health meter in the character status
 - Slime has 3 health points
@@ -10,7 +13,11 @@
 - Slime dies and disapear in a puff when health goes down to 0
 - New slime respawns after 10 steps
 - Chicken have 2 health points
+- "Hit" sound when a actor is hit
 - Slime attacks chickens instead of hunting the princess when they are near enough
+- bug: the soundtrack doesn loop properly
+- bug: on first draw, the depth ordering is wrong
+
 
 ### Spawner
 - Spawner actor responsible for spawning slime after 10 steps when none exists. The spawner will choose a random spawn point.
@@ -134,18 +141,15 @@
 - Bug: Flowers, weeds and other blocks appear over water
 - Bug: Actors can spawn over solid blocks
 - Bug: z-index calculation and ordering doesnt account for some cases during animation
-- bug: the soundtrack doesn loop properly
 - bug: Sometimes, the pop sound doesnt playback correctly
 - bug: must remove "puff" block effect when its finished ... after x steps
 - bug: respawning can create multiple puff blocks one over the other
-- bug: on first draw, the depth ordering is wrong
-- bug: pausing the game doesnt pause the rendering... still using cpu at max
 - bug: The depth ordering isnt always correct during animations
 - Debt: block type should have their own class for their properties, not be read from property file
 - Debt: use constants for playStates (rename to playbackMode ?  rewind, play, pause, or just an integer ?
 
 ## Housekeeping and Architecture
-
+- Use mixxins to compound actor properties
 - Bring back source PSD of common world into the project
 - Create a build script
 - Test long term playback: number limits, memory leaks
