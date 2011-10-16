@@ -2,27 +2,43 @@
 
 ## In Progress Release
 
+### v0.9 - Health
+- Display character status inthe isograph
+- Health meter in the character status
+- Slime has 3 health points
+- Slime loses 1 health point when hit
+- Slime dies and disapear in a puff when health goes down to 0
+- New slime respawns after 10 steps
+- Chicken have 2 health points
+- Slime attacks chickens instead of hunting the princess when they are near enough
 
-### v0.8 - Get the Slime!
-- DONE: Bigger sprites for blocks
-- DONE: Sidekick has etended styleheet
-- DONE: Act/React mechanics and hit action.
-- DONE: When the knight is next to the slime he "hit" it
-- DONE: When the slime is hit, it teleports elsewhere
-- DONE: When an actor move farther than a single block, the transition is instant instead of animated
-- DONE: Mechanics for spawn points where actors can respawn from
-- DONE: Soundtrack
-- DONE: Sound effects
-- DONE: Animated Puff effect when character re-spawn
-- FIXED: bug: actor moves one last step after being told to teleport
-- DONE: Chicken sounds
+### Spawner
+- Spawner actor responsible for spawning slime after 10 steps when none exists. The spawner will choose a random spawn point.
+- The stage adds a spawner instead of the slime itself.
+- Spawner for chickens
 
-- DONE: Block animations can be dynamic
-- DONE: Chicken should be redrawn as a block and have exended spritesheets
-- DONE: Princess has a been redrawn an has a crown
-- FIXED: bug: actors can move two on the same spot in some cases!
 
-### v0.9 - HTML5 at all cost
+### Inventory
+- "item" bloc types... pickable whe stepping on or next to them, floating a little
+- Compulsion for Knight to eat eggs from inventory to gain back health
+- Compulsion to pick up items that match their interests/tastes
+- Slime grabs egg and puts in his inventory
+- Each character has a specific inventory limit
+- Show inventory in character Status
+
+
+### Chicken & Egg
+- Chicken actor which lays eggs
+- Chicken Compulsion: If chicken doesnt see other chicken or egg for too long he lays an egg, if egg isnt picked up in X steps, it spawns another chicken.
+- Slime compulsion: Attack chicken (along with princess)
+- Chicken dies/disapear if hit byt slime
+- Knight Compulsion: pick up eggs (or any item) and put in inventory
+
+
+## Upcomming Releases
+
+### v0.? - HTML5 at all cost
+
 - DONE: Use HTML5 Sound API
 - Persistance of current game
 - Button to restart
@@ -31,9 +47,8 @@
 - Offlining ?
 - In app purchase ?
 
-## Upcomming Releases
-
 ### v0.? - Story Time - Sheep and wolfs
+
 - Possibility to abandon an act ?
 - Wolf actor
 - Sheep actor based on chicken
@@ -44,6 +59,7 @@
 -
 
 ### v0.? - Menage-à-Trois
+
 - Slime wandering: Picks a random destination and goes there.
 - Slime fleeing: moves away slowly when the knight get within 10 blocks
 - Slime attacking: attacks weak target when within 10 blocks (ex.: princess)
@@ -52,13 +68,6 @@
 - Princess wandering: moves randomly if nothing else occurs
 - Knight exploring: Picks a random destination and goes there.
 - Knight attacking: Attacks when a "monster" gets within 10 blocks.
-
-### v0.? - Trivial Compulsions
-- Chicken fleas: moves away fast when someone else than another chicken comes near (2 blocks)
-- Chicken flocking: moves back thoward other chickens if he gets too far (3 blocks)
-- Chicken wandering: moves randomly if nothing else occurs
-- Sidekick following: moves thoward knight, but never too near.
-- Sidekick waiting: Stays put otherwise
 
 ### v0.? - iOS Compatible ?
 - Disable animations and/or adapt fpd on ipad/iphone
@@ -86,19 +95,6 @@
 - A story log stores all the significant game actions and actor exclamations
 - Achievements and Inventory changes are logged to the story log
 
-### Chicken & Egg
-- Chicken actor which lays eggs
-- Chicken Compulsion: If chicken doesnt see other chicken or egg for too long he lays an egg, if egg isnt picked up in X steps, it spawns another chicken.
-- Slime compulsion: Attack chicken (along with princess)
-- Chicken dies/disapear if hit byt slime
-- Knight Compulsion: pick up eggs (or any item) and put in inventory
-
-### v0.? - Health
-- Health meter for actors
-- knight looses healt when colliding with slime
-- Actor dies when he looses all his health
-- Knight eats egg from inventory to gain back health
-
 ### v0.? - Success or failure
 - "Knight kills slime" objective
 - "Knight finds gold" objective
@@ -108,11 +104,6 @@
 
 
 ## Unplanned releases
-
-### Inventory
-- "item" bloc types... pickable whe stepping on or next to them, floating a little
-- Actor grabs gold and puts in his inventory
-- Actor grabs sword and puts in his inventory
 
 ### Let's fight
 - Knight attacks slime with bare hands
