@@ -28,8 +28,6 @@ Reversible Transactions:
 		Main constructors
 		 */
 		this.actor = null; // The controlling actor of this block
-		this.Block = Block;
-		this.Area = Area;
 		this.World = World;
 		this.worlds = {}; // Collection of available worlds
 		this.builder = {
@@ -88,7 +86,7 @@ Reversible Transactions:
 			// If new blockSets are provided, Load the blockSet collections from the options
 			if (_options && _options.blockSets) {
 				for (setId in _options.blockSets) {
-					blockSet = new BlockSet(setId, _options.blockSets[setId]);
+					blockSet = new Isomaton.BlockSet(setId, _options.blockSets[setId]);
 					this.blockSets[setId] = blockSet;
 					for (typeId in blockSet.blockTypes) {
 						this.blockTypes[setId + "." + typeId] = blockSet.blockTypes[typeId];
@@ -97,8 +95,6 @@ Reversible Transactions:
 			}
 			return options;
 		};
-
-		this.random = fakeRandom;
 
 		this.serializer = function serializer(json) {
 			var obj = json || {};
@@ -153,250 +149,13 @@ Reversible Transactions:
 			});
 		};
 
+		this.random = Isomaton.fakeRandom;
+
 		this.init();
 	}
 
-	// Base class for blocks
-	function Block(type, coord) {
-		//todo: become a pubSub and publish on update to the miniDb for blocks
-		this.id = _.uniqueId();
-		this.type = type;
-		this.coord = coord;
-		this.nextCoord = null;
-		this.prevCoord = null;
-
-		this.goNext = function goNext(coord) {
-			this.nextCoord = coord;
-		};
-
-		this.go = function go(coord) {
-			// todo: manage a better coord history queue
-			if (this.nextCoord) {
-				this.prevCoord = this.coord;
-				this.coord = this.nextCoord;
-				this.nextCoord = null;
-			}
-		};
-
-		this.toString = function toString() {
-			return "Block-" + this.id;
-		};
-		this.toIndex = function txoIndex() {
-			var index = {
-				"class": "Block",
-				"id": this.id,
-				"type.id": this.type.id,
-				"type.isSolid": this.type.isSolid,
-				"coord.x": this.coord.x,
-				"coord.y": this.coord.y,
-				"coord.z": this.coord.z
-			};
-			if (this.nextCoord) {
-				index["nextCoord.x"] = this.nextCoord.x;
-				index["nextCoord.y"] = this.nextCoord.y;
-				index["nextCoord.z"] = this.nextCoord.z;
-			}
-			return index;
-		};
-
-		this.blur = function blur() {
-			if (this.actor) {
-				this.actor.blur();
-			}
-		};
-
-		this.focus = function focus() {
-			if (this.actor) {
-				this.actor.focus();
-			}
-		};
-
-		this.serializer = function (json) {
-			if (json) {
-
-			} else {
-
-			}
-		};
-	}
-
-	function BlockType(id, options) {
-		this.id = id;
-		this.offset = options.offset || 0;
-		// todo: use an extend method instead of this idiotic approach...
-		this.isSolid = this.isSolid = (options.isSolid !== undefined) ? options.isSolid : true;
-		this.isAnimated = this.isAnimated = (options.isAnimated !== undefined) ? options.isAnimated : false;
-		this.loop = this.loop = (options.loop !== undefined) ? options.loop : false;
-		this.frames = this.frames = (options.frames !== undefined) ? options.frames : true;
-
-		// true is this block has its own spritesheet
-		this.hasOwnSpriteSheet = (options.hasOwnSpriteSheet !== undefined) ? options.hasOwnSpriteSheet : false;
-	}
-
-	function BlockSet(id, options) {
-		var blockType, typeId;
-		this.id = id;
-		this.offset = options.offset;
-		this.blockTypes = {};
-		for (typeId in options.blocks) {
-			blockType = new BlockType(typeId, options.blocks[typeId]);
-			// Adjust the offset of the blockType with the offset of its set
-			this.blockTypes[typeId] = blockType;
-			blockType.offset = blockType.offset + this.offset;
-
-		}
-	}
-
-	//todo: move into separate package
-	Isomaton.Coord = function Coord(x, y, z, direction) {
-		/*
-		Directions:
-			0: North
-			1: East
-			2: South
-			3: West
-			4: Up
-			5: Down
-		 */
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.direction = (direction !== undefined) ? direction : 0;
-
-		this.copy = function copy() {
-			return new Isomaton.Coord(this.x, this.y, this.z, this.direction);
-		};
-
-
-		this.serializer = function serializer(json) {
-			if (json) {
-
-			} else {
-
-			}
-		};
-
-		this.down = function down(_offset) {
-			var offset = (_offset === undefined) ? 1 : _offset;
-			this.z = this.z - offset;
-			return this;
-		};
-
-		this.up = function up(_offset) {
-			var offset = (_offset === undefined) ? 1 : _offset;
-			this.z = this.z + offset;
-			return this;
-		};
-
-		this.move = function move(direction, _offset) {
-			var cardinalDirections;
-			cardinalDirections = ["north", "east", "south", "west", "up", "down"];
-			return this[cardinalDirections[direction]](_offset);
-		};
-
-		// todo: test if cardinal points are adressed correctly
-		this.north = function north(_offset) {
-			var offset = (_offset === undefined) ? 1 : _offset;
-			this.x = this.x + offset;
-			return this;
-		};
-
-		this.east = function east(_offset) {
-			var offset = (_offset === undefined) ? 1 : _offset;
-			this.y = this.y + offset;
-			return this;
-		};
-
-		this.south = function south(_offset) {
-			var offset = (_offset === undefined) ? 1 : _offset;
-			this.x = this.x - offset;
-			return this;
-		};
-
-		this.west = function west(_offset) {
-			var offset = (_offset === undefined) ? 1 : _offset;
-			this.y = this.y - offset;
-			return this;
-		};
-
-		this.stepDistanceFrom = function stepDistanceFrom(coord) {
-			var distance = 0;
-			if (coord) {
-				distance = Math.abs(this.x - coord.x) + Math.abs(this.y - coord.y);
-			}
-			return distance;
-		};
-
-		this.directionsThoward = function directionsThoward(coord) {
-			var directions = [];
-			if (coord) {
-				if (this.x > coord.x) {
-					directions.push(2,2);
-				} else if (this.x < coord.x) {
-					directions.push(0,0);
-				} else {
-					directions.push(0, 2);
-				}
-				if (this.y > coord.y) {
-					directions.push(3,3);
-				} else if (this.y < coord.y) {
-					directions.push(1,1);
-				} else {
-					directions.push(1, 3);
-				}
-			}
-			return directions;
-		};
-
-		this.directionsAway = function directionsAway(coord) {
-			var directions = [];
-			if (coord) {
-				if (this.x > coord.x) {
-					directions.push(0);
-				} else if (this.x < coord.x) {
-					directions.push(2);
-				} else {
-					directions.push(0, 2);
-				}
-				if (this.y > coord.y) {
-					directions.push(1);
-				} else if (this.y < coord.y) {
-					directions.push(3);
-				} else {
-					directions.push(1, 3);
-				}
-			}
-			return directions;
-		};
-
-		// todo: function to turn clockwise and anti-clockwise
-	};
-
-	function Area(coord, width, height) {
-		this.coord = coord;
-		this.width = width;
-		this.height = height;
-
-		this.randomCoord = function randomCoord(seed) {
-			var coord, newCoord, offsetX, offsetY;
-			offsetX = Math.round(fakeRandom(seed, "offsetX") * (this.width-1));
-			offsetY = Math.round(fakeRandom(seed, "offsetY") * (this.height-1));
-			coord = this.coord;
-			newCoord = new Isomaton.Coord(coord.x + offsetX, coord.y + offsetY, coord.z);
-			return newCoord;
-		};
-
-		this.serializer = function serializer(json) {
-			if (json) {
-
-			} else {
-
-			}
-		};
-	}
-
 	function one(type, coord) {
-		var block = new Block(type, coord);
+		var block = new Isomaton.Block(type, coord);
 		return [block];
 	}
 
@@ -407,7 +166,7 @@ Reversible Transactions:
 		for (x = coord.x; x < coord.x + area.width; x = x + 1) {
 			for (y = coord.y; y < coord.y + area.height; y = y + 1) {
 				blockCoord = new Isomaton.Coord(x, y, coord.z);
-				block = new Block(type, blockCoord);
+				block = new Isomaton.Block(type, blockCoord);
 				blocks.push(block);
 			}
 		}
@@ -419,7 +178,7 @@ Reversible Transactions:
 		for (i = 0; i < count; i = i + 1) {
 				iSeed = i + seed + "" + i;
 				coord = area.randomCoord(iSeed);
-				block = new Block(type, coord);
+				block = new Isomaton.Block(type, coord);
 				blocks.push(block);
 		}
 		return blocks;
@@ -430,22 +189,22 @@ Reversible Transactions:
 		for (i = 0; i < count; i = i + 1) {
 			iSeed = i + seed + "" + i;
 			coord = area.randomCoord(iSeed);
-			block = new Block(type, coord);
+			block = new Isomaton.Block(type, coord);
 			blocks.push(block);
 			coord = coord.copy().north();
-			block = new Block(type, coord);
+			block = new Isomaton.Block(type, coord);
 			blocks.push(block);
 			coord = coord.copy().east();
-			block = new Block(type, coord);
+			block = new Isomaton.Block(type, coord);
 			blocks.push(block);
 			coord = coord.copy().south();
-			block = new Block(type, coord);
+			block = new Isomaton.Block(type, coord);
 			blocks.push(block);
 		}
 		return blocks;
 	}
 
-	function fakeRandom(seed, key) {
+	Isomaton.fakeRandom = function fakeRandom(seed, key) {
 		// todo: make better handling of key to prevent accidental duplicate results
 		var rnd, i;
 		rnd = (seed || 1) * Math.PI;
@@ -458,7 +217,7 @@ Reversible Transactions:
 		//console.log(rnd, seed, rnd, key);
 		return rnd;
 
-	}
+	};
 
 	//todo: place Rules in a separate package
 	var Rules = Isomaton.Rules = {};

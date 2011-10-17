@@ -97,11 +97,14 @@
 		};
 		this.onMouseDown = function onMouseDown(e) {
 			if (!e) { e = window.event; }
-			this.mouseIsDown = true;
+			isograph.mouseIsDown = true;
+			if (isograph.mouseTarget) {
+				isograph.mouseTarget.block.select();
+			}
 		};
 		this.onMouseUp = function onMouseUp(e) {
 			if (!e) { e = window.event; }
-			this.mouseIsDown = false;
+			isograph.mouseIsDown = false;
 		};
 		this.onMouseOver = function onMouseOver(bitmap) {
 			bitmap.block.focus();
@@ -149,7 +152,7 @@
 							x: x,
 							y: y
 						}, speed)
-					.to({z: z}, 0)
+					.to({z: z}, 0.01)
 					.call(function() {
 						isograph.updateZ();
 					});

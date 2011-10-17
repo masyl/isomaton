@@ -33,7 +33,7 @@
 			// Place where on stage
 			this.coord = coord;
 			// Create the block to represent the actor
-			this.block = new isomaton.Block(this.blockType, coord);
+			this.block = new Isomaton.Block(this.blockType, coord);
 			this.block.actor = this;
 			this.publish("bind");
 			return this;
@@ -77,7 +77,9 @@
 					if (!isValid) break;
 				}
 				if (!isValid) {
+					// Invalidate the nextCoordinate of both the actor and its block
 					this.nextCoord = null;
+					this.block.nextCoord = null;
 				}
 			}
 			return this;
@@ -88,6 +90,8 @@
 			if (compulsion) {
 				compulsion.act();
 			}
+			this.validateMove();
+			this.go();
 			return this;
 		};
 
@@ -120,6 +124,10 @@
 			return this;
 		};
 
+		this.updateStatus = function updateStatus() {
+			this.stage.updateActorStatus(this);
+		};
+
 		this.toString = function toString() {
 			return "Actor-" + this.id;
 		};
@@ -144,11 +152,13 @@
 
 
 		this.blur = function blur() {
-			console.log("actor: blur", this);
 		};
 
 		this.focus = function focus() {
-			console.log("actor: focus", this);
+		};
+
+		this.select = function select() {
+			this.stage.actorSelect(this);
 		};
 
 		this.subscribe("bind", function () {

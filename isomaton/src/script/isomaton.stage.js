@@ -136,7 +136,8 @@ Optimizations:
 				sounds.soundTrack = soundManager.createSound({
 					autoLoad: true,
 					id:'soundtrack',
-					url: "../../sounds/Nurykabe-Arrivee-distante.ogg"
+					url: "../../sounds/Nurykabe-Arrivee-distante.ogg",
+					volume: 0
 				});
 				sounds.soundTrack.play({
 					loops: 3
@@ -224,6 +225,57 @@ Optimizations:
 			this.isograph.stepSpeed = this.speed / this.speedMultiplier;
 		};
 
+
+		this.actorSelect = function actorSelect(actor) {
+			this.setActorStatus(actor);
+		};
+
+		this.actorOnStatus = null;
+		// todo: can this be done better with a pubsub approach ?
+		this.updateActorStatus = function updateActorStatus(actor) {
+			if (actor === this.actorOnStatus) {
+				this.setActorStatus(actor);
+			}
+		};
+		this.setActorStatus = function setActorStatus(actor) {
+			var i, letter, block, oldBlocks, builder, type, coord, worldOptions;
+
+			builder = this.world.builder;
+			worldOptions = this.world.options();
+			this.actorOnStatus = actor;
+
+			// find and delete all block for the actorStatus group
+			oldBlocks = this.blocks.select({
+				group: "actorStatus"
+			}).remove();
+
+			// place a block for the character name
+			coord = new Isomaton.Coord(worldOptions.width, 1, -2);
+			for (i = 0; i < actor.label.length; i = i + 1) {
+				letter = actor.label[i].toLowerCase();
+				type = this.world.blockTypes["alphabet." + letter];
+				block = new Isomaton.Block(type, coord, true, "actorStatus");
+				this.placeBlocks([block]);
+				coord.east();
+				if (letter === "m" || letter === "w") coord.east();
+			}
+
+
+			// place a block for the character avatar
+			type = actor.blockType;
+			coord = new Isomaton.Coord(worldOptions.width, 1, -4);
+			block = new Isomaton.Block(type, coord, true, "actorStatus");
+			this.placeBlocks([block]);
+
+			// place blocks for the character health
+			for (i = 0; i < actor.life; i = i + 1) {
+				coord.east();
+				type = this.world.blockTypes["cursors.life"];
+				block = new Isomaton.Block(type, coord, true, "actorStatus");
+				this.placeBlocks([block]);
+			}
+		};
+
 		this.slower = function slower() {
 			if (this.speedMultiplier < 16) {
 				jQuery.fx.off = false;
@@ -246,12 +298,18 @@ Optimizations:
 			}
 		};
 
+		/**
+		 * Pause the game playback along with the sound. Also reduce the isograph FPS to lighten CPU load.
+		 */
 		this.pause = function pause() {
 			this.playState = "pause";
-			Ticker.setFPS(1);
+			Ticker.setFPS(4);
 			soundManager.pauseAll();
 		};
 
+		/**
+		 * Resume the game playback along with sound. Also bring back the FPS to its normal setting.
+		 */
 		this.resume = function resume() {
 			this.playState = "play";
 			soundManager.resumeAll();
@@ -268,24 +326,19 @@ Optimizations:
 			for (var i = 0; i < stepCount; i = i + 1) {
 				// Increment the time marker by one
 				stage.time = stage.time + 1;
+
 				// Step through the stage logic
 				stage._options.step.call(stage);
+
 				// Obtain the collection of stage actors
 				actors = this.actors.all().get();
+
 				// Call the step handler of each actors
 				for (actorId in actors) {
 					actor = actors[actorId];
-					//todo: no nead to pass the stage as argument if it is aware of what stage it is on
-					actor.step(this);
-					// Ask the actor to validate his move
-					// todo: validateMove should be handled by the actor ?
-					actor.validateMove(this);
+					actor.step();
 				}
 
-				// Process all remaining nextCoord's as valid moves
-				for (actorId in actors) {
-					actors[actorId].go();
-				}
 				// Update the fps counter (for debug usage)
 				this.fps.update();
 			}
@@ -296,6 +349,7 @@ Optimizations:
 
 		/**
 		 * Go through the next step event is the stage is paused or not.
+		 * @param stepCount
 		 */
 		this.nextStep = function nextStep(stepCount) {
 			// Step through the world options step (usually for debugging)
@@ -318,11 +372,24 @@ Optimizations:
 			return this;
 		};
 
+		/**
+		 * Cause an action to occur, possibly between one actor and another
+		 * @param action
+		 * @param actor
+		 * @param subject
+		 * @param options
+		 */
 		this.act = function act(action, actor, subject, options) {
 			subject.publish("reaction-" + action, [actor, options]);
 			return this;
 		};
 
+		/**
+		 * Register a reaction to an eventual action, using a subscriber/publisher model.
+		 * @param action
+		 * @param subject
+		 * @param handler
+		 */
 		this.react = function react(action, subject, handler) {
 			subject.subscribe("reaction-" + action, function (actor, options) {
 				handler.call(subject, actor, options);

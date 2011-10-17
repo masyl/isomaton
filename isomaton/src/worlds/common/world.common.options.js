@@ -117,6 +117,127 @@ window.commonworld = {
 				"whiteplaceholder": {
 					"isSolid": false,
 					"offset": 2
+				},
+				"life": {
+					"isSolid": false,
+					"offset": 4
+				},
+				"halfLife": {
+					"isSolid": false,
+					"offset": 5
+				}
+			}
+		},
+		"alphabet": {
+			"offset": 27,
+			"blocks": {
+				"a": {
+					"isSolid": false,
+					"offset": 0
+				},
+				"b": {
+					"isSolid": false,
+					"offset": 1
+				},
+				"c": {
+					"isSolid": false,
+					"offset": 2
+				},
+				"d": {
+					"isSolid": false,
+					"offset": 3
+				},
+				"e": {
+					"isSolid": false,
+					"offset": 4
+				},
+				"f": {
+					"isSolid": false,
+					"offset": 5
+				},
+				"g": {
+					"isSolid": false,
+					"offset": 6
+				},
+				"h": {
+					"isSolid": false,
+					"offset": 7
+				},
+				"i": {
+					"isSolid": false,
+					"offset": 8
+				},
+				"j": {
+					"isSolid": false,
+					"offset": 9
+				},
+				"k": {
+					"isSolid": false,
+					"offset": 10
+				},
+				"l": {
+					"isSolid": false,
+					"offset": 11
+				},
+				"m": {
+					"isSolid": false,
+					"offset": 12
+				},
+				"n": {
+					"isSolid": false,
+					"offset": 13
+				},
+				"o": {
+					"isSolid": false,
+					"offset": 14
+				},
+				"p": {
+					"isSolid": false,
+					"offset": 15
+				},
+				"q": {
+					"isSolid": false,
+					"offset": 16
+				},
+				"r": {
+					"isSolid": false,
+					"offset": 17
+				},
+				"s": {
+					"isSolid": false,
+					"offset": 18
+				},
+				"t": {
+					"isSolid": false,
+					"offset": 19
+				},
+				"u": {
+					"isSolid": false,
+					"offset": 20
+				},
+				"v": {
+					"isSolid": false,
+					"offset": 21
+				},
+				"w": {
+					"isSolid": false,
+					"offset": 22
+				},
+				"x": {
+					"isSolid": false,
+					"offset": 23
+				},
+				"y": {
+					"isSolid": false,
+					"offset": 24
+				},
+				"z": {
+					"isSolid": false,
+					"offset": 25
+				},
+				" ": {
+					"isSolid": false,
+					"offset": 26
 				}
 			}
 		},

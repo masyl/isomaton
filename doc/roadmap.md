@@ -13,23 +13,24 @@
 - DONE: Slime dies and disapear in a puff when health goes down to 0
 - DONE: Added mouse events for mouseover, mouseout, mousedown, mouseup, mousemove.
 - DONE: Added focus and blur events on blocks and actors
+- DONE: "Hit" sound when a actor is hit
+- DONE: Display character status in the isograph
+- DONE: Health meter in the character status
+- DONE: Chicken have 2 health points
+- FIXED: bug: invalid moves are animated before they get invalidated or rolled back!!! make weird results
 
-- Display character status in the isograph
-- Health meter in the character status
-- New slime respawns after 10 steps
-- Chicken have 2 health points
-- "Hit" sound when a actor is hit
 - Slime attacks chickens instead of hunting the princess when they are near enough
-
+- bug: the slime is not re-spawning anymore
 - bug: the soundtrack doesn loop properly
 - bug: on first draw, the depth ordering is wrong
-- bug: invalid moves are animated before they get invalidated or rolled back!!! make weird results
 
 
-### Spawner
-- Spawner actor responsible for spawning slime after 10 steps when none exists. The spawner will choose a random spawn point.
+### v0.10 Spawner
+- New slime respawns after 10 steps
+- Spawner actor responsible for spawning actors after X steps when none exists. The spawner will choose a random spawn point.
 - The stage adds a spawner instead of the slime itself.
 - Spawner for chickens
+- Spawner for slime
 
 
 ### Inventory
@@ -156,6 +157,8 @@
 - Debt: use constants for playStates (rename to playbackMode ?  rewind, play, pause, or just an integer ?
 
 ## Housekeeping and Architecture
+- Should there really be coord props on entities? Or should it be handled byt their blocks ? Its redundant.
+- Add a combined xyz key in the Blocks and actors toIndex method
 - Sound effects should be configurable just like sprites with a declarative model
 - Give names to all anonymous functions for better profiling
 - Resegment big packages into smaller packages

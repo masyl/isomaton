@@ -47,7 +47,7 @@
 			stepInterval: 6
 		});
 		this.compulsions.Escape = new Compulsions.Escape(this, {
-			weight: [2, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
+			weight: [5, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
 			stepInterval: 3,
 			minDistance: 0,
 			maxDistance: 6,
@@ -60,9 +60,10 @@
 				return weight;
 			}
 		});
+
 		// Slime will start to follow  any princess that is within a distance between 1 and 16 blocks
 		this.compulsions.Follow = new Compulsions.Follow(this, {
-			weight: [1, 0.9],
+			weight: [2, 0.9],
 			stepInterval: 4,
 			minDistance: 1,
 			maxDistance: 16,
@@ -74,6 +75,34 @@
 				return weight;
 			}
 		});
+		// Slime will start to follow  any princess that is within a distance between 1 and 16 blocks
+		this.compulsions.Follow = new Compulsions.Follow(this, {
+			weight: [3, 0.9],
+			stepInterval: 4,
+			minDistance: 1,
+			maxDistance: 16,
+			resolveTarget: function resolveTarget(actor, distance) {
+				var weight = 0;
+				if (actor.type === "princess") {
+					weight = this.weightByDistance(distance);
+				}
+				return weight;
+			}
+		});
+		this.compulsions.Attack = new Compulsions.Attack(this, {
+			weight: [4, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
+			stepInterval: 2,
+			minDistance: 0,
+			maxDistance: 3,
+			resolveTarget: function resolveTarget(actor, distance) {
+				var weight = 0;
+				if (actor.type === "chicken") {
+					weight = this.weightByDistance(distance);
+				}
+				return weight;
+			}
+		});
+
 		// todo: generalize this behavior as life/living mixin
 		this.subscribe("bind", function () {
 			// todo: get re-Hit protection limit from setting
@@ -91,20 +120,24 @@
 					this.life = this.life - 1;
 					// Keep a lastHit marker to calculate the hitProtection scheme
 					this.lastHit = this.stage.time;
+					this.updateStatus();
 					// Actor doesnt have any life left, he dies
 					if (this.life <= 0) {
 						this.act("die", this);
 						// todo: actor shouldn gain back life here
 						this.life = this.defaultLife;
+
 					}
 				}
 			});
 		});
+
 		this.init();
 	};
 
 
 	world.Actors.Chicken = function Chicken(options) {
+		this.defaultLife = 2;
 		Actor.apply(this, arguments); // Inherit from the Actor class
 		this.type = "chicken";
 		this.label = "Chicken";
@@ -112,12 +145,12 @@
 		// Chicken will wander around randomly if nothing else to do
 		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
 			weight: [1, 0],
-			stepInterval: 5
+			stepInterval: 6
 		});
 		// Chicken will start to follow fast any chicken that is within a distance between 4 and 20 blocks
 		this.compulsions.Follow = new Compulsions.Follow(this, {
 			weight: [2, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
-			stepInterval: 2,
+			stepInterval: 4,
 			minDistance: 5,
 			maxDistance: 30,
 			resolveTarget: function resolveTarget(actor, distance) {
@@ -268,10 +301,10 @@
 			var stoneBlock = world.blockTypes["materials.stone"];
 			var yellowflowersBlock = world.blockTypes["decorations.yellowflowers"];
 			var shortweedsBlock = world.blockTypes["decorations.shortweeds"];
-			var groundArea = new Area(new Coord(1, 1, -2), worldOptions.width, worldOptions.height);
+			var groundArea = new Isomaton.Area(new Coord(1, 1, -2), worldOptions.width, worldOptions.height);
 /*
 			var whiteFrameBlock = world.blockTypes["cursors.whiteplaceholder"];
-			var frameArea = new Area(new Coord(1, -3, 6), worldOptions.width, 1);
+			var frameArea = new Isomaton.Area(new Coord(1, -3, 6), worldOptions.width, 1);
 			this.placeBlocks(builder.fill(whiteFrameBlock, frameArea));
 */
 
