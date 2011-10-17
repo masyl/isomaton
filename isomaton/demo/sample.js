@@ -4,7 +4,7 @@
 		var $time = $debug.find(".time");
 		var $speedMultiplier = $debug.find(".speedMultiplier");
 		var $playState = $debug.find(".playState");
-		var $fps = $debug.find(".fps");
+		var $fps = $debug.find(".sps");
 
 		var isomatonOptions = {
 			spritesURL: "../src/worlds/common/isomaton.png",
@@ -37,7 +37,7 @@
 				$time[0].innerHTML = stage.time;
 				$speedMultiplier[0].innerHTML = stage.speedMultiplier;
 				$playState[0].innerHTML = stage.playState;
-				$fps[0].innerHTML = stage.fps.previous;
+				$fps[0].innerHTML = stage.sps.previous;
 			}
 		});
 	});

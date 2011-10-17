@@ -69,7 +69,7 @@ Optimizations:
 			return _.uniqueId(prefix);
 		};
 
-		this.fps = {
+		this.sps = {
 			previous: 0,
 			current: 0,
 			currentSecond: new Date().getSeconds(),
@@ -340,7 +340,7 @@ Optimizations:
 				}
 
 				// Update the fps counter (for debug usage)
-				this.fps.update();
+				this.sps.update();
 			}
 			// Move to the next step
 			this.nextStep(stepCount);

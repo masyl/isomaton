@@ -140,7 +140,7 @@
 			if (z > bitmap.z) {
 				bitmap.z = z;
 				// todo: find a cheaper way to update the z-ordering
-				this.updateZ();
+//				this.updateZ();
 				Tween.get(bitmap)
 					.to({
 							x: x,
@@ -154,12 +154,12 @@
 						}, speed)
 					.to({z: z}, 0.01)
 					.call(function() {
-						isograph.updateZ();
+//						isograph.updateZ();
 					});
 			}
 		};
 
-		this.updateZ = function() {
+		this.updateDepth = function() {
 			this.blockBitmaps.sortChildren(function (a, b) {
 				return a.z - b.z;
 			});
@@ -287,22 +287,27 @@
 			this.loadSprites(onSpritesLoaded);
 
 			function onSpritesLoaded() {
-				// Update the depth indexing
-				isograph.updateZ();
 				// Set the desired FPS
 				Ticker.setFPS(12); // todo: get the fps from options
 				// assign a tick listener directly to this window:
 				Ticker.addListener({
 					tick: function () {
-						isograph.tick();
+						isograph.frameStep();
 					}
 				});
 				callback();
 			}
 		};
 
-		this.tick = function tick() {
+		/**
+		 * Go through one frame redraw
+		 */
+		this.frameStep = function frameStep() {
+			// Run the mouse event handler
 			this.mouseTick();
+			// Update the depth ordering (onscreen z) before redrawing
+			isograph.updateDepth();
+			// Update the canvas scene graph
 			this.canvasStage.update();
 		};
 

@@ -2,7 +2,7 @@
 
 ## In Progress Release
 
-### v0.9 - Health
+### v0.9 - Life & Status
 - DONE: Music stops on pause
 - FIXED: bug: pausing the game doesnt pause the rendering... still using cpu at max
 - DONE: Canvas is now 16x9 and resizes to page width
@@ -18,14 +18,14 @@
 - DONE: Health meter in the character status
 - DONE: Chicken have 2 health points
 - FIXED: bug: invalid moves are animated before they get invalidated or rolled back!!! make weird results
+- FIXED: bug: on first draw, the depth ordering is wrong
 
 - Slime attacks chickens instead of hunting the princess when they are near enough
-- bug: the slime is not re-spawning anymore
 - bug: the soundtrack doesn loop properly
-- bug: on first draw, the depth ordering is wrong
 
 
-### v0.10 Spawner
+### v0.10 Spawner & True Death
+- The slime dies when it runs out of life
 - New slime respawns after 10 steps
 - Spawner actor responsible for spawning actors after X steps when none exists. The spawner will choose a random spawn point.
 - The stage adds a spawner instead of the slime itself.
