@@ -2,29 +2,19 @@
 
 ## In Progress Release
 
-### v0.9 - Life & Status
-- DONE: Music stops on pause
-- FIXED: bug: pausing the game doesnt pause the rendering... still using cpu at max
-- DONE: Canvas is now 16x9 and resizes to page width
-- REMOVE: Chickens sound for now
-- DONE: Slime has 3 health points
-- DONE: Slime loses 1 health point when hit
-- DONE: hitProtection scheme to prevent multiple close hits
-- DONE: Slime dies and disapear in a puff when health goes down to 0
-- DONE: Added mouse events for mouseover, mouseout, mousedown, mouseup, mousemove.
-- DONE: Added focus and blur events on blocks and actors
-- DONE: "Hit" sound when a actor is hit
-- DONE: Display character status in the isograph
-- DONE: Health meter in the character status
-- DONE: Chicken have 2 health points
-- FIXED: bug: invalid moves are animated before they get invalidated or rolled back!!! make weird results
-- FIXED: bug: on first draw, the depth ordering is wrong
+### v0.10 Select and Edit Tools
 
-- Slime attacks chickens instead of hunting the princess when they are near enough
-- bug: the soundtrack doesn loop properly
+- The user can select a coordinate by clicking on a decor block
+- A 10 blocks high column of cursor blocks appears at the selected coordinate
+- Keyboard arrows move the cursor column
+- The user can remove and place back any block with the spacebar
+- The "pause" action is remapped to the ESC key
 
 
-### v0.10 Spawner & True Death
+
+## Upcomming Releases
+
+### v0.? Spawner & True Death
 - The slime dies when it runs out of life
 - New slime respawns after 10 steps
 - Spawner actor responsible for spawning actors after X steps when none exists. The spawner will choose a random spawn point.
@@ -33,8 +23,9 @@
 - Spawner for slime
 
 
-### Inventory
+### v0.? - Inventory
 - "item" bloc types... pickable whe stepping on or next to them, floating a little
+- When selecting an item, the item gets picken up by the first actor with inventory capacity
 - Compulsion for Knight to eat eggs from inventory to gain back health
 - Compulsion to pick up items that match their interests/tastes
 - Slime grabs egg and puts in his inventory
@@ -42,15 +33,14 @@
 - Show inventory in character Status
 
 
-### Chicken & Egg
+### v0.? - Chicken & Egg
+- Slime attacks chickens instead of hunting the princess when they are near enough
 - Chicken actor which lays eggs
 - Chicken Compulsion: If chicken doesnt see other chicken or egg for too long he lays an egg, if egg isnt picked up in X steps, it spawns another chicken.
 - Slime compulsion: Attack chicken (along with princess)
 - Chicken dies/disapear if hit byt slime
 - Knight Compulsion: pick up eggs (or any item) and put in inventory
 
-
-## Upcomming Releases
 
 ### v0.? - HTML5 at all cost
 
@@ -146,6 +136,7 @@
 
 ## Bugs and Debts
 
+- bug: the soundtrack doesn loop properly
 - Bug: Flowers, weeds and other blocks appear over water
 - Bug: Actors can spawn over solid blocks
 - Bug: z-index calculation and ordering doesnt account for some cases during animation
@@ -171,7 +162,23 @@
 
 ## Features
 
-- Emit events for actors on "collidedOn", "gotCollided", "hitOn", "gotHit"
+- Totems Gameplay Concept: Affect the gameplay by errecting totems of blocks. When the correct combination is place together the totem actor can repel, attract, spaw, kill other elements on stage.
+	+ 3 Gold blocks totam could hypnotize and paralyze all slime and prevent the spawning of slimes.
+	+ 2 Wood blocks with an egg on top could raise the maximum of chickent to twice its current values!
+	+ 2 ice blocks with 1 torch could create a water source around the totem
+	+ 2 black rocks + 1 dead chicken could transform all chickens into zombie chickens
+	+ 2 wood block + 1 leaf could spawn a tree
+- Totem mechanics: Player casts a divine light on a x/y coordinate, selects the actors he can influence to go near the light to build the totem, then force the various actors to place blocs from their inventory to form the totem. When the right recipee is obtained it is automatically trigerred and the totem is sealed.
+- User interaction constraint: User doesnt place items directly on stage himself. Instead he motivates an actor to place the item at a speciific spot.
+- Put an actor in a trans to motivate an actor to continue a task he is doing no matter what.
+- Place a totem of object of veneration to force an actor to stay winthin a certain range.
+- Actor motivates an actor to pickup something
+- Actors that can be motivated to do some things. Knight is motivated to attact an enemy or pick up, place or use a specific item. Monster is motivated to eat one prey over another.
+- Dying actor crumbles to a pile of bone and awaits resurection. can be picked up for lter use or is swept away by passing time.
+- Resurection spell that can be triggered at a distance.
+- Actors with less generic names and titles:
+	Bob the Funky Chicken vs. Chicken
+	Peter the valiant knight vs Knight
 - Variation on compulsion for events that dont need to compete for exclusivity (sounds, exclamations)
 - On click, show the actor or block stats
 - Implement A* pathfinding function for knight to hunt slime

@@ -1,5 +1,25 @@
 #Isomaton Version History
 
+
+### v0.9 - Life & Status
+
+- Music stops on pause
+- FIXED: bug: pausing the game doesnt pause the rendering... still using cpu at max
+- Canvas is now 16x9 and resizes to page width
+- REMOVE: Chickens sound for now
+- Slime has 3 health points
+- Slime loses 1 health point when hit
+- hitProtection scheme to prevent multiple close hits
+- Slime dies and disapear in a puff when health goes down to 0
+- Added mouse events for mouseover, mouseout, mousedown, mouseup, mousemove.
+- Added focus and blur events on blocks and actors
+- "Hit" sound when a actor is hit
+- Display character status in the isograph
+- Health meter in the character status
+- Chicken have 2 health points
+- FIXED: bug: invalid moves are animated before they get invalidated or rolled back!!! make weird results
+- FIXED: bug: on first draw, the depth ordering is wrong
+
 ### v0.8 - Get the Slime!
 
 - Bigger sprites for blocks
@@ -16,7 +36,7 @@
 - Chicken sounds
 - Block animations can be dynamic
 - Chicken should be redrawn as a block and have exended spritesheets
-- Princess has a been redrawn an has a crown
+- Princess has a been redrawn and has a crown
 - FIXED: bug: actors can move two on the same spot in some cases!
 
 ### v0.7 - Compulsory Mechanics
