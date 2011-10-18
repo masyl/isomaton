@@ -169,6 +169,9 @@ Optimizations:
 			this.isograph.stepSpeed = this.speed / this.speedMultiplier;
 			this.isograph.setup(onSetup);
 			this.isograph.bind(this.blocks);
+			this.isograph.subscribe("blockSelect", function(block) {
+				stage.onBlockSelected(block);
+			});
 
 			function onSetup() {
 				// todo: find a better way than calling from options
@@ -225,6 +228,32 @@ Optimizations:
 			this.isograph.stepSpeed = this.speed / this.speedMultiplier;
 		};
 
+		this.selectedBlock = null;
+		this.updateSelectedBlock = function updateSelectedBlock() {
+			var i, block, coord, cursorBlock, cursorBlockType;
+			block = this.selectedBlock;
+			if (!block.actor) {
+				coord = block.coord.copy();
+				// find and delete all block for the actorStatus group
+				this.blocks.select({
+					group: "cursor"
+				}).remove();
+
+				// place a series of cursor blocks
+				this.editMode(Isomaton.editModes.normal);
+				for (i = 0; i < 9; i = i + 1) {
+					cursorBlockType = this.world.blockTypes["cursors.whiteframe"];
+					block = new Isomaton.Block(cursorBlockType, coord, true, "cursor");
+					this.placeBlocks([block]);
+					coord.up();
+				}
+			}
+		};
+
+		this.onBlockSelected = function onBlockSelected(block) {
+			this.selectedBlock = block;
+			this.updateSelectedBlock();
+		};
 
 		this.actorSelect = function actorSelect(actor) {
 			this.setActorStatus(actor);
@@ -238,14 +267,14 @@ Optimizations:
 			}
 		};
 		this.setActorStatus = function setActorStatus(actor) {
-			var i, letter, block, oldBlocks, builder, type, coord, worldOptions;
+			var i, letter, block, builder, type, coord, worldOptions;
 
 			builder = this.world.builder;
 			worldOptions = this.world.options();
 			this.actorOnStatus = actor;
 
 			// find and delete all block for the actorStatus group
-			oldBlocks = this.blocks.select({
+			this.blocks.select({
 				group: "actorStatus"
 			}).remove();
 

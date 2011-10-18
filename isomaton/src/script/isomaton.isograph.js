@@ -2,6 +2,7 @@
 
 	Isomaton.Isograph = function Isograph(options) {
 		var isograph = this;
+		mixinPubSub(this);
 
 		this._options = {};
 		this.stepSpeed = 0;
@@ -100,6 +101,7 @@
 			isograph.mouseIsDown = true;
 			if (isograph.mouseTarget) {
 				isograph.mouseTarget.block.select();
+				isograph.publish("blockSelect", [isograph.mouseTarget.block]);
 			}
 		};
 		this.onMouseUp = function onMouseUp(e) {

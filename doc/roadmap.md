@@ -4,23 +4,15 @@
 
 ### v0.10 Select and Edit Tools
 
-- The user can select a coordinate by clicking on a decor block
-- A 10 blocks high column of cursor blocks appears at the selected coordinate
-- Keyboard arrows move the cursor column
-- The user can remove and place back any block with the spacebar
-- The "pause" action is remapped to the ESC key
-
+- DONE: The user can select a coordinate by clicking on a decor block
+- DONE: A 5 blocks high column of cursor blocks appears at the selected coordinate
+- DONE: Keyboard arrows move the cursor column
+- DONE: The "pause" action is remapped to the ESC key
+- In "edit" mode the space bar will remove and place back any block. The blocks are stored in the players inventory in the bottom right quadrant.
+- Only blocks without actors can be moved in edit mode.
 
 
 ## Upcomming Releases
-
-### v0.? Spawner & True Death
-- The slime dies when it runs out of life
-- New slime respawns after 10 steps
-- Spawner actor responsible for spawning actors after X steps when none exists. The spawner will choose a random spawn point.
-- The stage adds a spawner instead of the slime itself.
-- Spawner for chickens
-- Spawner for slime
 
 
 ### v0.? - Inventory
@@ -31,6 +23,17 @@
 - Slime grabs egg and puts in his inventory
 - Each character has a specific inventory limit
 - Show inventory in character Status
+- In "game" mode the hitting space bar when a character is under the cursor will select this actor and hypnotise it. From there, the character will try to follow the cursor. When a character is following the cursor, space will ask the player to pickup the top-most block in front of him, and pressing enter will place one of his block.
+
+
+### v0.? Spawner & True Death
+- The slime dies when it runs out of life
+- New slime respawns after 10 steps
+- Spawner actor responsible for spawning actors after X steps when none exists. The spawner will choose a random spawn point.
+- The stage adds a spawner instead of the slime itself.
+- Spawner for chickens
+- Spawner for slime
+
 
 
 ### v0.? - Chicken & Egg

@@ -124,7 +124,7 @@ Reversible Transactions:
 		};
 
 		this.bindKeyboard = function bindKeyboard() {
-			$(document).bind('keydown', 'space', function(e) {
+			$(document).bind('keydown', 'esc', function(e) {
 				e.preventDefault();
 				var stage = world.currentStage;
 				if (stage.playState !== "pause") {
@@ -133,13 +133,48 @@ Reversible Transactions:
 					stage.resume();
 				}
 			});
-			$(document).bind('keydown', 'right', function(e) {
+			$(document).bind('keydown', 'space', function(e) {
+				e.preventDefault();
+			});
+			$(document).bind('keydown', '=', function(e) {
 				e.preventDefault();
 				world.currentStage.faster();
 			});
-			$(document).bind('keydown', 'left', function(e) {
+			$(document).bind('keydown', '-', function(e) {
 				e.preventDefault();
 				world.currentStage.slower();
+			});
+			$(document).bind('keydown', 'up', function(e) {
+				e.preventDefault();
+				var block = world.currentStage.selectedBlock;
+				if (block) {
+					block.coord.west();
+				}
+				world.currentStage.updateSelectedBlock();
+			});
+			$(document).bind('keydown', 'down', function(e) {
+				e.preventDefault();
+				var block = world.currentStage.selectedBlock;
+				if (block) {
+					block.coord.east();
+				}
+				world.currentStage.updateSelectedBlock();
+			});
+			$(document).bind('keydown', 'right', function(e) {
+				e.preventDefault();
+				var block = world.currentStage.selectedBlock;
+				if (block) {
+					block.coord.south();
+				}
+				world.currentStage.updateSelectedBlock();
+			});
+			$(document).bind('keydown', 'left', function(e) {
+				e.preventDefault();
+				var block = world.currentStage.selectedBlock;
+				if (block) {
+					block.coord.north();
+				}
+				world.currentStage.updateSelectedBlock();
 			});
 			$(document).bind('keydown', 's', function(e) {
 				e.preventDefault();
