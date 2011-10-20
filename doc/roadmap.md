@@ -5,8 +5,13 @@
 Transactionnal Object Store
 
 ### v0.11 Get Down With BOB (Big Object Bag)
-- Fork MiniDB into BOB
-- Set and Get attributes onto miniDB
+- DONE: Fork MiniDB into BOB
+- DONE: Set method
+- DONE: Bobify the Block class
+- DONE: Apply the Bobs' set method on all Block usage
+- Bobify the Actor class
+- Apply the Bobs' set method on all Actor usage
+- Handle child Coord objects with BOB... how?
 - Set with handler function
 - Publish a "change" event of set action
 - Filter with obj or with handler function

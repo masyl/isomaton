@@ -25,7 +25,6 @@ function doc(pseudo) {
 		this.coord = null; // The current position of the actor
 		this.nextCoord = null; // The future position of the actor
 		this.prevCoord = null; // The previous position of the actor
-		this.block = null; // The default block representing the actor
 		this.label = "Blank"; // The label for this actor
 		this.stage = null; // Reference to the parent stage
 		this.compulsions = {}; // Collection of compulsion that animate the actors behaviors
@@ -51,7 +50,9 @@ function doc(pseudo) {
 			this.coord = coord;
 			// Create the block to represent the actor
 			this.block = new Isomaton.Block(this.blockType, coord);
-			this.block.actor = this;
+			this.block.set({
+				actor: this
+			});
 			this.publish("bind");
 			return this;
 		};
@@ -115,7 +116,9 @@ function doc(pseudo) {
 				if (!isValid) {
 					// Invalidate the nextCoordinate of both the actor and its block
 					this.nextCoord = null;
-					this.block.nextCoord = null;
+					this.block.set({
+						nextCoord: null
+					});
 				}
 			}
 			return this;

@@ -12,7 +12,7 @@
 			id: _.uniqueId(),
 			"class": "Block",
 			type: type,
-			coord: coord,
+			coord: coord.copy(),
 			group: group || "",
 			nextCoord: null,
 			prevCoord: null,

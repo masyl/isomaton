@@ -120,7 +120,9 @@
 		this.updateBlock = function (block) {
 			var speed, coord;
 			if (block.coord !== block.animatedCoord) {
-				block.animatedCoord = block.coord;
+				block.set({
+					animatedCoord: block.coord
+				});
 				coord = this.translateFromISO(block.coord);
 				if (block.coord.stepDistanceFrom(block.prevCoord) > 1) {
 					speed = 0;
