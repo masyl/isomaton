@@ -11,8 +11,10 @@ Transactionnal Object Store
 - DONE: Apply the Bobs' set method on all Block usage
 - Bobify the Actor class
 - Apply the Bobs' set method on all Actor usage
+- Merge the actors and blocks MiniDB to a single Bob store
 - Handle child Coord objects with BOB... how?
 - Set with handler function
+- Ensure the stage object state is disposable and doesnt need versionning
 - Publish a "change" event of set action
 - Filter with obj or with handler function
 
@@ -21,7 +23,7 @@ Transactionnal Object Store
 - Commit()
 - Rollback([revision|tag])
 - Tag(id)
-- Branch(id)
+- Branch/Fork(id)
 
 ### v0.? Select and Edit Tools Complete
 
