@@ -1,5 +1,13 @@
 #Isomaton Version History
 
+### v0.10 Select and Edit Tools Incomplete
+
+- The user can select a coordinate by clicking on a decor block
+- A 5 blocks high column of cursor blocks appears at the selected coordinate
+- Keyboard arrows move the cursor column
+- The "pause" action is remapped to the ESC key
+- Only blocks without actors can be moved in edit mode.
+
 
 ### v0.9 - Life & Status
 

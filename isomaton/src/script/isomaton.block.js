@@ -2,8 +2,14 @@
 
 	// Base class for blocks
 	Isomaton.Block = function Block(type, coord, offStage, group) {
+		Bobify(this, {
+			uid: uid,
+			index: index
+		}); // Add basic bob functionnalities to this object
+
 		//todo: become a pubSub and publish on update to the miniDb for blocks
 		this.id = _.uniqueId();
+		this["class"] = "Block";
 		this.type = type;
 		this.coord = coord;
 		this.group = group || "";
@@ -22,29 +28,6 @@
 				this.coord = this.nextCoord;
 				this.nextCoord = null;
 			}
-		};
-
-		this.toString = function toString() {
-			return "Block-" + this.id;
-		};
-		this.toIndex = function txoIndex() {
-			var index = {
-				"class": "Block",
-				"id": this.id,
-				"offStage": this.offStage,
-				"group": this.group,
-				"type.id": this.type.id,
-				"type.isSolid": this.type.isSolid,
-				"coord.x": this.coord.x,
-				"coord.y": this.coord.y,
-				"coord.z": this.coord.z
-			};
-			if (this.nextCoord) {
-				index["nextCoord.x"] = this.nextCoord.x;
-				index["nextCoord.y"] = this.nextCoord.y;
-				index["nextCoord.z"] = this.nextCoord.z;
-			}
-			return index;
 		};
 
 		this.blur = function blur() {
@@ -72,6 +55,30 @@
 
 			}
 		};
+
+		function uid() {
+			return this["class"] + "-" + this.id;
+		}
+
+		function index() {
+			var attrs = {
+				"class": this["class"],
+				"id": this.id,
+				"offStage": this.offStage,
+				"group": this.group,
+				"type.id": this.type.id,
+				"type.isSolid": this.type.isSolid,
+				"coord.x": this.coord.x,
+				"coord.y": this.coord.y,
+				"coord.z": this.coord.z
+			};
+			if (this.nextCoord) {
+				attrs["nextCoord.x"] = this.nextCoord.x;
+				attrs["nextCoord.y"] = this.nextCoord.y;
+				attrs["nextCoord.z"] = this.nextCoord.z;
+			}
+			return attrs;
+		}
 	};
 
 	Isomaton.BlockType = function BlockType(id, options) {

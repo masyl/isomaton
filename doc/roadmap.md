@@ -2,13 +2,21 @@
 
 ## In Progress Release
 
-### v0.10 Select and Edit Tools Incomplete
+Transactionnal Object Store
 
-- DONE: The user can select a coordinate by clicking on a decor block
-- DONE: A 5 blocks high column of cursor blocks appears at the selected coordinate
-- DONE: Keyboard arrows move the cursor column
-- DONE: The "pause" action is remapped to the ESC key
-- DONE: Only blocks without actors can be moved in edit mode.
+### v0.11 Get Down With BOB (Big Object Bag)
+- Fork MiniDB into BOB
+- Set and Get attributes onto miniDB
+- Set with handler function
+- Publish a "change" event of set action
+- Filter with obj or with handler function
+
+### v0.12 BOB reversed is BOB
+- Automatic Revision Log
+- Commit()
+- Rollback([revision|tag])
+- Tag(id)
+- Branch(id)
 
 ### v0.? Select and Edit Tools Complete
 

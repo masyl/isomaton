@@ -55,7 +55,7 @@ Optimizations:
 			return this;
 		};
 
-		this.blocks =  new Minidb();
+		this.blocks =  new Bob();
 		this.actors =  new Minidb();
 		this.world = null;
 		this.isograph = null;
@@ -193,28 +193,20 @@ Optimizations:
 		};
 
 		this.placeBlocks = function placeBlocks(blocks) {
-			var i, newBlocks, newBlock, coord, existingBlocks, mode, key, removed;
-			newBlocks = this.blocks;
+			var i, newBlock, coord, existingBlocks, mode, key, removed;
 			mode = this.editMode().value();
-			window.blocks = this.blocks;
 			for (i in blocks) {
 				newBlock = blocks[i];
 				coord = newBlock.coord;
 				if (mode === editModes.emptyFirst) {
 					removed = this.blocks
-							.select({
-								"coord.x": coord.x,
-								"coord.y": coord.y,
-								"coord.z": coord.z
-							})
-							.remove()
-							.get();
-					if (coord.z === 0) {
-//						console.log("placing blocks", blocks);
-					}
-					if (removed.length) {
-//						console.log("removed: empty first: ",  removed);
-					}
+						.select({
+							"coord.x": coord.x,
+							"coord.y": coord.y,
+							"coord.z": coord.z
+						})
+						.remove()
+						.get();
 				}
 				this.blocks.add(newBlock);
 			}
