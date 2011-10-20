@@ -16,7 +16,7 @@ Transactionnal Object Store
 - Set with handler function
 - Ensure the stage object state is disposable and doesnt need versionning
 - Publish a "change" event of set action
-- Filter with obj or with handler function
+- Filter() method with obj or with handler function
 
 ### v0.12 BOB reversed is BOB
 - Automatic Revision Log
