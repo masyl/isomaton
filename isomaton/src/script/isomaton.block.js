@@ -8,25 +8,31 @@
 		}); // Add basic bob functionnalities to this object
 
 		//todo: become a pubSub and publish on update to the miniDb for blocks
-		this.id = _.uniqueId();
-		this["class"] = "Block";
-		this.type = type;
-		this.coord = coord;
-		this.group = group || "";
-		this.nextCoord = null;
-		this.prevCoord = null;
-		this.offStage = (offStage === undefined) ? true : offStage;
+		this.set({
+			id: _.uniqueId(),
+			"class": "Block",
+			type: type,
+			coord: coord,
+			group: group || "",
+			nextCoord: null,
+			prevCoord: null,
+			offStage: (offStage === undefined) ? true : offStage
+		});
 
 		this.goNext = function goNext(coord) {
-			this.nextCoord = coord;
+			this.set({
+				nextCoord: coord
+			});
 		};
 
 		this.go = function go(coord) {
 			// todo: manage a better coord history queue
 			if (this.nextCoord) {
-				this.prevCoord = this.coord;
-				this.coord = this.nextCoord;
-				this.nextCoord = null;
+				this.set({
+					prevCoord: this.coord,
+					coord: this.nextCoord,
+					nextCoord: null
+				});
 			}
 		};
 
