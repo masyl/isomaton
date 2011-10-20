@@ -2,15 +2,19 @@
 
 ## In Progress Release
 
-### v0.10 Select and Edit Tools
+### v0.10 Select and Edit Tools Incomplete
 
 - DONE: The user can select a coordinate by clicking on a decor block
 - DONE: A 5 blocks high column of cursor blocks appears at the selected coordinate
 - DONE: Keyboard arrows move the cursor column
 - DONE: The "pause" action is remapped to the ESC key
-- In "edit" mode the space bar will remove and place back any block. The blocks are stored in the players inventory in the bottom right quadrant.
-- Only blocks without actors can be moved in edit mode.
+- DONE: Only blocks without actors can be moved in edit mode.
 
+### v0.? Select and Edit Tools Complete
+
+- helper method to get the top-most block at a coodinate
+- In "edit" mode the space bar will remove and place back any block. The blocks are stored in the players inventory in the bottom right quadrant.
+- bug: the rules of "walk on solid" isnt respected
 
 ## Upcomming Releases
 
@@ -151,6 +155,7 @@
 - Debt: use constants for playStates (rename to playbackMode ?  rewind, play, pause, or just an integer ?
 
 ## Housekeeping and Architecture
+- IMPORTANT: The main object properties should be handled by a uniform property by handler with get/set methods, to make serialization and transactionnal logs more automatic
 - Should there really be coord props on entities? Or should it be handled byt their blocks ? Its redundant.
 - Add a combined xyz key in the Blocks and actors toIndex method
 - Sound effects should be configurable just like sprites with a declarative model

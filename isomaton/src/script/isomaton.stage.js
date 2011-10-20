@@ -65,6 +65,10 @@ Optimizations:
 		this._options = {};
 		this.playState = "play";
 
+        /**
+         *
+         * @param {String} [prefix]
+         */
 		this.uid = function(prefix) {
 			return _.uniqueId(prefix);
 		};
@@ -228,12 +232,47 @@ Optimizations:
 			this.isograph.stepSpeed = this.speed / this.speedMultiplier;
 		};
 
-		this.selectedBlock = null;
-		this.updateSelectedBlock = function updateSelectedBlock() {
+
+		this.pickedUpBlock = null;
+		/**
+		 * Pick up the top-most block currently under the cursor and keep it up along with the cursor
+		 * until it is put down again
+		 */
+		this.pickUpBlock = function pickUpBlock() {
+			var block, blocks, coord;
+			if (this.selectedCoord) {
+				coord = this.selectedCoord;
+				blocks = this.blocks.select({
+					"coord.x": coord.x,
+					"coord.y": coord.y
+				}).get();
+
+				//todo: fix error: Remove cursor blocks from selection
+				// use a .filter({group:""}) method on the miniDB
+
+				// todo: add a "sort" method to minidb to get the top most block
+				if (blocks.length > 0) {
+					block = blocks[0];
+					this.pickedUpBlock = block;
+					block.coord.z = 10;
+					this.blocks.update(block);
+				}
+			}
+		};
+
+		/**
+		 * Put down the block that the cursor is currently carrying
+		 */
+		this.putDownBlock = function putDownBlock() {
+
+		};
+
+		this.selectedCoord = null;
+		this.updateCursor = function updateCursor() {
 			var i, block, coord, cursorBlock, cursorBlockType;
-			block = this.selectedBlock;
-			if (!block.actor) {
-				coord = block.coord.copy();
+			coord = this.selectedCoord;
+			if (coord) {
+				coord.z = 0;
 				// find and delete all block for the actorStatus group
 				this.blocks.select({
 					group: "cursor"
@@ -241,7 +280,7 @@ Optimizations:
 
 				// place a series of cursor blocks
 				this.editMode(Isomaton.editModes.normal);
-				for (i = 0; i < 9; i = i + 1) {
+				for (i = 0; i < 11; i = i + 1) {
 					cursorBlockType = this.world.blockTypes["cursors.whiteframe"];
 					block = new Isomaton.Block(cursorBlockType, coord, true, "cursor");
 					this.placeBlocks([block]);
@@ -251,13 +290,65 @@ Optimizations:
 		};
 
 		this.onBlockSelected = function onBlockSelected(block) {
-			this.selectedBlock = block;
-			this.updateSelectedBlock();
+			if (!block.actor) {
+				this.selectedCoord = block.coord.copy();
+				this.updateCursor();
+			}
 		};
 
 		this.actorSelect = function actorSelect(actor) {
 			this.setActorStatus(actor);
 		};
+
+		this.up = function up() {
+			var coord = this.selectedCoord;
+			if (coord) {
+				coord.west();
+				console.log("this.pickedUpBlock", this.pickedUpBlock);
+				if (this.pickedUpBlock) {
+					this.pickedUpBlock.coord.west();
+					this.blocks.update(this.pickedUpBlock);
+				}
+			}
+			this.updateCursor();
+		};
+
+		this.down = function down() {
+			var coord = this.selectedCoord;
+			if (coord) {
+				coord.east();
+				if (this.pickedUpBlock) {
+					this.pickedUpBlock.coord.east();
+					this.blocks.update(this.pickedUpBlock);
+				}
+			}
+			this.updateCursor();
+		};
+
+		this.left = function left() {
+			var coord = this.selectedCoord;
+			if (coord) {
+				coord.north();
+				if (this.pickedUpBlock) {
+					this.pickedUpBlock.coord.north();
+					this.blocks.update(this.pickedUpBlock);
+				}
+			}
+			this.updateCursor();
+		};
+
+		this.right = function right() {
+			var coord = this.selectedCoord;
+			if (coord) {
+				coord.south();
+				if (this.pickedUpBlock) {
+					this.pickedUpBlock.coord.south();
+					this.blocks.update(this.pickedUpBlock);
+				}
+			}
+			this.updateCursor();
+		};
+
 
 		this.actorOnStatus = null;
 		// todo: can this be done better with a pubsub approach ?
@@ -366,6 +457,12 @@ Optimizations:
 				for (actorId in actors) {
 					actor = actors[actorId];
 					actor.step();
+				}
+
+				// Call the go handler of each actors
+				for (actorId in actors) {
+					actor = actors[actorId];
+					actor.go();
 				}
 
 				// Update the fps counter (for debug usage)

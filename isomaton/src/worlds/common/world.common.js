@@ -1,4 +1,4 @@
-(function (isomaton, Isomaton){
+(function (isomaton, Isomaton) {
 
 	var world = isomaton.worlds.common = new isomaton.World(window.commonworld);
 

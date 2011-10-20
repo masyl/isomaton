@@ -135,46 +135,31 @@ Reversible Transactions:
 			});
 			$(document).bind('keydown', 'space', function(e) {
 				e.preventDefault();
+				world.currentStage.pickUpBlock();
 			});
-			$(document).bind('keydown', '=', function(e) {
+			$(document).bind('keydown', 'p', function(e) {
 				e.preventDefault();
 				world.currentStage.faster();
 			});
-			$(document).bind('keydown', '-', function(e) {
+			$(document).bind('keydown', 'o', function(e) {
 				e.preventDefault();
 				world.currentStage.slower();
 			});
 			$(document).bind('keydown', 'up', function(e) {
 				e.preventDefault();
-				var block = world.currentStage.selectedBlock;
-				if (block) {
-					block.coord.west();
-				}
-				world.currentStage.updateSelectedBlock();
+				world.currentStage.up();
 			});
 			$(document).bind('keydown', 'down', function(e) {
 				e.preventDefault();
-				var block = world.currentStage.selectedBlock;
-				if (block) {
-					block.coord.east();
-				}
-				world.currentStage.updateSelectedBlock();
+				world.currentStage.down();
 			});
 			$(document).bind('keydown', 'right', function(e) {
 				e.preventDefault();
-				var block = world.currentStage.selectedBlock;
-				if (block) {
-					block.coord.south();
-				}
-				world.currentStage.updateSelectedBlock();
+				world.currentStage.right();
 			});
 			$(document).bind('keydown', 'left', function(e) {
 				e.preventDefault();
-				var block = world.currentStage.selectedBlock;
-				if (block) {
-					block.coord.north();
-				}
-				world.currentStage.updateSelectedBlock();
+				world.currentStage.left();
 			});
 			$(document).bind('keydown', 's', function(e) {
 				e.preventDefault();
@@ -256,7 +241,7 @@ Reversible Transactions:
 
 	//todo: place Rules in a separate package
 	var Rules = Isomaton.Rules = {};
-	Rules.CantWalkOnEmptyOrNonSolid = function CantWalkOnEmptyOrNonSolid(actor) {
+	Rules.CantWalkOnEmptyOrNonSolid = function CantWalkOnEmptyOrNonSolid() {
 		var coord, blocks, isValidMove, stage;
 		isValidMove = true;
 		coord = this.nextCoord;
@@ -310,7 +295,6 @@ Reversible Transactions:
 			block = blocks[i];
 			if (block.type.isSolid && block !== this.block) {
 				isValidMove = false;
-				//console.log("invalid move");
 			}
 		}
 
