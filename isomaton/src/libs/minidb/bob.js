@@ -10,9 +10,9 @@
 		items = this.items = items = {};
 		index = this.index = index = {};
 
-		selection = [];
-
 		mixinPubSub(this);
+
+		selection = [];
 
 		// Add an item
 		this.add = function (input, silentEvent) {

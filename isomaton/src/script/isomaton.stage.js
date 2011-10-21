@@ -56,7 +56,7 @@ Optimizations:
 		};
 
 		this.blocks =  new Bob();
-		this.actors =  new Minidb();
+		this.actors =  new Bob();
 		this.world = null;
 		this.isograph = null;
 		this.time = 0;

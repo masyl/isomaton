@@ -1,7 +1,9 @@
-(function IsomatonBlockPackage(Isomaton, _, undefined) {
+/*global Isomaton, _, PubSub, Bobify */
+(function IsomatonBlockPackage(Isomaton, _, Bobify, undefined) {
 
 	// Base class for blocks
 	Isomaton.Block = function Block(type, coord, offStage, group) {
+		// Add basic bob functionnalities to this object
 		Bobify(this, {
 			index: function index() {
 				var attrs = {
@@ -23,7 +25,7 @@
 				}
 				return attrs;
 			}
-		}); // Add basic bob functionnalities to this object
+		});
 
 		//todo: become a pubSub and publish on update to the miniDb for blocks
 		// Initialise the block with default attributes
@@ -111,4 +113,4 @@
 	};
 
 
-})(Isomaton, _);
+})(Isomaton, _, Bobify);

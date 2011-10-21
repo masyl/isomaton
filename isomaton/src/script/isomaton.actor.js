@@ -1,7 +1,8 @@
-/*global Isomaton, _, PubSub */
+/*global Isomaton, _, PubSub, Bobify */
+//todo: adopt or dump the _doc approach
 function doc(pseudo) {
 }
-(function (global, Isomaton, _, PubSub) {
+(function (global, Isomaton, _, PubSub, Bobify) {
 	"use strict";
 
 	var
@@ -13,7 +14,30 @@ function doc(pseudo) {
 	 * @param [options]
 	 */
 	Isomaton.Actor = function Actor(options) {
+		// Can the Bobify and PubSub mixins load with a common mechanism ?
+
 		PubSub.call(this); // Add publisher/subscriber functionnalities
+
+		// Add basic bob functionnalities to this object
+		Bobify(this, {
+			index: function index() {
+				var attrs = {
+					"class": this["class"],
+					"uid": this["class"] + "-" + this.id,
+					"id": this.id,
+					"type": this.type,
+					"coord.x": this.coord.x,
+					"coord.y": this.coord.y,
+					"coord.z": this.coord.z
+				};
+				if (this.nextCoord) {
+					attrs["nextCoord.x"] = this.nextCoord.x;
+					attrs["nextCoord.y"] = this.nextCoord.y;
+					attrs["nextCoord.z"] = this.nextCoord.z;
+				}
+				return attrs;
+			}
+		});
 
 		var actor = this; // Self reference
 
@@ -21,19 +45,22 @@ function doc(pseudo) {
 		this.options = this.options || {};
 		_(this.options).extend(options);
 
-		this.id = null; // a unique id for this actor (initialised on init)
-		this.coord = null; // The current position of the actor
-		this.nextCoord = null; // The future position of the actor
-		this.prevCoord = null; // The previous position of the actor
-		this.label = "Blank"; // The label for this actor
-		this.stage = null; // Reference to the parent stage
-		this.compulsions = {}; // Collection of compulsion that animate the actors behaviors
-		this.blockType = null; // A string id of the blockType
-		this.block = null; // The block representing the Actor
+		this.set({
+			id: null, // a unique id for this actor (initialised on init)
+			"class": "Actor", // A object class id
+			coord: null, // The current position of the actor
+			nextCoord: null, // The future position of the actor
+			prevCoord: null, // The previous position of the actor
+			label: "Blank", // The label for this actor
+			stage: null, // Reference to the parent stage
+			compulsions: {}, // Collection of compulsion that animate the actors behaviors
+			blockType: null, // A string id of the blockType
+			block: null, // The block representing the Actor
+			// The life meter of this actor
+			defaultLife: this.defaultLife || this.options.defaultLife || 10,
+			life: this.life || this.defaultLife
+		});
 
-		// The life meter of this actor
-		this.defaultLife = this.defaultLife || this.options.defaultLife || 10;
-		this.life = this.life || this.defaultLife;
 
 
 		/**
@@ -44,15 +71,21 @@ function doc(pseudo) {
 		this.bind = function bind(stage, coord) {
 			// Which stage to bind to
 			this.stage = stage;
-			// Get a unique Id for this stage
-			this.id = this.id || String(stage.uid()); // Unique Id must be a string
-			// Place where on stage
-			this.coord = coord;
-			// Create the block to represent the actor
-			this.block = new Isomaton.Block(this.blockType, coord);
+
+			this.set({
+				// Get a unique Id for this stage
+				id: this.id || String(stage.uid()), // Unique Id must be a string
+				// Place where on stage
+				coord: coord,
+				// Create the block to represent the actor
+				block: new Isomaton.Block(this.blockType, coord)
+			});
+
+			// Bind the block to its parent actor
 			this.block.set({
 				actor: this
 			});
+			// Trigger the bind event
 			this.publish("bind");
 			return this;
 		};
@@ -69,7 +102,9 @@ function doc(pseudo) {
 		 * @param coord
 		 */
 		this.goNext = function goNext(coord) {
-			this.nextCoord = coord;
+			this.set({
+				nextCoord: coord
+			});
 			this.block.goNext(coord);
 			this.updateIndex();
 		};
@@ -90,9 +125,11 @@ function doc(pseudo) {
 		this.go = function go() {
 			// todo: manage a better coord history queue
 			if (this.nextCoord) {
-				this.prevCoord = this.coord;
-				this.coord = this.nextCoord;
-				this.nextCoord = null;
+				this.set({
+					prevCoord: this.coord,
+					coord: this.nextCoord,
+					nextCoord: null
+				});
 			}
 			this.block.go();
 			this.updateIndex();
@@ -115,7 +152,9 @@ function doc(pseudo) {
 				}
 				if (!isValid) {
 					// Invalidate the nextCoordinate of both the actor and its block
-					this.nextCoord = null;
+					this.set({
+						nextCoord: null
+					});
 					this.block.set({
 						nextCoord: null
 					});
@@ -197,27 +236,6 @@ function doc(pseudo) {
 		};
 
 		/**
-		 * Return the index keys for a miniDB store
-		 */
-		this.toIndex = function txoIndex() {
-			var index;
-			index = {
-				"id": this.id,
-				"class": "Actor",
-				"type": this.type,
-				"coord.x": this.coord.x,
-				"coord.y": this.coord.y,
-				"coord.z": this.coord.z
-			};
-			if (this.nextCoord) {
-				index["nextCoord.x"] = this.nextCoord.x;
-				index["nextCoord.y"] = this.nextCoord.y;
-				index["nextCoord.z"] = this.nextCoord.z;
-			}
-			return index;
-		};
-
-		/**
 		 * Called when the mouse leaves an actors' block
 		 */
 		this.blur = function blur() {
@@ -256,5 +274,5 @@ function doc(pseudo) {
 		});
 	};
 
-}(this, Isomaton, _, PubSub));
+}(this, Isomaton, _, PubSub, Bobify));
 
