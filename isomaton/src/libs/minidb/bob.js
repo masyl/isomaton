@@ -16,7 +16,7 @@
 
 		// Add an item
 		this.add = function (input, silentEvent) {
-			var i, item, keys, key, obj, objs;
+			var i, item, keys, key, obj, objs, indexKeys;
 			// Convert the input to an array of items, or take the current selection
 			if (input !== undefined) {
 				if (input.constructor.name === "Array") {
@@ -26,8 +26,9 @@
 				}
 				for (i = 0; i < objs.length; i = i + 1) {
 					obj = objs[i];
-					key = obj.uid();
-					item = new Item(obj);
+					indexKeys = obj.index();
+					key = indexKeys.uid;
+					item = new Item(obj, indexKeys);
 					items[key] = item;
 					addToIndex(obj, item.keys);
 				}
@@ -55,15 +56,16 @@
 			return this;
 		};
 
-		function addToIndex(obj, keys) {
+		// Add an objects keys into the index
+		function addToIndex(obj, indexKeys) {
 			var key, indexItem, i;
-			for (i in keys) {
-				key = keys[i];
+			for (i in indexKeys) {
+				key = indexKeys[i];
 				indexItem = index[key];
 				if (indexItem === undefined) {
 					indexItem = index[key] = {};
 				}
-				indexItem[obj.uid()] = obj;
+				indexItem[obj.index().uid] = obj;
 			}
 		}
 
@@ -85,7 +87,7 @@
 			for (i = 0; i < objs.length; i = i + 1) {
 				obj = objs[i];
 				// Find the item to delete
-				objKey = obj.uid();
+				objKey = obj.index().uid;
 				item = items[objKey];
 				keys = item.keys;
 				// Iterate through all the referenced and remove the item from each of them
@@ -110,13 +112,14 @@
 			if (!silentEvent && selection.length) this.publish("update", [selection]);
 		};
 
-		function removeFromIndex(obj, keys) {
+		// todo: this is unused... should be used in ".remove()"
+		function removeFromIndex(obj, indexKeys) {
 			var key, indexItem, i;
-			for (i in keys) {
-				key = keys[i];
+			for (i in indexKeys) {
+				key = indexKeys[i];
 				indexItem = index[key];
 				if (indexItem !== undefined) {
-					delete indexItem[obj.uid()];
+					delete indexItem[obj.index().uid];
 				}
 			}
 		}
@@ -137,7 +140,6 @@
 					// Each sets after that wil be used to exclude non-matches from the reference set
 					if (count == 0) {
 						if (indexSet) {
-							//console.log("match!", matchedSet);
 							// copy items from index set to match set (so that we can delete them
 							// later without affecting the index
 							for (j in indexSet) {
@@ -180,19 +182,19 @@
 
 	}
 
-	function keyValuePairs(attrs) {
+	function keyValuePairs(index) {
 		var key, keys;
 		keys = [];
-		for (key in attrs) {
-			keys.push(key + ":" + attrs[key]);
+		for (key in index) {
+			keys.push(key + ":" + index[key]);
 		}
 		return keys;
 	}
 
-	function Item (obj) {
+	function Item (obj, indexKeys) {
 		this.content = obj;
-		this.attrs = obj.index();
-		this.keys = keyValuePairs(this.attrs);
+		this.index = indexKeys;
+		this.keys = keyValuePairs(indexKeys);
 	}
 
 	/**
@@ -239,12 +241,13 @@
 
 	function Bobify(obj, options) {
 		obj.set = function set(attrs) {
-			var attrId
+			var attrId;
 			for (attrId in attrs) {
-				this[attrId] = attrs[attrId];
+				if (attrs.hasOwnProperty(attrId)) {
+					this[attrId] = attrs[attrId];
+				}
 			}
 		};
-		obj.uid = options.uid;
 		obj.index = options.index;
 	}
 

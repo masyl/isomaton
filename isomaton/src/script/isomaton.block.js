@@ -3,11 +3,30 @@
 	// Base class for blocks
 	Isomaton.Block = function Block(type, coord, offStage, group) {
 		Bobify(this, {
-			uid: uid,
-			index: index
+			index: function index() {
+				var attrs = {
+					"class": this["class"],
+					"uid": this["class"] + "-" + this.id,
+					"id": this.id,
+					"offStage": this.offStage,
+					"group": this.group,
+					"type.id": this.type.id,
+					"type.isSolid": this.type.isSolid,
+					"coord.x": this.coord.x,
+					"coord.y": this.coord.y,
+					"coord.z": this.coord.z
+				};
+				if (this.nextCoord) {
+					attrs["nextCoord.x"] = this.nextCoord.x;
+					attrs["nextCoord.y"] = this.nextCoord.y;
+					attrs["nextCoord.z"] = this.nextCoord.z;
+				}
+				return attrs;
+			}
 		}); // Add basic bob functionnalities to this object
 
 		//todo: become a pubSub and publish on update to the miniDb for blocks
+		// Initialise the block with default attributes
 		this.set({
 			id: _.uniqueId(),
 			"class": "Block",
@@ -62,29 +81,6 @@
 			}
 		};
 
-		function uid() {
-			return this["class"] + "-" + this.id;
-		}
-
-		function index() {
-			var attrs = {
-				"class": this["class"],
-				"id": this.id,
-				"offStage": this.offStage,
-				"group": this.group,
-				"type.id": this.type.id,
-				"type.isSolid": this.type.isSolid,
-				"coord.x": this.coord.x,
-				"coord.y": this.coord.y,
-				"coord.z": this.coord.z
-			};
-			if (this.nextCoord) {
-				attrs["nextCoord.x"] = this.nextCoord.x;
-				attrs["nextCoord.y"] = this.nextCoord.y;
-				attrs["nextCoord.z"] = this.nextCoord.z;
-			}
-			return attrs;
-		}
 	};
 
 	Isomaton.BlockType = function BlockType(id, options) {

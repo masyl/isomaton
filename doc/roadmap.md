@@ -184,7 +184,7 @@ Transactionnal Object Store
 - Clean todos in code
 
 ## Features
-
+- Disable/Enable sound with offstage block
 - Totems Gameplay Concept: Affect the gameplay by errecting totems of blocks. When the correct combination is place together the totem actor can repel, attract, spaw, kill other elements on stage.
 	+ 3 Gold blocks totam could hypnotize and paralyze all slime and prevent the spawning of slimes.
 	+ 2 Wood blocks with an egg on top could raise the maximum of chickent to twice its current values!

@@ -162,7 +162,8 @@ Optimizations:
 					autoLoad: true,
 					id:'hit',
 					url: "../../sounds/hit.ogg",
-					multiShot: true
+					multiShot: true,
+					volume: 0
 				});
 
 			});
