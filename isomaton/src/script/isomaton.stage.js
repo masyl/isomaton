@@ -130,13 +130,24 @@ Optimizations:
 
 			// Setup sound
 
-			var sounds = stage.sounds = {};
+			var sounds = stage.sounds = {
+				play: function play(soundId) {
+					var sound = this[soundId];
+					if (sound) {
+						sound.play();
+					} else {
+						console.error("Missing sound: ", soundId);
+					}
+				}
+			};
 			soundManager.url = '../src/libs/soundmanager-297a/swf/';
 			soundManager.debugMode = false;
 			soundManager.flashVersion = 9; // optional: shiny features (default = 8)
 			soundManager.useFlashBlock = false; // optionally, enable when you're ready to dive in
 			soundManager.useHTML5Audio = true;
+			console.info("starting sound manager");
 			soundManager.onready(function() {
+				console.info("sound manager is ready!");
 				soundManager.preferFlash = false;
 				sounds.soundTrack = soundManager.createSound({
 					autoLoad: true,

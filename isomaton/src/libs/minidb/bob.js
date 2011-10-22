@@ -6,9 +6,11 @@
 	 * for a unique identifier and a toIndex function to supply the indexed attributes
 	 */
 	function Bob() {
-		var selection, items, index;
+		var bob, selection, items, index;
 		items = this.items = items = {};
 		index = this.index = index = {};
+
+		bob = this;
 
 		mixinPubSub(this);
 
@@ -26,7 +28,10 @@
 				}
 				for (i = 0; i < objs.length; i = i + 1) {
 					obj = objs[i];
-					indexKeys = obj.index();
+					// Subscribe to the objects "set" published event
+					if (!silentEvent) obj.bob.subscribe("set", onObjectSet);
+					// todo: should test first if object is bobyfied
+					indexKeys = obj.bob.index.call(obj);
 					key = indexKeys.uid;
 					item = new Item(obj, indexKeys);
 					items[key] = item;
@@ -37,6 +42,11 @@
 			if (!silentEvent && objs.length) this.publish("add", [objs]);
 			return this;
 		};
+
+		function onObjectSet (attrs) {
+//			console.log(attrs, this, this.obj);
+			bob.update([this.obj]);
+		}
 
 		this.set = function set(attrs) {
 			var i, item, attrId;
@@ -65,7 +75,7 @@
 				if (indexItem === undefined) {
 					indexItem = index[key] = {};
 				}
-				indexItem[obj.index().uid] = obj;
+				indexItem[obj.bob.index.call(obj).uid] = obj;
 			}
 		}
 
@@ -87,7 +97,7 @@
 			for (i = 0; i < objs.length; i = i + 1) {
 				obj = objs[i];
 				// Find the item to delete
-				objKey = obj.index().uid;
+				objKey = obj.bob.index.call(obj).uid;
 				item = items[objKey];
 				keys = item.keys;
 				// Iterate through all the referenced and remove the item from each of them
@@ -109,9 +119,13 @@
 		this.update = function update(input, silentEvent) {
 			//console.log("update:", input);
 			// todo: find a better way of updating than just a remove followed by an add
+			// todo: the update should be able to only change the part of the index that have changed
+			// todo: this should be done by passing an attrs param to this update method
+//			console.log("input", input);
 			this.remove(input, true);
 			this.add(input, true);
-			if (!silentEvent && selection.length) this.publish("update", [selection]);
+//			debugger;
+			if (!silentEvent && input.length) this.publish("update", [input]);
 		};
 
 		// todo: this is unused... should be used in ".remove()"
@@ -121,26 +135,26 @@
 				key = indexKeys[i];
 				indexItem = index[key];
 				if (indexItem !== undefined) {
-					delete indexItem[obj.index().uid];
+					delete indexItem[obj.bob.index.call(obj).uid];
 				}
 			}
 		}
 
 		this.get = function (criterias) {
-			var i, j, count, matchedSet, key, subKey, results;
+			var i, j, count, matchedSet, key, subKey, results, indexSet;
 			results = [];
 			count = 0;
 			matchedSet = {};
 			if (criterias) {
 				for (i in criterias) {
 					key = i + ":" + criterias[i];
-					var indexSet = index[key];
+					indexSet = index[key];
 					if (!indexSet) {
 						return [];
 					}
 					// Keep the first matched set as the reference set
 					// Each sets after that wil be used to exclude non-matches from the reference set
-					if (count == 0) {
+					if (count === 0) {
 						if (indexSet) {
 							// copy items from index set to match set (so that we can delete them
 							// later without affecting the index
@@ -242,6 +256,15 @@
 	}
 
 	function Bobify(obj, options) {
+		// Add the bob connector to this object
+		obj.bob = {
+			obj: obj
+		};
+		// Make the bob connector a PubSub
+		mixinPubSub(obj.bob);
+		// Add the index handler to the Bob connector
+		obj.bob.index = options.index;
+		// Add th .set() method to the object itself
 		obj.set = function set(attrs) {
 			var attrId;
 			for (attrId in attrs) {
@@ -249,8 +272,8 @@
 					this[attrId] = attrs[attrId];
 				}
 			}
+			obj.bob.publish("set", [attrs]);
 		};
-		obj.index = options.index;
 	}
 
 	window.Bob = Bob;

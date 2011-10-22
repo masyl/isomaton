@@ -12,13 +12,13 @@ Transactionnal Object Store
 - DONE: Bobify the Actor class
 - DONE: Apply the Bobs' set method on all Actor usage
 - DONE: Merge the actors and blocks MiniDB to a single Bob store
+- Publish a "change" event of set actions to prevent the need to trigger updates manually
+- Make Bob selections work like jQuery contexts
 - Handle child Coord objects with BOB... how?
 - Set values with handler function that reveived a this for each items
 - Ensure the stage object state is disposable and doesnt need versionning
-- Publish a "change" event of set action
 - Filter() method with obj or with handler function
 - Rename the .select method to .find
-- Make Bob selections work like jQuery contexts
 
 ### v0.12 BOB reversed is BOB
 - Automatic Revision Log

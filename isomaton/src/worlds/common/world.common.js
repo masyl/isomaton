@@ -22,7 +22,7 @@
 			this.react("respawnTo", function (source, options) {
 				var stage = source.stage;
 				source.goNext(this.coord.copy());
-				stage.sounds.pop.play();
+				stage.sounds.play("pop");
 
 				var puffBlock = world.blockTypes["effects.puff"];
 				var block = builder.one(puffBlock, source.coord.copy());
@@ -114,7 +114,6 @@
 				}
 				if (this.stage.time - this.lastHit > hitProtectionLength) {
 					// Play the "hit" sound effect
-					this.stage.sounds.hit.play();
 					// Decrease life by 1
 					// todo: strength of hit should be flexible
 					this.life = this.life - 1;

@@ -117,12 +117,12 @@
 
 
 
+		// note: to prevent the "update" event chain from going into a loop
+		// this method should not call the ".set" method on blocks
 		this.updateBlock = function (block) {
 			var speed, coord;
 			if (block.coord !== block.animatedCoord) {
-				block.set({
-					animatedCoord: block.coord
-				});
+				block.animatedCoord = block.coord;
 				coord = this.translateFromISO(block.coord);
 				if (block.coord.stepDistanceFrom(block.prevCoord) > 1) {
 					speed = 0;
@@ -271,6 +271,7 @@
 			});
 			this.state.subscribe("update", function(blocks) {
 				var i, block;
+//				console.log("isograph update", blocks);
 				if (blocks[0]["class"] === "Block") {
 					for (i in blocks) {
 						block = blocks[i];
