@@ -7,9 +7,9 @@
 	var Actor = Isomaton.Actor;
 	var Area = isomaton.Area;
 	var Rules = Isomaton.Rules;
-	var builder = isomaton.builder;
+	var builder = Isomaton.builder;
 	var editModes = Isomaton.editModes; // Constants
-
+console.log(builder);
 
 	world.Actors.SpawnPoint = function SpawnPoint(options) {
 		Actor.apply(this, arguments); // Inherit from the Actor class
@@ -324,29 +324,29 @@
 
 			// place random patches of dirt in the grass at random
 			var dirtPatchCount = Math.round(this.random("dirtPatchCount") * 9);
-			this.placeBlocks(isomaton.builder.random(this.random("dirtPatches"), dirtBlock, groundArea, dirtPatchCount));
+			this.placeBlocks(builder.random(this.random("dirtPatches"), dirtBlock, groundArea, dirtPatchCount));
 
 			// place random patches of water in the grass at random
 			var waterCount = Math.round(this.random("waterCount") * 9);
-			this.placeBlocks(isomaton.builder.random4(this.random("water"), waterBlock, groundArea, waterCount));
+			this.placeBlocks(builder.random4(this.random("water"), waterBlock, groundArea, waterCount));
 
 			// Go up once to place stuff "on" the ground layer
 			groundArea.coord.up();
 
 			// place random yellow flowers
 			var flowersCount = Math.round(this.random("flowersCount") * 9 + 3);
-			this.placeBlocks(isomaton.builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
+			this.placeBlocks(builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
 
 			// place random weeds
 			var weedCount = Math.round(this.random("weedCount") * 20 + 3);
-			this.placeBlocks(isomaton.builder.random(this.random("weeds"), shortweedsBlock, groundArea, weedCount));
+			this.placeBlocks(builder.random(this.random("weeds"), shortweedsBlock, groundArea, weedCount));
 
 			// place a gold block at random
 			var randomCoord = groundArea.randomCoord(this.random("goldBlock"));
-			this.placeBlocks(isomaton.builder.one(goldBlock, randomCoord), true);
+			this.placeBlocks(builder.one(goldBlock, randomCoord));
 
 			// place 5 stones at random
-			this.placeBlocks(isomaton.builder.random(this.random("stones"), stoneBlock, groundArea, 5));
+			this.placeBlocks(builder.random(this.random("stones"), stoneBlock, groundArea, 5));
 
 			// place 1 slime
 			coord = groundArea.randomCoord(this.random("slimeCoord"));
@@ -388,7 +388,7 @@
 			this.placeActors(spawnPoints);
 
 			// place frame
-			this.placeBlocks(isomaton.builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
+			this.placeBlocks(builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
 
 
 		},

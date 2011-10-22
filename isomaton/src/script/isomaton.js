@@ -30,12 +30,6 @@ Reversible Transactions:
 		this.actor = null; // The controlling actor of this block
 		this.World = World;
 		this.worlds = {}; // Collection of available worlds
-		this.builder = {
-			fill: fill,
-			one: one,
-			random: random,
-			random4: random4
-		};
 
 		this.start = function start(options) {
 			console.log("Starting!");
@@ -172,56 +166,6 @@ Reversible Transactions:
 		this.random = Isomaton.fakeRandom;
 
 		this.init();
-	}
-
-	function one(type, coord) {
-		var block = new Isomaton.Block(type, coord);
-		return [block];
-	}
-
-	function fill(type, area) {
-		var coord = area.coord;
-		var blockCoord = new Isomaton.Coord(0, 0, 0);
-		var x, y, z, block, blocks = [];
-		for (x = coord.x; x < coord.x + area.width; x = x + 1) {
-			for (y = coord.y; y < coord.y + area.height; y = y + 1) {
-				blockCoord = new Isomaton.Coord(x, y, coord.z);
-				block = new Isomaton.Block(type, blockCoord);
-				blocks.push(block);
-			}
-		}
-		return blocks;
-	}
-
-	function random(seed, type, area, count) {
-		var i, iSeed, coord, block, blocks = [];
-		for (i = 0; i < count; i = i + 1) {
-				iSeed = i + seed + "" + i;
-				coord = area.randomCoord(iSeed);
-				block = new Isomaton.Block(type, coord);
-				blocks.push(block);
-		}
-		return blocks;
-	}
-
-	function random4(seed, type, area, count) {
-		var i, iSeed, coord, block, blocks = [];
-		for (i = 0; i < count; i = i + 1) {
-			iSeed = i + seed + "" + i;
-			coord = area.randomCoord(iSeed);
-			block = new Isomaton.Block(type, coord);
-			blocks.push(block);
-			coord = coord.copy().north();
-			block = new Isomaton.Block(type, coord);
-			blocks.push(block);
-			coord = coord.copy().east();
-			block = new Isomaton.Block(type, coord);
-			blocks.push(block);
-			coord = coord.copy().south();
-			block = new Isomaton.Block(type, coord);
-			blocks.push(block);
-		}
-		return blocks;
 	}
 
 	Isomaton.fakeRandom = function fakeRandom(seed, key) {
