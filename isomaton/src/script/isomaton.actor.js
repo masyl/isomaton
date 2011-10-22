@@ -113,9 +113,9 @@ function doc(pseudo) {
 		 * Update the actor and block index in their MiniDB object stores
 		 */
 		this.updateIndex = function updateIndex() {
-			this.stage.actors.update(this);
+			this.stage.state.update(this);
 			// todo: refactor, the actor should not be responsible to update the blocks indexes
-			this.stage.blocks.update(this.block);
+			this.stage.state.update(this.block);
 		};
 
 		/**
@@ -229,13 +229,6 @@ function doc(pseudo) {
 		};
 
 		/**
-		 * Return a unique string id for this object
-		 */
-		this.toString = function toString() {
-			return "Actor-" + this.id;
-		};
-
-		/**
 		 * Called when the mouse leaves an actors' block
 		 */
 		this.blur = function blur() {
@@ -263,7 +256,10 @@ function doc(pseudo) {
 			this.react("respawn", function (source, options) {
 				var spawners, spawner;
 				doc("Get the list of available spawners");
-				spawners = this.stage.actors.select({type: "spawnPoint"}).get();
+				spawners = this.stage.state.select({
+					"class": "Actor",
+					type: "spawnPoint"
+				}).get();
 				doc("Pick a spawnPoint at random");
 				spawner = this.stage.randomItem("randomSpawn-" + this.id, spawners);
 				doc("Teleport to the selected spawnPoint");

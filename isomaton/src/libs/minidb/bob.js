@@ -107,6 +107,8 @@
 		};
 
 		this.update = function update(input, silentEvent) {
+			//console.log("update:", input);
+			// todo: find a better way of updating than just a remove followed by an add
 			this.remove(input, true);
 			this.add(input, true);
 			if (!silentEvent && selection.length) this.publish("update", [selection]);

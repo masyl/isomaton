@@ -247,7 +247,8 @@ Reversible Transactions:
 		coord = this.nextCoord;
 		stage = this.stage;
 		// Test if next move is a step on a solid block
-		blocks = stage.blocks.select({
+		blocks = stage.state.select({
+			"class": "Block",
 			"coord.x": coord.x,
 			"coord.y": coord.y,
 			"coord.z": coord.z - 1
@@ -272,7 +273,8 @@ Reversible Transactions:
 		// Test if next move is into a solid block
 		coord = this.nextCoord;
 		stage = this.stage;
-		blocks = stage.blocks.select({
+		blocks = stage.state.select({
+			"class": "Block",
 			"coord.x": coord.x,
 			"coord.y": coord.y,
 			"coord.z": coord.z
@@ -285,7 +287,8 @@ Reversible Transactions:
 		}
 
 		// Test if next move is into a space that WILL be occupied by a solid block
-		blocks = stage.blocks.select({
+		blocks = stage.state.select({
+			"class": "Block",
 			"nextCoord.x": coord.x,
 			"nextCoord.y": coord.y,
 			"nextCoord.z": coord.z

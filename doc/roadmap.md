@@ -9,9 +9,9 @@ Transactionnal Object Store
 - DONE: Set method
 - DONE: Bobify the Block class
 - DONE: Apply the Bobs' set method on all Block usage
-- Bobify the Actor class
-- Apply the Bobs' set method on all Actor usage
-- Merge the actors and blocks MiniDB to a single Bob store
+- DONE: Bobify the Actor class
+- DONE: Apply the Bobs' set method on all Actor usage
+- DONE: Merge the actors and blocks MiniDB to a single Bob store
 - Handle child Coord objects with BOB... how?
 - Set with handler function
 - Ensure the stage object state is disposable and doesnt need versionning

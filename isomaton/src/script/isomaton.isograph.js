@@ -6,7 +6,7 @@
 
 		this._options = {};
 		this.stepSpeed = 0;
-		this.blocks = null;
+		this.state = null; // Reference to the state machine containing all the blocks
 		this.sprites = null;
 		this.blockBitmaps = null;
 		this.blockTypes = null;
@@ -143,8 +143,6 @@
 			// update the z-ordering first
 			if (z > bitmap.z) {
 				bitmap.z = z;
-				// todo: find a cheaper way to update the z-ordering
-//				this.updateZ();
 				Tween.get(bitmap)
 					.to({
 							x: x,
@@ -156,10 +154,7 @@
 							x: x,
 							y: y
 						}, speed)
-					.to({z: z}, 0.01)
-					.call(function() {
-//						isograph.updateZ();
-					});
+					.to({z: z}, 0.01);
 			}
 		};
 
@@ -248,31 +243,39 @@
 		};
 
 
-		this.bind = function bind(blocks) {
-			this.blocks = blocks;
-			this.blocks.subscribe("add", function(blocks) {
-				var i, block;
-				for (i in blocks) {
-					block = blocks[i];
-					isograph.renderBlock(block);
-				}
-			});
-			this.blocks.subscribe("remove", function(blocks) {
-				var i, block;
-				for (i in blocks) {
-					block = blocks[i];
-					if (block.bitmap) {
-						isograph.blockBitmaps.removeChild(block.bitmap);
-					} else {
-						console.log("block is missing bitmap", block, block.id, block.toString(), block.bitmap);
+		this.bind = function bind(state) {
+			this.state = state;
+			// blocks should be a temporary selection
+			this.state.subscribe("add", function(blocks) {
+				// todo: Having to do this sort of if is ridiculous
+				if (blocks[0]["class"] === "Block") {
+					var i, block;
+					for (i in blocks) {
+						block = blocks[i];
+						isograph.renderBlock(block);
 					}
 				}
 			});
-			this.blocks.subscribe("update", function(blocks) {
+			this.state.subscribe("remove", function(blocks) {
 				var i, block;
-				for (i in blocks) {
-					block = blocks[i];
-					isograph.updateBlock(block);
+				if (blocks[0]["class"] === "Block") {
+					for (i in blocks) {
+						block = blocks[i];
+						if (block.bitmap) {
+							isograph.blockBitmaps.removeChild(block.bitmap);
+						} else {
+							console.error("block is missing a bitmap", block, block.id, block.toString(), block.bitmap);
+						}
+					}
+				}
+			});
+			this.state.subscribe("update", function(blocks) {
+				var i, block;
+				if (blocks[0]["class"] === "Block") {
+					for (i in blocks) {
+						block = blocks[i];
+						isograph.updateBlock(block);
+					}
 				}
 			});
 		};

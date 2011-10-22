@@ -55,11 +55,12 @@ Optimizations:
 			return this;
 		};
 
-		this.blocks =  new Bob();
-		this.actors =  new Bob();
+		//this.blocks =  new Bob();
+		//this.actors =  new Bob();
+		this.state = new Bob();
 		this.world = null;
 		this.isograph = null;
-		this.time = 0;
+		this.time = 0; //todo: eventually match this to the stateMacine revision number
 		this.speed = 200;
 		this.speedMultiplier = 1;
 		this._options = {};
@@ -173,7 +174,7 @@ Optimizations:
 			this.isograph = options.isograph;
 			this.isograph.stepSpeed = this.speed / this.speedMultiplier;
 			this.isograph.setup(onSetup);
-			this.isograph.bind(this.blocks);
+			this.isograph.bind(this.state);
 			this.isograph.subscribe("blockSelect", function(block) {
 				stage.onBlockSelected(block);
 			});
@@ -185,14 +186,6 @@ Optimizations:
 			}
 		};
 
-		//todo: Blocks collections/container should have this method instead of this procedural approach
-		this.removeBlocks = function removeBlocks(blocks) {
-			_(blocks).each(function (block) {
-				var index = _(stage.blocks).indexOf(block);
-				stage.blocks.splice(index, 1);
-			});
-		};
-
 		this.placeBlocks = function placeBlocks(blocks) {
 			var i, newBlock, coord, existingBlocks, mode, key, removed;
 			mode = this.editMode().value();
@@ -200,8 +193,9 @@ Optimizations:
 				newBlock = blocks[i];
 				coord = newBlock.coord;
 				if (mode === editModes.emptyFirst) {
-					removed = this.blocks
+					removed = this.state
 						.select({
+							"class": "Block",
 							"coord.x": coord.x,
 							"coord.y": coord.y,
 							"coord.z": coord.z
@@ -209,7 +203,7 @@ Optimizations:
 						.remove()
 						.get();
 				}
-				this.blocks.add(newBlock);
+				this.state.add(newBlock);
 			}
 		};
 
@@ -235,7 +229,8 @@ Optimizations:
 			var block, blocks, coord;
 			if (this.selectedCoord) {
 				coord = this.selectedCoord;
-				blocks = this.blocks.select({
+				blocks = this.state.select({
+					"class": "Block",
 					"coord.x": coord.x,
 					"coord.y": coord.y
 				}).get();
@@ -248,7 +243,7 @@ Optimizations:
 					block = blocks[0];
 					this.pickedUpBlock = block;
 					block.coord.z = 10;
-					this.blocks.update(block);
+					this.state.update(block);
 				}
 			}
 		};
@@ -267,7 +262,8 @@ Optimizations:
 			if (coord) {
 				coord.z = 0;
 				// find and delete all block for the actorStatus group
-				this.blocks.select({
+				this.state.select({
+					"class": "Block",
 					group: "cursor"
 				}).remove();
 
@@ -297,10 +293,9 @@ Optimizations:
 			var coord = this.selectedCoord;
 			if (coord) {
 				coord.west();
-				console.log("this.pickedUpBlock", this.pickedUpBlock);
 				if (this.pickedUpBlock) {
 					this.pickedUpBlock.coord.west();
-					this.blocks.update(this.pickedUpBlock);
+					this.state.update(this.pickedUpBlock);
 				}
 			}
 			this.updateCursor();
@@ -312,7 +307,7 @@ Optimizations:
 				coord.east();
 				if (this.pickedUpBlock) {
 					this.pickedUpBlock.coord.east();
-					this.blocks.update(this.pickedUpBlock);
+					this.state.update(this.pickedUpBlock);
 				}
 			}
 			this.updateCursor();
@@ -324,7 +319,7 @@ Optimizations:
 				coord.north();
 				if (this.pickedUpBlock) {
 					this.pickedUpBlock.coord.north();
-					this.blocks.update(this.pickedUpBlock);
+					this.state.update(this.pickedUpBlock);
 				}
 			}
 			this.updateCursor();
@@ -336,7 +331,7 @@ Optimizations:
 				coord.south();
 				if (this.pickedUpBlock) {
 					this.pickedUpBlock.coord.south();
-					this.blocks.update(this.pickedUpBlock);
+					this.state.update(this.pickedUpBlock);
 				}
 			}
 			this.updateCursor();
@@ -358,7 +353,8 @@ Optimizations:
 			this.actorOnStatus = actor;
 
 			// find and delete all block for the actorStatus group
-			this.blocks.select({
+			this.state.select({
+				"class": "Block",
 				group: "actorStatus"
 			}).remove();
 
@@ -403,10 +399,10 @@ Optimizations:
 
 		this.placeActors = function (actors) {
 			var i;
-			this.actors.add(actors);
+			this.state.add(actors);
 			for (i in actors) {
 				if (actors[i].block) {
-					this.blocks.add(actors[i].block);
+					this.state.add(actors[i].block);
 				}
 			}
 		};
@@ -444,7 +440,10 @@ Optimizations:
 				stage._options.step.call(stage);
 
 				// Obtain the collection of stage actors
-				actors = this.actors.all().get();
+				// todo: find a sexier way to access a class of actor in the state
+				// like preset selectors ?
+				// todo: rename .select to .find ?
+				actors = this.state.select({"class": "Actor"}).get();
 
 				// Call the step handler of each actors
 				for (actorId in actors) {
