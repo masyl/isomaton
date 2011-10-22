@@ -8,13 +8,13 @@
 		coord = this.nextCoord;
 		stage = this.stage;
 		// Test if next move is a step on a solid block
-		blocks = stage.state.select({
+		blocks = stage.state.find({
 			"class": "Block",
 			"coord.x": coord.x,
 			"coord.y": coord.y,
 			"coord.z": coord.z - 1,
 			"type.isSolid": true
-		}).get();
+		});
 		if (!blocks.length) {
 			isValidMove = false;
 		}
@@ -27,12 +27,12 @@
 		// Test if next move is into a solid block
 		coord = this.nextCoord;
 		stage = this.stage;
-		blocks = stage.state.select({
+		blocks = stage.state.find({
 			"class": "Block",
 			"coord.x": coord.x,
 			"coord.y": coord.y,
 			"coord.z": coord.z
-		}).get();
+		});
 		if (blocks.length) {
 			//todo: handle case where multiple blocks occupy the same space
 			if (blocks[0].type.isSolid) {

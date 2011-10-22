@@ -1,18 +1,12 @@
-(function (isomaton, Isomaton) {
+(function (isomaton, I) {
 
-	var world = isomaton.worlds.common = new isomaton.World(window.commonworld);
+	var world;
 
-	var Coord = Isomaton.Coord;
-	var Compulsions = Isomaton.Compulsions;
-	var Actor = Isomaton.Actor;
-	var Area = isomaton.Area;
-	var Rules = Isomaton.Rules;
-	var builder = Isomaton.builder;
-	var editModes = Isomaton.editModes; // Constants
-console.log(builder);
+	// todo: worl instantiation makes no sense
+	world = isomaton.worlds.common = new isomaton.World(window.commonworld);
 
 	world.Actors.SpawnPoint = function SpawnPoint(options) {
-		Actor.apply(this, arguments); // Inherit from the Actor class
+		I.Actor.apply(this, arguments); // Inherit from the Actor class
 		this.type = "spawnPoint";
 		this.label = "Spawn point";
 		// todo: use a functionnal getter for block types (with fallbacks)
@@ -25,9 +19,9 @@ console.log(builder);
 				stage.sounds.play("pop");
 
 				var puffBlock = world.blockTypes["effects.puff"];
-				var block = builder.one(puffBlock, source.coord.copy());
+				var block = I.builder.one(puffBlock, source.coord.copy());
 				stage
-						.editMode(editModes.normal)
+						.editMode(I.editModes.normal)
 						.placeBlocks([block]);
 			});
 		});
@@ -38,15 +32,15 @@ console.log(builder);
 		// todo: better handling of default options and default values when inheriting
 		this.defaultLife = 3;
 
-		Actor.apply(this, arguments); // Inherit from the Actor class
+		I.Actor.apply(this, arguments); // Inherit from the Actor class
 		this.type = "slime";
 		this.label = "Slime";
 		this.blockType = world.blockTypes["actors.slime"];
-		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
+		this.compulsions.WanderAtRandom = new I.Compulsions.WanderAtRandom(this, {
 			weight: [1, 0],
 			stepInterval: 6
 		});
-		this.compulsions.Escape = new Compulsions.Escape(this, {
+		this.compulsions.Escape = new I.Compulsions.Escape(this, {
 			weight: [5, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
 			stepInterval: 3,
 			minDistance: 0,
@@ -62,7 +56,7 @@ console.log(builder);
 		});
 
 		// Slime will start to follow  any princess that is within a distance between 1 and 16 blocks
-		this.compulsions.Follow = new Compulsions.Follow(this, {
+		this.compulsions.Follow = new I.Compulsions.Follow(this, {
 			weight: [2, 0.9],
 			stepInterval: 4,
 			minDistance: 1,
@@ -76,7 +70,7 @@ console.log(builder);
 			}
 		});
 		// Slime will start to follow  any princess that is within a distance between 1 and 16 blocks
-		this.compulsions.Follow = new Compulsions.Follow(this, {
+		this.compulsions.Follow = new I.Compulsions.Follow(this, {
 			weight: [3, 0.9],
 			stepInterval: 4,
 			minDistance: 1,
@@ -89,7 +83,7 @@ console.log(builder);
 				return weight;
 			}
 		});
-		this.compulsions.Attack = new Compulsions.Attack(this, {
+		this.compulsions.Attack = new I.Compulsions.Attack(this, {
 			weight: [4, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
 			stepInterval: 2,
 			minDistance: 0,
@@ -137,17 +131,17 @@ console.log(builder);
 
 	world.Actors.Chicken = function Chicken(options) {
 		this.defaultLife = 2;
-		Actor.apply(this, arguments); // Inherit from the Actor class
+		I.Actor.apply(this, arguments); // Inherit from the Actor class
 		this.type = "chicken";
 		this.label = "Chicken";
 		this.blockType = world.blockTypes["actors.chicken"];
 		// Chicken will wander around randomly if nothing else to do
-		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
+		this.compulsions.WanderAtRandom = new I.Compulsions.WanderAtRandom(this, {
 			weight: [1, 0],
 			stepInterval: 6
 		});
 		// Chicken will start to follow fast any chicken that is within a distance between 4 and 20 blocks
-		this.compulsions.Follow = new Compulsions.Follow(this, {
+		this.compulsions.Follow = new I.Compulsions.Follow(this, {
 			weight: [2, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
 			stepInterval: 4,
 			minDistance: 5,
@@ -163,7 +157,7 @@ console.log(builder);
 
 
 		// Chicken will escape fast if any actor that is not chicken moves within 4 blocks
-		this.compulsions.Escape = new Compulsions.Escape(this, {
+		this.compulsions.Escape = new I.Compulsions.Escape(this, {
 			weight: [3, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
 			stepInterval: 2,
 			minDistance: 1,
@@ -183,15 +177,15 @@ console.log(builder);
 
 
 	world.Actors.Knight = function Knight(options) {
-		Actor.apply(this, arguments); // Inherit from the Actor class
+		I.Actor.apply(this, arguments); // Inherit from the Actor class
 		this.type = "knight";
 		this.label = "Knight";
 		this.blockType = world.blockTypes["actors.knight"];
-		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
+		this.compulsions.WanderAtRandom = new I.Compulsions.WanderAtRandom(this, {
 			weight: [1, 0],
 			stepInterval: 4
 		});
-		this.compulsions.Follow = new Compulsions.Follow(this, {
+		this.compulsions.Follow = new I.Compulsions.Follow(this, {
 			weight: [1, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
 			stepInterval: 2,
 			minDistance: 1,
@@ -204,7 +198,7 @@ console.log(builder);
 				return weight;
 			}
 		});
-		this.compulsions.Attack = new Compulsions.Attack(this, {
+		this.compulsions.Attack = new I.Compulsions.Attack(this, {
 			weight: [2, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
 			stepInterval: 2,
 			minDistance: 0,
@@ -221,15 +215,15 @@ console.log(builder);
 	};
 
 	world.Actors.Sidekick = function Sidekick(options) {
-		Actor.apply(this, arguments); // Inherit from the Actor class
+		I.Actor.apply(this, arguments); // Inherit from the Actor class
 		this.type = "sidekick";
 		this.label = "Sidekick";
 		this.blockType = world.blockTypes["actors.sidekick"];
-		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
+		this.compulsions.WanderAtRandom = new I.Compulsions.WanderAtRandom(this, {
 			weight: [1, 0],
 			stepInterval: 5
 		});
-		this.compulsions.Follow = new Compulsions.Follow(this, {
+		this.compulsions.Follow = new I.Compulsions.Follow(this, {
 			weight: [1, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
 			stepInterval: 4,
 			minDistance: 3,
@@ -246,16 +240,16 @@ console.log(builder);
 	};
 
 	world.Actors.Princess = function Princess(options) {
-		Actor.apply(this, arguments); // Inherit from the Actor class
+		I.Actor.apply(this, arguments); // Inherit from the Actor class
 		this.type = "princess";
 		this.label = "Princess";
 		this.blockType = world.blockTypes["actors.princess"];
-		this.compulsions.WanderAtRandom = new Compulsions.WanderAtRandom(this, {
+		this.compulsions.WanderAtRandom = new I.Compulsions.WanderAtRandom(this, {
 			weight: [1, 0],
 			stepInterval: 8
 		});
 		// The princess will follow the chicken slowly from a distance of 5 blocks
-		this.compulsions.Follow = new Compulsions.Follow(this, {
+		this.compulsions.Follow = new I.Compulsions.Follow(this, {
 			weight: [2, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
 			stepInterval: 6,
 			minDistance: 6,
@@ -269,7 +263,7 @@ console.log(builder);
 			}
 		});
 		// Chicken will escape fast if any actor that is not chicken moves within 4 blocks
-		this.compulsions.Escape = new Compulsions.Escape(this, {
+		this.compulsions.Escape = new I.Compulsions.Escape(this, {
 			weight: [3, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
 			stepInterval: 3,
 			maxDistance: 6,
@@ -285,7 +279,7 @@ console.log(builder);
 		this.init();
 	};
 
-	world.stages.prairie = new Isomaton.Stage("prairie", {
+	world.stages.prairie = new I.Stage("prairie", {
 		start: function start() {
 			var coord;
 			var world = this.world;
@@ -300,53 +294,53 @@ console.log(builder);
 			var stoneBlock = world.blockTypes["materials.stone"];
 			var yellowflowersBlock = world.blockTypes["decorations.yellowflowers"];
 			var shortweedsBlock = world.blockTypes["decorations.shortweeds"];
-			var groundArea = new Isomaton.Area(new Coord(1, 1, -2), worldOptions.width, worldOptions.height);
+			var groundArea = new I.Area(new I.Coord(1, 1, -2), worldOptions.width, worldOptions.height);
 /*
 			var whiteFrameBlock = world.blockTypes["cursors.whiteplaceholder"];
-			var frameArea = new Isomaton.Area(new Coord(1, -3, 6), worldOptions.width, 1);
-			this.placeBlocks(builder.fill(whiteFrameBlock, frameArea));
+			var frameArea = new I.Area(new I.Coord(1, -3, 6), worldOptions.width, 1);
+			this.placeBlocks(I.builder.fill(whiteFrameBlock, frameArea));
 */
 
-			this.editMode(editModes.emptyFirst);
+			this.editMode(I.editModes.emptyFirst);
 
 			// place layer of stone
 			// todo: bring back this layer once isograph is optimized
-//			this.placeBlocks(builder.fill(stoneBlock, groundArea));
+//			this.placeBlocks(I.builder.fill(stoneBlock, groundArea));
 
 			// place layer of dirt
 			groundArea.coord.up();
 			// todo: bring back this layer once isograph is optimized
-//			this.placeBlocks(builder.fill(dirtBlock, groundArea));
+//			this.placeBlocks(I.builder.fill(dirtBlock, groundArea));
 
 			// place layer of grass
 			groundArea.coord.up();
-			this.placeBlocks(builder.fill(grassBlock, groundArea));
+			this.placeBlocks(I.builder.fill(grassBlock, groundArea));
 
 			// place random patches of dirt in the grass at random
 			var dirtPatchCount = Math.round(this.random("dirtPatchCount") * 9);
-			this.placeBlocks(builder.random(this.random("dirtPatches"), dirtBlock, groundArea, dirtPatchCount));
+			this.placeBlocks(I.builder.random(this.random("dirtPatches"), dirtBlock, groundArea, dirtPatchCount));
 
 			// place random patches of water in the grass at random
 			var waterCount = Math.round(this.random("waterCount") * 9);
-			this.placeBlocks(builder.random4(this.random("water"), waterBlock, groundArea, waterCount));
+			this.placeBlocks(I.builder.random4(this.random("water"), waterBlock, groundArea, waterCount));
 
 			// Go up once to place stuff "on" the ground layer
 			groundArea.coord.up();
 
 			// place random yellow flowers
 			var flowersCount = Math.round(this.random("flowersCount") * 9 + 3);
-			this.placeBlocks(builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
+			this.placeBlocks(I.builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
 
 			// place random weeds
 			var weedCount = Math.round(this.random("weedCount") * 20 + 3);
-			this.placeBlocks(builder.random(this.random("weeds"), shortweedsBlock, groundArea, weedCount));
+			this.placeBlocks(I.builder.random(this.random("weeds"), shortweedsBlock, groundArea, weedCount));
 
 			// place a gold block at random
 			var randomCoord = groundArea.randomCoord(this.random("goldBlock"));
-			this.placeBlocks(builder.one(goldBlock, randomCoord));
+			this.placeBlocks(I.builder.one(goldBlock, randomCoord));
 
 			// place 5 stones at random
-			this.placeBlocks(builder.random(this.random("stones"), stoneBlock, groundArea, 5));
+			this.placeBlocks(I.builder.random(this.random("stones"), stoneBlock, groundArea, 5));
 
 			// place 1 slime
 			coord = groundArea.randomCoord(this.random("slimeCoord"));
@@ -388,7 +382,7 @@ console.log(builder);
 			this.placeActors(spawnPoints);
 
 			// place frame
-			this.placeBlocks(builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
+			this.placeBlocks(I.builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
 
 
 		},

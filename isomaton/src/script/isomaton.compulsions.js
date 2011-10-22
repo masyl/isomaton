@@ -36,7 +36,7 @@
 
 	function relativeWeightByMinMaxDistance () {
 		var i, targets, target, targetWeight, bestTarget, bestTargetWeight, distance;
-		targets = this.actor.stage.state.select({"class":"Actor"}).get();
+		targets = this.actor.stage.state.find({"class":"Actor"});
 		targetWeight = 0;
 		bestTargetWeight = 0;
 		// Find a prey to follow

@@ -273,7 +273,7 @@ Optimizations:
 			if (coord) {
 				coord.z = 0;
 				// find and delete all block for the actorStatus group
-				this.state.select({
+				this.state.find({
 					"class": "Block",
 					group: "cursor"
 				}).remove();
@@ -364,7 +364,7 @@ Optimizations:
 			this.actorOnStatus = actor;
 
 			// find and delete all block for the actorStatus group
-			this.state.select({
+			this.state.find({
 				"class": "Block",
 				group: "actorStatus"
 			}).remove();
@@ -442,8 +442,8 @@ Optimizations:
 		 * @param stepCount The number of steps to do in a batch without applying a setTimout
 		 */
 		this.step = function step(stepCount) {
-			var isValidMove, key, actor, actorId, actors, blocks, coord;
-			for (var i = 0; i < stepCount; i = i + 1) {
+			var i, j, isValidMove, key, actor, actors, blocks, coord;
+			for (i = 0; i < stepCount; i = i + 1) {
 				// Increment the time marker by one
 				stage.time = stage.time + 1;
 
@@ -454,18 +454,20 @@ Optimizations:
 				// todo: find a sexier way to access a class of actor in the state
 				// like preset selectors ?
 				// todo: rename .select to .find ?
-				actors = this.state.select({"class": "Actor"}).get();
+				actors = this.state.find({"class": "Actor"});
 
-				// Call the step handler of each actors
-				for (actorId in actors) {
-					actor = actors[actorId];
-					actor.step();
-				}
+				if (actors) {
+					// Call the step handler of each actors
+					for (j = 0; j < actors.length; j = j + 1) {
+						actor = actors[j];
+						actor.step();
+					}
 
-				// Call the go handler of each actors
-				for (actorId in actors) {
-					actor = actors[actorId];
-					actor.go();
+					// Call the go handler of each actors
+					for (j = 0; j < actors.length; j = j + 1) {
+						actor = actors[j];
+						actor.go();
+					}
 				}
 
 				// Update the fps counter (for debug usage)

@@ -239,10 +239,10 @@ function doc(pseudo) {
 			this.react("respawn", function (source, options) {
 				var spawners, spawner;
 				doc("Get the list of available spawners");
-				spawners = this.stage.state.select({
+				spawners = this.stage.state.find({
 					"class": "Actor",
 					type: "spawnPoint"
-				}).get();
+				});
 				doc("Pick a spawnPoint at random");
 				spawner = this.stage.randomItem("randomSpawn-" + this.id, spawners);
 				doc("Teleport to the selected spawnPoint");

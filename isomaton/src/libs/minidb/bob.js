@@ -1,4 +1,4 @@
-(function (undefined) {
+(function () {
 
 	/**
 	 * A low level, indexable object registry
@@ -16,11 +16,33 @@
 
 		selection = [];
 
+		function buildSelection(objs) {
+			var ret = extend(objs, bob);
+			return ret;
+		}
+
+
+
+
+		function extend (obj) {
+			var prop, arg, source;
+			for (arg = 1; arg < arguments.length; arg = arg + 1) {
+				source = arguments[arg];
+				for (prop in source) {
+					if (source.hasOwnProperty(prop)) {
+						if (source[prop] !== void 0) obj[prop] = source[prop];
+					}
+				}
+			}
+			return obj;
+		}
+
+
 		// Add an item
 		this.add = function (input, silentEvent) {
 			var i, item, keys, key, obj, objs, indexKeys;
 			// Convert the input to an array of items, or take the current selection
-			if (input !== undefined) {
+			if (input !== void 0) {
 				if (input.constructor.name === "Array") {
 					objs = input;
 				} else {
@@ -78,7 +100,7 @@
 			for (i in indexKeys) {
 				key = indexKeys[i];
 				indexItem = index[key];
-				if (indexItem === undefined) {
+				if (indexItem === void 0) {
 					indexItem = index[key] = {};
 				}
 				indexItem[obj.bob.index.call(obj).uid] = obj;
@@ -93,8 +115,13 @@
 		this.remove = function remove(input, silentEvent) {
 			var i, key, obj, objs, removed = [];
 			// Convert the input to an array of items, or take the current selection
-			if (input === undefined) {
-				objs = selection;
+			if (input === void 0) {
+				if (this.length !== void 0) {
+					objs = this; // If the current object is a selection
+				} else {
+					// remove the notion of "selection"
+					objs = selection;
+				}
 			} else {
 				if (input.constructor.name === "Array") {
 					objs = input;
@@ -194,6 +221,12 @@
 		this.select = function select(criterias) {
 			selection = this.get(criterias);
 			return this;
+		};
+
+		this.find = function find(criterias) {
+			return buildSelection(
+				this.get(criterias)
+			);
 		};
 
 		this.clear = function clear() {

@@ -319,6 +319,7 @@
 			this.canvasStage.update();
 		};
 
+		// todo: Simplify this method
 		this.loadSprites = function(callback) {
 			var
 					mainSpritesheetIsReady = false,
