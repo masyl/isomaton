@@ -18,7 +18,6 @@ Transactionnal Object Store
 - Also auto-update Bob when coord changes
 - Set values with handler function that reveived a this for each items
 - Ensure the stage object state is disposable and doesnt need versionning
-- Filter() method with obj or with handler function
 - Rename the .select method to .find
 
 ### v0.12 BOB reversed is BOB

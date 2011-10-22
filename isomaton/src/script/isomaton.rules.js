@@ -41,12 +41,12 @@
 		}
 
 		// Test if next move is into a space that WILL be occupied by a solid block
-		blocks = stage.state.select({
+		blocks = stage.state.find({
 			"class": "Block",
 			"nextCoord.x": coord.x,
 			"nextCoord.y": coord.y,
 			"nextCoord.z": coord.z
-		}).get();
+		});
 
 		for (i = 0; i < blocks.length; i = i + 1) {
 			block = blocks[i];

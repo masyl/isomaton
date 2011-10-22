@@ -6,7 +6,7 @@
 	 * for a unique identifier and a toIndex function to supply the indexed attributes
 	 */
 	function Bob() {
-		var bob, selection, items, index;
+		var bob, items, index;
 		items = this.items = items = {};
 		index = this.index = index = {};
 
@@ -14,15 +14,10 @@
 
 		mixinPubSub(this);
 
-		selection = [];
-
 		function buildSelection(objs) {
 			var ret = extend(objs, bob);
 			return ret;
 		}
-
-
-
 
 		function extend (obj) {
 			var prop, arg, source;
@@ -67,7 +62,6 @@
 					}
 				}
 			}
-			selection = objs;
 			if (!silentEvent && objs.length) this.publish("add", [objs]);
 			return this;
 		};
@@ -78,20 +72,17 @@
 
 		this.set = function set(attrs) {
 			var i, item, attrId;
-			for (i in selection) {
-				item = selection[item];
-				item.set(attrs);
+			if (this.length !== void 0) {
+				for (i = 0; i < this.length; i = i + 1) {
+					item = this[i];
+					item.set(attrs);
+				}
 			}
 			return this;
 		};
 
 		this.all = function all() {
-			var i;
-			selection = [];
-			for (i in this.items) {
-				selection.push(this.items[i].content);
-			}
-			return this;
+			return buildSelection(this.items);
 		};
 
 		// Add an objects keys into the index
@@ -118,9 +109,6 @@
 			if (input === void 0) {
 				if (this.length !== void 0) {
 					objs = this; // If the current object is a selection
-				} else {
-					// remove the notion of "selection"
-					objs = selection;
 				}
 			} else {
 				if (input.constructor.name === "Array") {
@@ -128,7 +116,6 @@
 				} else {
 					objs = [input];
 				}
-				selection = objs;
 			}
 
 			for (i = 0; i < objs.length; i = i + 1) {
@@ -138,7 +125,7 @@
 				removed.push(obj);
 			}
 			if (!silentEvent && removed.length) this.publish("remove", [removed]);
-			return this;
+			return buildSelection(objs);
 		};
 
 		/**
@@ -213,14 +200,9 @@
 					results.push(matchedSet[key]);
 				}
 			} else {
-				results = selection;
+				results = this;
 			}
 			return results;
-		};
-
-		this.select = function select(criterias) {
-			selection = this.get(criterias);
-			return this;
 		};
 
 		this.find = function find(criterias) {
@@ -230,8 +212,7 @@
 		};
 
 		this.clear = function clear() {
-			selection = [];
-			return this;
+			return buildSelection([]);
 		};
 
 	}

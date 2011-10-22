@@ -205,14 +205,13 @@ Optimizations:
 				coord = newBlock.coord;
 				if (mode === editModes.emptyFirst) {
 					removed = this.state
-						.select({
+						.find({
 							"class": "Block",
 							"coord.x": coord.x,
 							"coord.y": coord.y,
 							"coord.z": coord.z
 						})
-						.remove()
-						.get();
+						.remove();
 				}
 				this.state.add(newBlock);
 			}
@@ -240,11 +239,11 @@ Optimizations:
 			var block, blocks, coord;
 			if (this.selectedCoord) {
 				coord = this.selectedCoord;
-				blocks = this.state.select({
+				blocks = this.state.find({
 					"class": "Block",
 					"coord.x": coord.x,
 					"coord.y": coord.y
-				}).get();
+				});
 
 				//todo: fix error: Remove cursor blocks from selection
 				// use a .filter({group:""}) method on the miniDB
