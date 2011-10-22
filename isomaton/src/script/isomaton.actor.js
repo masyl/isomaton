@@ -102,16 +102,6 @@ function doc(pseudo) {
 				nextCoord: coord
 			});
 			this.block.goNext(coord);
-			this.updateIndex();
-		};
-
-		/**
-		 * Update the actor and block index in their MiniDB object stores
-		 */
-		this.updateIndex = function updateIndex() {
-			this.stage.state.update(this);
-			// todo: refactor, the actor should not be responsible to update the blocks indexes
-			this.stage.state.update(this.block);
 		};
 
 		/**
@@ -128,7 +118,6 @@ function doc(pseudo) {
 				});
 			}
 			this.block.go();
-			this.updateIndex();
 		};
 
 		/**

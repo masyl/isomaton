@@ -254,7 +254,7 @@ Optimizations:
 					block = blocks[0];
 					this.pickedUpBlock = block;
 					block.coord.z = 10;
-					this.state.update(block);
+//					this.state.update(block);
 				}
 			}
 		};
@@ -306,7 +306,7 @@ Optimizations:
 				coord.west();
 				if (this.pickedUpBlock) {
 					this.pickedUpBlock.coord.west();
-					this.state.update(this.pickedUpBlock);
+					this.pickedUpBlock.bob.update();
 				}
 			}
 			this.updateCursor();
@@ -318,7 +318,7 @@ Optimizations:
 				coord.east();
 				if (this.pickedUpBlock) {
 					this.pickedUpBlock.coord.east();
-					this.state.update(this.pickedUpBlock);
+					this.pickedUpBlock.bob.update();
 				}
 			}
 			this.updateCursor();
@@ -330,7 +330,7 @@ Optimizations:
 				coord.north();
 				if (this.pickedUpBlock) {
 					this.pickedUpBlock.coord.north();
-					this.state.update(this.pickedUpBlock);
+					this.pickedUpBlock.bob.update();
 				}
 			}
 			this.updateCursor();
@@ -342,7 +342,7 @@ Optimizations:
 				coord.south();
 				if (this.pickedUpBlock) {
 					this.pickedUpBlock.coord.south();
-					this.state.update(this.pickedUpBlock);
+					this.pickedUpBlock.bob.update();
 				}
 			}
 			this.updateCursor();

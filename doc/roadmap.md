@@ -15,6 +15,7 @@ Transactionnal Object Store
 - Publish a "change" event of set actions to prevent the need to trigger updates manually
 - Make Bob selections work like jQuery contexts
 - Handle child Coord objects with BOB... how?
+- Also auto-update Bob when coord changes
 - Set values with handler function that reveived a this for each items
 - Ensure the stage object state is disposable and doesnt need versionning
 - Filter() method with obj or with handler function
