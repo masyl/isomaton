@@ -5,10 +5,6 @@ function doc(pseudo) {
 (function (global, Isomaton, _, PubSub, Bobify) {
 	"use strict";
 
-	var
-		// Global imports
-		Rules = Isomaton.Rules;
-
 	/**
 	 * Actor Class
 	 * @param [options]
@@ -93,8 +89,8 @@ function doc(pseudo) {
 		// Basic move	ment rules
 		// todo: should be a mixxin
 		this.movementRules = [
-			Rules.CantWalkOnEmptyOrNonSolid,
-			Rules.CantWalkIntoSolids
+			Isomaton.Rules.CantWalkOnEmptyOrNonSolid,
+			Isomaton.Rules.CantWalkIntoSolids
 		];
 
 		/**
@@ -145,8 +141,6 @@ function doc(pseudo) {
 				for (i = 0; i < this.movementRules.length; i = i + 1) {
 					isValid = this.movementRules[i].call(this);
 					if (!isValid) {
-						if (this.type === "slime")
-	//					console.log("move rollback", this, this.movementRules[i]);
 						break;
 					}
 				}
