@@ -7,8 +7,8 @@
 	 */
 	function Bob() {
 		var bob, items, index;
-		items = this.items = items = {};
-		index = this.index = index = {};
+		items = this.items = {};
+		index = this.index = {};
 
 		bob = this;
 

@@ -37,27 +37,20 @@ Optimizations:
 	Isomaton.Stage = function Stage(id, stageOptions) {
 		mixinPubSub(this);
 
-		var
-				stage = this, // Self reference used inside deeper closures
-				_editMode; // The current edit mode when placing blocks and actors
-
-		var _value;
-		this.value = function(newValue, oldValue) {
-			if (newValue !== undefined) {
-				_value = (newValue === undefined) ? oldValue : newValue;
-			}
-			return _value;
-		};
+		var stage = this; // Self reference used inside deeper closures
 
 		// todo: use a factory to create such functionnal getter/setters
-		this.editMode = function (editMode) {
-			_editMode = this.value(editMode, _editMode);
-			return this;
-		};
+		this.editMode = function() {
+			var _editMode;
+			return function (editMode) {
+				if (editMode !== void 0) {
+					_editMode = editMode;
+				}
+				return _editMode;
+			};
+		}();
 
-		//this.blocks =  new Bob();
-		//this.actors =  new Bob();
-		this.state = new Bob();
+		this.state = new Bob(); // Object bag for blocks and actors
 		this.world = null;
 		this.isograph = null;
 		this.time = 0; //todo: eventually match this to the stateMacine revision number
@@ -92,9 +85,8 @@ Optimizations:
 
 
 		this.init = function init() {
-			this
-					.editMode(editModes.emptyFirst)
-					.options(stageOptions);
+			this.editMode(editModes.emptyFirst);
+			this.options(stageOptions);
 		};
 
 		this.options = function options(_options) {
@@ -199,7 +191,7 @@ Optimizations:
 
 		this.placeBlocks = function placeBlocks(blocks) {
 			var i, newBlock, coord, existingBlocks, mode, key, removed;
-			mode = this.editMode().value();
+			mode = this.editMode();
 			for (i in blocks) {
 				newBlock = blocks[i];
 				coord = newBlock.coord;

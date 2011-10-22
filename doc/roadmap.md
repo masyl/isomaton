@@ -14,11 +14,11 @@ Transactionnal Object Store
 - DONE: Merge the actors and blocks MiniDB to a single Bob store
 - DONE: Publish a "change" event of set actions to prevent the need to trigger updates manually
 - DONE: Make Bob selections work like jQuery contexts
+
 - Handle child Coord objects with BOB... how?
 - Also auto-update Bob when coord changes
-- Set values with handler function that reveived a this for each items
+
 - Ensure the stage object state is disposable and doesnt need versionning
-- Rename the .select method to .find
 
 ### v0.12 BOB reversed is BOB
 - Automatic Revision Log
