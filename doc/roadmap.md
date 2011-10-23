@@ -4,22 +4,6 @@
 
 Transactionnal Object Store
 
-### v0.11 Get Down With BOB (Big Object Bag)
-- DONE: Fork MiniDB into BOB
-- DONE: Set method
-- DONE: Bobify the Block class
-- DONE: Apply the Bobs' set method on all Block usage
-- DONE: Bobify the Actor class
-- DONE: Apply the Bobs' set method on all Actor usage
-- DONE: Merge the actors and blocks MiniDB to a single Bob store
-- DONE: Publish a "change" event of set actions to prevent the need to trigger updates manually
-- DONE: Make Bob selections work like jQuery contexts
-
-- Handle child Coord objects with BOB... how?
-- Also auto-update Bob when coord changes
-
-- Ensure the stage object state is disposable and doesnt need versionning
-
 ### v0.12 BOB reversed is BOB
 - Automatic Revision Log
 - Commit()

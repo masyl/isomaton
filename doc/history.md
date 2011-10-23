@@ -1,5 +1,16 @@
 #Isomaton Version History
 
+### v0.11 Get Down With BOB (Big Object Bag)
+- Fork MiniDB into BOB
+- Set method
+- Bobify the Block class
+- Apply the Bobs' set method on all Block usage
+- Bobify the Actor class
+- Apply the Bobs' set method on all Actor usage
+- Merge the actors and blocks MiniDB to a single Bob store
+- Publish a "change" event of set actions to prevent the need to trigger updates manually
+- Make Bob selections work like jQuery contexts
+
 ### v0.10 Select and Edit Tools Incomplete
 
 - The user can select a coordinate by clicking on a decor block
