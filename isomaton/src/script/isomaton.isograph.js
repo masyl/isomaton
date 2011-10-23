@@ -121,7 +121,9 @@
 		// this method should not call the ".set" method on blocks
 		this.updateBlock = function (block) {
 			var speed, coord;
-			if (block.coord !== block.animatedCoord) {
+//			console.log("updateBlock", block, block.animatedCoord);
+			if (block.coord && !block.coord.isEqual(block.animatedCoord)) {
+//				console.log("updateBlock for real");
 				block.animatedCoord = block.coord;
 				coord = this.translateFromISO(block.coord);
 				if (block.coord.stepDistanceFrom(block.prevCoord) > 1) {
@@ -142,19 +144,27 @@
 			// If the bitmap if moving higher/forward the z index
 			// update the z-ordering first
 			if (z > bitmap.z) {
-				bitmap.z = z;
-				Tween.get(bitmap)
+				Tween.get(bitmap, {
+						override: true
+					})
+					.call(function () {
+						this.z = z;
+					})
 					.to({
 							x: x,
 							y: y
 						}, speed);
 			} else {
-				Tween.get(bitmap)
+				Tween.get(bitmap, {
+						override: true
+					})
 					.to({
 							x: x,
 							y: y
 						}, speed)
-					.to({z: z}, 0.01);
+					.call(function () {
+						this.z = z;
+					});
 			}
 		};
 
@@ -273,7 +283,7 @@
 				var i, block;
 //				console.log("isograph update", blocks);
 				if (blocks[0]["class"] === "Block") {
-					for (i in blocks) {
+					for (i = 0; i < blocks.length; i = i + 1) {
 						block = blocks[i];
 						isograph.updateBlock(block);
 					}

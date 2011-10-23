@@ -17,6 +17,14 @@
 		this.z = z;
 		this.direction = (direction !== undefined) ? direction : 0;
 
+		this.isEqual = function isEqual(coord) {
+			var equal = false;
+			if (coord) {
+				equal = this.x === coord.x && this.y === coord.y && this.z === coord.z;
+			}
+			return equal;
+		};
+
 		this.copy = function copy() {
 			return new Isomaton.Coord(this.x, this.y, this.z, this.direction);
 		};

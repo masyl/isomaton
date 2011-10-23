@@ -44,9 +44,10 @@
 			this.set({
 				nextCoord: coord
 			});
+			return this;
 		};
 
-		this.go = function go(coord) {
+		this.go = function go() {
 			// todo: manage a better coord history queue
 			if (this.nextCoord) {
 				this.set({
@@ -55,6 +56,7 @@
 					nextCoord: null
 				});
 			}
+			return this;
 		};
 
 		this.blur = function blur() {

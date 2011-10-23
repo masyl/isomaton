@@ -228,24 +228,39 @@ Optimizations:
 		 * until it is put down again
 		 */
 		this.pickUpBlock = function pickUpBlock() {
-			var block, blocks, coord;
-			if (this.selectedCoord) {
-				coord = this.selectedCoord;
-				blocks = this.state.find({
-					"class": "Block",
-					"coord.x": coord.x,
-					"coord.y": coord.y
-				});
+			var block, blocks, coord, newCoord;
+			if (!this.pickedUpBlock) {
 
-				//todo: fix error: Remove cursor blocks from selection
-				// use a .filter({group:""}) method on the miniDB
+				if (this.selectedCoord) {
+					coord = this.selectedCoord;
+					blocks = this.state.find({
+						"class": "Block",
+						"group": "",
+						"coord.x": coord.x,
+						"coord.y": coord.y
+					});
 
-				// todo: add a "sort" method to minidb to get the top most block
-				if (blocks.length > 0) {
-					block = blocks[0];
-					this.pickedUpBlock = block;
-					block.coord.z = 10;
-//					this.state.update(block);
+					//todo: fix error: Remove cursor blocks from selection
+					// use a .filter({group:""}) method on the miniDB
+
+					// todo: add a "sort" method to minidb to get the top most block
+					if (blocks.length > 0) {
+						block = blocks[0];
+						this.pickedUpBlock = block;
+						newCoord = coord.copy();
+						newCoord.z = 10;
+						block.goNext(newCoord).go();
+					}
+				}
+			} else {
+				if (this.selectedCoord) {
+					coord = this.selectedCoord;
+					block = this.pickedUpBlock;
+
+					newCoord = coord.copy();
+					newCoord.z = 0;
+					block.goNext(newCoord).go();
+					this.pickedUpBlock = null;
 				}
 			}
 		};
@@ -292,48 +307,48 @@ Optimizations:
 		};
 
 		this.up = function up() {
-			var coord = this.selectedCoord;
+			var block = this.pickedUpBlock,
+				coord = this.selectedCoord;
 			if (coord) {
 				coord.west();
-				if (this.pickedUpBlock) {
-					this.pickedUpBlock.coord.west();
-					this.pickedUpBlock.bob.update();
+				if (block) {
+					block.goNext(coord.copy()).go();
 				}
 			}
 			this.updateCursor();
 		};
 
 		this.down = function down() {
-			var coord = this.selectedCoord;
+			var block = this.pickedUpBlock,
+				coord = this.selectedCoord;
 			if (coord) {
 				coord.east();
-				if (this.pickedUpBlock) {
-					this.pickedUpBlock.coord.east();
-					this.pickedUpBlock.bob.update();
+				if (block) {
+					block.goNext(coord.copy()).go();
 				}
 			}
 			this.updateCursor();
 		};
 
 		this.left = function left() {
-			var coord = this.selectedCoord;
+			var block = this.pickedUpBlock,
+				coord = this.selectedCoord;
 			if (coord) {
 				coord.north();
-				if (this.pickedUpBlock) {
-					this.pickedUpBlock.coord.north();
-					this.pickedUpBlock.bob.update();
+				if (block) {
+					block.goNext(coord.copy()).go();
 				}
 			}
 			this.updateCursor();
 		};
 
 		this.right = function right() {
-			var coord = this.selectedCoord;
+			var block = this.pickedUpBlock,
+				coord = this.selectedCoord;
 			if (coord) {
 				coord.south();
-				if (this.pickedUpBlock) {
-					this.pickedUpBlock.coord.south();
-					this.pickedUpBlock.bob.update();
+				if (block) {
+					block.goNext(coord.copy()).go();
 				}
 			}
 			this.updateCursor();
@@ -414,7 +429,7 @@ Optimizations:
 		 */
 		this.pause = function pause() {
 			this.playState = "pause";
-			Ticker.setFPS(4);
+			Ticker.setFPS(8);
 			soundManager.pauseAll();
 		};
 
@@ -425,7 +440,7 @@ Optimizations:
 			this.playState = "play";
 			soundManager.resumeAll();
 			// todo: get fps value from settings
-			Ticker.setFPS(12);
+			Ticker.setFPS(15);
 		};
 
 		/**
@@ -433,7 +448,7 @@ Optimizations:
 		 * @param stepCount The number of steps to do in a batch without applying a setTimout
 		 */
 		this.step = function step(stepCount) {
-			var i, j, isValidMove, key, actor, actors, blocks, coord;
+			var i, j, isValidMove, key, actor, actors, block, blocks, coord;
 			for (i = 0; i < stepCount; i = i + 1) {
 				// Increment the time marker by one
 				stage.time = stage.time + 1;
@@ -460,6 +475,19 @@ Optimizations:
 						actor.go();
 					}
 				}
+
+/*
+				blocks = this.state.find({
+					"class": "Block"
+				});
+				if (blocks) {
+					// Call the go handler of each actors
+					for (j = 0; j < blocks.length; j = j + 1) {
+						block = blocks[j];
+						block.go();
+					}
+				}
+				 */
 
 				// Update the fps counter (for debug usage)
 				this.sps.update();

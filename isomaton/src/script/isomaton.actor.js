@@ -102,6 +102,7 @@ function doc(pseudo) {
 				nextCoord: coord
 			});
 			this.block.goNext(coord);
+			return this;
 		};
 
 		/**
@@ -118,6 +119,7 @@ function doc(pseudo) {
 				});
 			}
 			this.block.go();
+			return this;
 		};
 
 		/**
