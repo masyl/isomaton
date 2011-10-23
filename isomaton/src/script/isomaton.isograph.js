@@ -153,7 +153,7 @@
 					.to({
 							x: x,
 							y: y
-						}, speed);
+						}, speed, Transition.ease.in(Transition.quad));
 			} else {
 				Tween.get(bitmap, {
 						override: true
@@ -161,7 +161,7 @@
 					.to({
 							x: x,
 							y: y
-						}, speed)
+						}, speed, Transition.ease.in(Transition.quad))
 					.call(function () {
 						this.z = z;
 					});

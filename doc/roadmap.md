@@ -13,7 +13,6 @@
 
 - helper method to get the top-most block at a coodinate
 - In "edit" mode the space bar will remove and place back any block. The blocks are stored in the players inventory in the bottom right quadrant.
-- bug: the rules of "walk on solid" isnt respected
 
 ## Upcomming Releases
 
@@ -168,6 +167,7 @@
 - Clean todos in code
 
 ## Features
+- See how this new tweening lib compares https://github.com/sole/tween.js
 - Disable/Enable sound with offstage block
 - Totems Gameplay Concept: Affect the gameplay by errecting totems of blocks. When the correct combination is place together the totem actor can repel, attract, spaw, kill other elements on stage.
 	+ 3 Gold blocks totam could hypnotize and paralyze all slime and prevent the spawning of slimes.
