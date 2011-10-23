@@ -2,8 +2,6 @@
 
 ## In Progress Release
 
-Transactionnal Object Store
-
 ### v0.12 BOB reversed is BOB
 - Automatic Revision Log
 - Commit()
