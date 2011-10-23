@@ -20,9 +20,8 @@
 
 				var puffBlock = world.blockTypes["effects.puff"];
 				var block = I.builder.one(puffBlock, source.coord.copy());
-				stage
-						.editMode(I.editModes.normal)
-						.placeBlocks([block]);
+				stage.editMode(I.editModes.normal);
+				stage.placeBlocks([block]);
 			});
 		});
 		this.init();
