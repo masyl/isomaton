@@ -1,7 +1,7 @@
 (function IsomatonRendererPackage(Isomaton, _){
 
 	Isomaton.RenderBlock = function RenderBlock(options) {
-
+		console.log("Rendering block", options);
 		var newBlock, topImage;
 
 		newBlock = new Container();
