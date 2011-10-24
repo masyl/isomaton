@@ -1,0 +1,11 @@
+.top {
+    -moz-transform: rotate(-45deg) skew(15deg, 15deg);
+}
+
+.left {
+    -moz-transform: rotate(15deg) skew(15deg, 15deg);
+}
+
+.right {
+    -moz-transform: rotate(-15deg) skew(-15deg, -15deg);
+}

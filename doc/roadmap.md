@@ -167,6 +167,11 @@
 - Clean todos in code
 
 ## Features
+- Test manipulation with Pixastic:  http://www.pixastic.com/lib/docs/
+- Test rendering with ThreeJS, Pre3d or k3d:
+	https://github.com/mrdoob/three.js
+	http://deanm.github.com/pre3d/
+	http://kevs3d.co.uk/dev/canvask3d/k3d_test.html
 - See how this new tweening lib compares https://github.com/sole/tween.js
 - Disable/Enable sound with offstage block
 - Totems Gameplay Concept: Affect the gameplay by errecting totems of blocks. When the correct combination is place together the totem actor can repel, attract, spaw, kill other elements on stage.

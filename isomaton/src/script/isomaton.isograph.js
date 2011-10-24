@@ -302,8 +302,14 @@
 			canvasStage.addChild(this.blockBitmaps);
 			canvasStage.mouseEnabled = true;
 
-			this.loadSprites(onSpritesLoaded);
-
+/*
+			var demoBlockBitmap = Isomaton.RenderBlock({
+				stage: canvasStage,
+				texture: "brick-texture.png",
+				x: 100,
+				y: 100
+			});
+*/
 			function onSpritesLoaded() {
 				// Set the desired FPS
 				Ticker.setFPS(12); // todo: get the fps from options
