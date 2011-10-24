@@ -309,6 +309,10 @@
 				y: 100
 			});
 
+			this.loadSprites(onSpritesLoaded);
+
+
+
 			function onSpritesLoaded() {
 				// Set the desired FPS
 				Ticker.setFPS(12); // todo: get the fps from options

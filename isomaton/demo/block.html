@@ -1,0 +1,78 @@
+
+<html>
+  <body>
+    <canvas id="canvas" width=400 height=400></canvas>
+    <script>
+
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+var board = ["XXO",
+             "-X-",
+             "-O-"];
+
+var angle1 = 0.0;
+var angle2 = 0.0;
+
+function redraw()
+{
+    canvas.width = 400;
+    canvas.height = 400;
+    ctx.fillStyle = "#00CC00";
+    ctx.fillRect(0, 0, 400, 400);
+    ctx.strokeStyle = "#000000";
+
+    var cs = Math.cos(angle1), sn = Math.sin(angle1);
+    var h = Math.cos(angle2);
+
+    var a = 100*cs, b = -100*sn, c = 200;
+    var d = h*100*sn, e = h*100*cs, f = 200;
+
+    ctx.setTransform(a, d, b, e, c, f);
+    ctx.lineWidth = 0.05;
+
+    // board
+    ctx.beginPath();
+    ctx.moveTo(-0.5, -1.5); ctx.lineTo(-0.5,  1.5);
+    ctx.moveTo( 0.5, -1.5); ctx.lineTo( 0.5,  1.5);
+    ctx.moveTo(-1.5, -0.5); ctx.lineTo( 1.5, -0.5);
+    ctx.moveTo(-1.5,  0.5); ctx.lineTo( 1.5,  0.5);
+    ctx.stroke();
+
+    // used squares
+    for (var i=0; i<3; i++)
+    {
+        for (var j=0; j<3; j++)
+        {
+            var xx = i - 1;
+            var yy = j - 1;
+            if (board[i][j] == "X")
+            {
+                ctx.strokeStyle = "#FF0000";
+                ctx.beginPath();
+                ctx.moveTo(xx-0.4, yy-0.4); ctx.lineTo(xx+0.4, yy+0.4);
+                ctx.moveTo(xx-0.4, yy+0.4); ctx.lineTo(xx+0.4, yy-0.4);
+                ctx.stroke();
+            }
+            else if (board[i][j] == "O")
+            {
+                ctx.strokeStyle = "#0000FF";
+                ctx.beginPath();
+                ctx.arc(xx, yy, 0.4, 0, 2*Math.PI, true);
+                ctx.closePath();
+                ctx.stroke();
+            }
+        }
+    }
+}
+
+redraw();
+
+setInterval(function(){
+//    angle1 += 0.05;
+//    angle2 += 0.007;
+    angle1  = 0.55;
+    angle2 = 20;
+    redraw();
+}, 20);
+
+</script></body></html>
