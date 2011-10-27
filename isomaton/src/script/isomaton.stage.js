@@ -1,31 +1,3 @@
-/*
-Optimization:
-BASE
-	5 Actors
-	40 fps animé
-	80 fps sans anim
-	145 fps sans render
-	600 fps - no render, batched steps
-
-NEW
-	5 Actors
-	? fps animé
-	124 fps sans anim
-	? 145 fps sans render
-	? 600 fps - no render, batched steps
-
-Optimizations:
-	- test run without delay... or raw setTimeout
-	- Usage de minidb au lieu du custom registry
-	- Generation de faux random avec banque de chiffres pré-calculés
-	- Better handling of state changes between steps (not having to cycle through each blocks)
-	- Faster debug (html write, access by id, keep ref to element)
-	- Debug to show only fps
-	- Keystroke to activate/dactivate show/hide fps
-	- Keystroke to show/hide debug
-	- Option to render the isograph with canvas
-
- */
 (function IsomatonStagePackage(Isomaton, $, _, undefined) {
 
 	// Constants for editModes
@@ -154,13 +126,15 @@ Optimizations:
 					autoLoad: true,
 					id:'pop',
 					url: "../../sounds/pop.ogg",
-					multiShot: true
+					multiShot: true,
+					volume: 0
 				});
 				sounds.chicken = soundManager.createSound({
 					autoLoad: true,
 					id:'chicken',
 					url: "../../sounds/chicken.ogg",
-					multiShot: true
+					multiShot: true,
+					volume: 0
 				});
 				sounds.hit = soundManager.createSound({
 					autoLoad: true,
@@ -176,8 +150,7 @@ Optimizations:
 			this.options(options);
 			this.isograph = options.isograph;
 			this.isograph.stepSpeed = this.speed / this.speedMultiplier;
-			this.isograph.setup(onSetup);
-			this.isograph.bind(this.state);
+			this.isograph.setup(this.state, onSetup);
 			this.isograph.subscribe("blockSelect", function(block) {
 				stage.onBlockSelected(block);
 			});

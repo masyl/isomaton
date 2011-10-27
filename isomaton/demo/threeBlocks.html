@@ -1,0 +1,130 @@
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>three.js canvas - camera - orthographic</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #000000;
+				margin: 0px;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+
+		<script src="../src/libs/Threejs/Three.js"></script>
+		<script>
+			if ( !window.requestAnimationFrame ) {
+				window.requestAnimationFrame = ( function() {
+					return window.webkitRequestAnimationFrame ||
+					window.mozRequestAnimationFrame ||
+					window.oRequestAnimationFrame ||
+					window.msRequestAnimationFrame ||
+					function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element ) {
+						window.setTimeout( callback, 1000 / 60 );
+					};
+				} )();
+			}
+		</script>
+
+		<script>
+
+			var container, stats;
+			var camera, scene, renderer;
+			var cubes = [];
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				// Create place the camera
+				var cameraSize = 1.2; // 2 is default (not sure what it means)
+				camera = new THREE.OrthographicCamera( window.innerWidth / - cameraSize, window.innerWidth / cameraSize, window.innerHeight / cameraSize, window.innerHeight / - cameraSize, - 4000, 4000 );
+				camera.position.x = 700;
+				camera.position.y = 600;
+				camera.position.z = 700;
+
+				scene = new THREE.Scene();
+
+
+				var light;
+				light = new THREE.PointLight(0xffffff, 0.6);
+				light.position.set(300, 300, 700);
+				scene.add(light);
+				light = new THREE.PointLight(0xffffff, 0.8);
+				light.position.set(1000, 1000, 1000);
+				scene.add(light);
+
+
+				// Cubes
+
+				var cubeSize = 50;
+
+				var baseMaterial = THREE.MeshLambertMaterial;
+				var loader = THREE.ImageUtils.loadTexture;
+				var materials = [
+					new baseMaterial({ map : loader("chicken/left.png") }),
+					new baseMaterial({ map : loader("chicken/right.png") }),
+					new baseMaterial({ map : loader("chicken/top.png") }),
+					new baseMaterial({ map : loader("chicken/bottom.png") }),
+					new baseMaterial({ map : loader("chicken/front.png") }),
+					new baseMaterial({ map : loader("chicken/back.png") })
+				];
+				var cubeGeometry = new THREE.CubeGeometry(cubeSize, cubeSize, cubeSize, 4, 4, 1, materials);
+
+				for ( var i = 0; i < 100; i ++ ) {
+					// Create the cube
+					var cube = new THREE.Mesh( cubeGeometry, new THREE.MeshFaceMaterial() );
+					// todo: figure this line out
+ 					cube.overdraw = true;
+
+					// Pick a random position for the cube
+					cube.position.x = Math.floor( ( Math.random() * 1000 - 500 ) / cubeSize ) * cubeSize;
+					cube.position.z = Math.floor( ( Math.random() * 1000 - 500 ) / cubeSize ) * cubeSize;
+
+					// Add the cube to the scene
+					cubes.push(cube);
+					scene.add(cube);
+				}
+
+				//
+				//renderer = new THREE.CanvasRenderer();
+				renderer = new THREE.WebGLRenderer({
+					antialias: true
+				});
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				container.appendChild( renderer.domElement );
+			}
+
+
+			// Trigger an animation frame when it is available
+			function animate() {
+				requestAnimationFrame( animate );
+				render();
+			}
+
+			// Render the scene (one frame)
+			function render() {
+				// Reposition the camera
+				camera.lookAt( scene.position );
+				var cube = cubes[1];
+//				cube.x = cubePosition.x + 0.001;
+				cube.rotation.y = cube.rotation.y + 0.01;
+				cube.position.y = cube.position.y + 1;
+//				console.log(cube.rotation.x);
+				// Render the scene with the camera
+				renderer.render( scene, camera );
+			}
+
+		</script>
+
+	</body>
+</html>

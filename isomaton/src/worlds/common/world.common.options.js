@@ -7,10 +7,12 @@ window.commonworld = {
 			"blocks": {
 				"empty": {
 					"isSolid": false,
+					"isInvisible": true,
 					"offset": 0
 				},
 				"blank": {
 					"isSolid": true,
+					"isInvisible": true,
 					"offset": 1
 				}
 			}

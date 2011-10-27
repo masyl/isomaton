@@ -5,6 +5,7 @@
 		<script src="../src/libs/minidb/minidb.js"></script>
 		<script src="../src/libs/minidb/bob.js"></script>
 		<script src="../src/libs/easel/easel.js"></script>
+		<script src="../src/libs/Threejs/Three.js"></script>
 		<script src="../src/libs/tweenjs/tween.js"></script>
 		<script src="../src/libs/tweenjs/transition.js"></script>
 		<script src="../src/libs/soundmanager-297a/script/soundmanager2.js"></script>
@@ -14,7 +15,7 @@
 		<script src="../src/script/isomaton.js"></script>
 		<script src="../src/script/isomaton.builder.js"></script>
 		<script src="../src/script/isomaton.renderer.js"></script>
-		<script src="../src/script/isomaton.isograph.js"></script>
+		<script src="../src/script/isomaton.isograph3D.js"></script>
 		<script src="../src/script/isomaton.stage.js"></script>
 		<script src="../src/script/isomaton.actor.js"></script>
 		<script src="../src/script/isomaton.rules.js"></script>
@@ -26,11 +27,25 @@
 		<script src="../src/worlds/common/world.common.js"></script>
 		<script src="sample.js"></script>
 		<link href="sample.css" rel="stylesheet" />
+		<style>
+			#isomaton {
+				height: 100%;
+				width: 100%;
+			}
+			#isomaton canvas {
+				top:0;
+				left: 0;
+				zwidth: 100%;
+				border: 1px solid #333;
+				z-index: 10000;
+				position: absolute;
+			}
+		</style>
 	</head>
 	<body>
 		<div id="isomaton">
 			<!--<canvas id="testCanvas" style="width:960; height: 675px;" width="1280" height="900"  style='z-index: 10000; position: absolute;' class="isograph"></canvas>-->
-			<canvas style="width: 100%; border: 1px solid #333" id="testCanvas" width="1280" height="720"  style='z-index: 10000; position: absolute;' class="isograph"></canvas>
+			<!--<canvas style="width: 100%; border: 1px solid #333" id="testCanvas" width="1280" height="720"  style='z-index: 10000; position: absolute;' class="isograph"></canvas>-->
 		</div>
 		<div id="debug">
 			<div>time: <span class="time"></span></div>

@@ -301,6 +301,9 @@
 			canvasStage = this.canvasStage;
 			canvasStage.addChild(this.blockBitmaps);
 			canvasStage.mouseEnabled = true;
+/*
+
+Commented out until Easel fixes the bug with the skewing transformations
 
 			var demoBlockBitmap = Isomaton.RenderBlock({
 				stage: canvasStage,
@@ -308,6 +311,7 @@
 				x: 100,
 				y: 100
 			});
+ */
 
 			this.loadSprites(onSpritesLoaded);
 

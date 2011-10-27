@@ -284,7 +284,7 @@
 			var world = this.world;
 
 			var worldOptions = world.options();
-			//console.log("placing blocks...");
+			console.log("placing blocks...");
 
 			var grassBlock = world.blockTypes["materials.grass"];
 			var waterBlock = world.blockTypes["materials.water"];
