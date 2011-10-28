@@ -1,14 +1,15 @@
 /*
 todo:
+- Remove concept of "puff" block, replace with an isograph specific event
+- Transparency for flowers and grass textues
 - Mouse events
-- Textures for all cube blocks
-- Mesh for invisible blocks
-- Mesh for flat items, non blocks (shortweeds, flowers)
-- Textures for letters and hearts
-- Variations on the size of blocks (material vs knight vs sidekick)
-- Rotate block in the appropriate directions
-- Remove blocks on "remove" event
--
+- Show offstage blocks
+- Proper reference point for blocks (blocks on the floor)
+- Textures for letters
+- Texture for life hearts
+- Texture for cursor blocks
+- Rotate with mouse
+- Zoom in and out on double click
  */
 (function IsomatonIsographPackage(Isomaton, _, undefined){
 	var fps = 12;
@@ -183,6 +184,9 @@ todo:
 			z = block.coord.y * cubeSize - 500;
 			y = block.coord.z * cubeSize;
 			direction = block.coord.direction;
+			// Remove the animation if the displacment is more than one block
+			if (block.coord.stepDistanceFrom(block.prevCoord) > 1) speed = 0;
+			// Call the animation sequence on the scenegraph
 			this.updateBlockBitmap(model, x, y, z, direction, speed);
 		};
 
