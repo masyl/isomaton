@@ -8,11 +8,13 @@ window.commonworld = {
 				"empty": {
 					"isSolid": false,
 					"isInvisible": true,
+					"shape": "empty",
 					"offset": 0
 				},
 				"blank": {
 					"isSolid": true,
 					"isInvisible": true,
+					"shape": "empty",
 					"offset": 1
 				}
 			}
@@ -22,28 +24,34 @@ window.commonworld = {
 			"blocks": {
 				"dirt": {
 					"isSolid": true,
+					"shape": "fullBlock",
 					"offset": 0
 				},
 				"bush": {
 					"isSolid": true,
+					"shape": "fullBlock",
 					"offset": 1
 				},
 				"grass": {
 					"isSolid": true,
+					"shape": "fullBlock",
 					"offset": 2
 				},
 				"gold": {
 					"isSolid": true,
+					"shape": "fullBlock",
 					"offset": 3
 				},
 				"stone": {
 					"isSolid": true,
+					"shape": "fullBlock",
 					"offset": 4
 				},
 				"water": {
 					"isAnimated": false,
 					"frames": 18,
 					"hasOwnSpriteSheet": true,
+					"shape": "liquidBlock",
 					"isSolid": false,
 					"loop": true
 				}
@@ -55,26 +63,31 @@ window.commonworld = {
 				"knight": {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
+					"shape": "mediumBlock",
 					"offset": 0
 				},
 				"princess": {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
+					"shape": "mediumBlock",
 					"offset": 1
 				},
 				"slime": {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
+					"shape": "mediumBlock",
 					"offset": 2
 				},
 				"sidekick": {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
+					"shape": "smallBlock",
 					"offset": 3
 				},
 				"chicken": {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
+					"shape": "mediumBlock",
 					"offset": 4
 				}
 			}
@@ -97,10 +110,12 @@ window.commonworld = {
 			"blocks": {
 				"yellowflowers": {
 					"isSolid": false,
+					"shape": "floorTile",
 					"offset": 0
 				},
 				"shortweeds": {
 					"isSolid": false,
+					"shape": "verticalTile",
 					"offset": 1
 				}
 			}
@@ -251,6 +266,7 @@ window.commonworld = {
 					"frames": 9,
 					"hasOwnSpriteSheet": true,
 					"isSolid": false,
+					"isInvisible": true,
 					"loop": false
 				}
 			}

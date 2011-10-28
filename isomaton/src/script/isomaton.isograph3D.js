@@ -8,6 +8,7 @@ todo:
 - Variations on the size of blocks (material vs knight vs sidekick)
 - Rotate block in the appropriate directions
 - Remove blocks on "remove" event
+-
  */
 (function IsomatonIsographPackage(Isomaton, _, undefined){
 	var fps = 12;
@@ -45,13 +46,15 @@ todo:
 		var baseMaterial = THREE.MeshLambertMaterial;
 		var loader = THREE.ImageUtils.loadTexture;
 		var geometries = {};
-		function getGeometry(id) {
+
+		function getGeometry(blockType) {
 			var root = "textures/";
+			var id = blockType.id;
+			var shape = blockType.shape;
 			var geometry;
 			if (geometries.hasOwnProperty(id)) {
 				geometry = geometries[id];
 			} else {
-				console.log("new texture id: ", id);
 				var materials = [
 					material(id, "left"),
 					material(id, "right"),
@@ -60,7 +63,19 @@ todo:
 					material(id, "front"),
 					material(id, "back")
 				];
-				geometry = new THREE.CubeGeometry(cubeSize, cubeSize, cubeSize, 4, 4, 1, materials);
+				if (shape == "liquidBlock") {
+					geometry = new THREE.CubeGeometry(cubeSize, cubeSize*0.85, cubeSize, 4, 4, 1, materials);
+				} else if (shape == "mediumBlock") {
+					geometry = new THREE.CubeGeometry(cubeSize*0.85, cubeSize*0.85, cubeSize*0.85, 4, 4, 1, materials);
+				} else if (shape == "smallBlock") {
+					geometry = new THREE.CubeGeometry(cubeSize*0.75, cubeSize*0.75, cubeSize*0.75, 4, 4, 1, materials);
+				} else if (shape == "floorTile") {
+					geometry = new THREE.CubeGeometry(cubeSize, 0, cubeSize*0.75, 4, 4, 1, materials);
+				} else if (shape == "verticalTile") {
+					geometry = new THREE.CubeGeometry(cubeSize, cubeSize, 0, 4, 4, 1, materials);
+				} else {
+					geometry = new THREE.CubeGeometry(cubeSize, cubeSize, cubeSize, 4, 4, 1, materials);
+				}
 				geometries[id] = geometry;
 			}
 			function material(id, face) {
@@ -161,45 +176,58 @@ todo:
 		// note: to prevent the "update" event chain from going into a loop
 		// this method should not call the ".set" method on blocks
 		this.updateBlock = function (block) {
-			var model, x, y, z, speed = 300;
+			var model, x, y, z, direction, speed;
+			speed = 300;
 			model = block.isograph.model;
 			x = block.coord.x * cubeSize - 500;
 			z = block.coord.y * cubeSize - 500;
 			y = block.coord.z * cubeSize;
-			this.updateBlockBitmap(model, x, y, z, speed);
+			direction = block.coord.direction;
+			this.updateBlockBitmap(model, x, y, z, direction, speed);
 		};
 
-		this.updateBlockBitmap = function(model, x, y, z, speed) {
+		this.updateBlockBitmap = function(model, x, y, z, direction, speed) {
 			var coord = model.position;
 			// If the bitmap if moving higher/forward the z index
 			// update the z-ordering first
-			Tween.get(coord, {
+			Tween
+				.get(model.rotation, {
 					override: true
 				})
 				.to({
-						x: x,
-						y: y,
-						z: z
-					}, speed, Transition.ease.in(Transition.quad));
+					y: ((1 - direction) * 90) * (Math.PI / 180)
+				}, speed/2, Transition.ease.in(Transition.quad));
+			Tween
+				.get(coord, {
+					override: true
+				})
+				.to({
+					x: x,
+					y: y,
+					z: z
+				}, speed, Transition.ease.in(Transition.quad));
 		};
 
 		this.renderBlock = function renderBlock(block) {
-			var geometry = getGeometry(block.type.id);
-			var cube = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial() );
-			cube.position.x = block.coord.x * cubeSize - (cubeSize * 10);
-			cube.position.z = block.coord.y * cubeSize - (cubeSize * 10);
-			cube.position.y = block.coord.z * cubeSize;
-			// Keep a reference to the isograph in the block
+			var model = null;
+			if (!block.type.isInvisible) {
+				var geometry = getGeometry(block.type);
+				var cube = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial() );
+				cube.position.x = block.coord.x * cubeSize - (cubeSize * 10);
+				cube.position.z = block.coord.y * cubeSize - (cubeSize * 10);
+				cube.position.y = block.coord.z * cubeSize;
+				// Keep a reference to the isograph in the block
+				// Add the cube to the scene
+				scene.add(cube);
+				model = cube;
+			}
 			block.isograph = {
-				model: cube
+				model: model
 			};
-			// Add the cube to the scene
-			scene.add(cube);
 		};
 
 
 		this.bind = function bind(state) {
-			console.log("bindn");
 			this.state = state;
 			// blocks should be a temporary selection
 			this.state.subscribe("add", function(blocks) {
@@ -218,8 +246,7 @@ todo:
 				if (blocks[0]["class"] === "Block") {
 					for (i in blocks) {
 						block = blocks[i];
-//						isograph.blockBitmaps.removeChild(block.bitmap);
-//						console.log("todo: remove");
+						scene.remove(block.isograph.model);
 					}
 				}
 			});

@@ -95,6 +95,8 @@
 		this.isAnimated = this.isAnimated = (options.isAnimated !== undefined) ? options.isAnimated : false;
 		this.loop = this.loop = (options.loop !== undefined) ? options.loop : false;
 		this.frames = this.frames = (options.frames !== undefined) ? options.frames : true;
+		this.isInvisible = this.isInvisible = (options.isInvisible !== undefined) ? options.isInvisible : false;
+		this.shape = this.shape = (options.shape !== undefined) ? options.shape : "fullBlock";
 
 		// true is this block has its own spritesheet
 		this.hasOwnSpriteSheet = (options.hasOwnSpriteSheet !== undefined) ? options.hasOwnSpriteSheet : false;
