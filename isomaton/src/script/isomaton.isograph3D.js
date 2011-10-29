@@ -15,8 +15,6 @@ todo:
 	var fps = 12;
 	var requestAnimationFrame;
 
-	var SHADOW_MAP_WIDTH = 1024, SHADOW_MAP_HEIGHT = 1024;
-
 	if ( !window.requestAnimationFrame ) {
 		requestAnimationFrame = ( function() {
 			return window.webkitRequestAnimationFrame ||
@@ -174,29 +172,19 @@ todo:
 			//
 			//renderer = new THREE.CanvasRenderer();
 			renderer = new THREE.WebGLRenderer({
-//				clearColor: 0x000000,
-//				clearAlpha: 1,
 				antialias: true
 			});
 
-
-
-							// SHADOW
-
+			// Shadow settings
 			renderer.shadowCameraNear = 2;
 			renderer.shadowCameraFar = camera.far;
-//			renderer.shadowCameraFov = 50;
-			renderer.shadowCameraFov = 90;
-
-//			renderer.shadowMapBias = 0.003885;
+			renderer.shadowCameraFov = 90; // Was originally 50
 			renderer.shadowMapBias = 0.003885;
 			renderer.shadowMapDarkness = 0.35;
-			renderer.shadowMapWidth = SHADOW_MAP_WIDTH;
-			renderer.shadowMapHeight = SHADOW_MAP_HEIGHT;
-
+			renderer.shadowMapWidth = 1024;
+			renderer.shadowMapHeight = 1024;
 			renderer.shadowMapEnabled = true;
 			renderer.shadowMapSoft = true;
-
 
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			container.innerHTML = "";
