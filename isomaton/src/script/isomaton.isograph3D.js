@@ -14,6 +14,9 @@ todo:
 (function IsomatonIsographPackage(Isomaton, _, undefined){
 	var fps = 12;
 	var requestAnimationFrame;
+
+	var SHADOW_MAP_WIDTH = 1024, SHADOW_MAP_HEIGHT = 1024;
+
 	if ( !window.requestAnimationFrame ) {
 		requestAnimationFrame = ( function() {
 			return window.webkitRequestAnimationFrame ||
@@ -80,7 +83,17 @@ todo:
 				geometries[id] = geometry;
 			}
 			function material(id, face) {
-				return new baseMaterial({ map : loader(root + id + "/" + face + ".png") })
+				var isTransparent = true
+				options = {
+					depthTest: false,
+					map : loader(root + id + "/" + face + ".png")
+				};
+				if (isTransparent) {
+					//options.blending = THREE.AdditiveBlending;
+					options.transparent = true;
+
+				}
+				return new baseMaterial(options)
 			}
 			return geometry;
 		}
@@ -116,27 +129,75 @@ todo:
 
 			// Create place the camera
 			var cameraSize = 1.2; // 2 is default (not sure what it means)
-			camera = new THREE.OrthographicCamera( window.innerWidth / - cameraSize, window.innerWidth / cameraSize, window.innerHeight / cameraSize, window.innerHeight / - cameraSize, - 4000, 4000 );
+			var width = window.innerWidth;
+			var height = window.innerHeight;
+			camera = new THREE.OrthographicCamera(
+					width / - cameraSize,
+					width / cameraSize,
+					height / cameraSize,
+					height / - cameraSize,
+					-4000,
+					4000
+			);
+/*
+			camera = new THREE.PerspectiveCamera(
+					30, window.innerWidth / window.innerHeight, 200, -200
+			);
+			*/
+
 			camera.position.x = 700;
 			camera.position.y = 600;
 			camera.position.z = 700;
 
+
 			scene = new THREE.Scene();
 
 
+			var ambient = new THREE.AmbientLight( 0x55555 );
+			scene.add( ambient );
+
 			var light;
-			light = new THREE.PointLight(0xffffff, 0.6);
+
+//			light = new THREE.PointLight(0xffffff, 0.6);
+/*
+			light = new THREE.SpotLight(0xffffff, 0.6);
 			light.position.set(300, 300, 700);
+			light.castShadow = true;
 			scene.add(light);
-			light = new THREE.PointLight(0xffffff, 0.8);
-			light.position.set(1000, 1000, 1000);
+*/
+//			light = new THREE.PointLight(0xffffff, 0.8);
+			light = new THREE.SpotLight(0xff4400, 0.8);
+			light.position.set(-100, 700, 200);
+			light.castShadow = true;
 			scene.add(light);
 
 			//
 			//renderer = new THREE.CanvasRenderer();
 			renderer = new THREE.WebGLRenderer({
+//				clearColor: 0x000000,
+//				clearAlpha: 1,
 				antialias: true
 			});
+
+
+
+							// SHADOW
+
+			renderer.shadowCameraNear = 2;
+			renderer.shadowCameraFar = camera.far;
+//			renderer.shadowCameraFov = 50;
+			renderer.shadowCameraFov = 90;
+
+//			renderer.shadowMapBias = 0.003885;
+			renderer.shadowMapBias = 0.003885;
+			renderer.shadowMapDarkness = 0.35;
+			renderer.shadowMapWidth = SHADOW_MAP_WIDTH;
+			renderer.shadowMapHeight = SHADOW_MAP_HEIGHT;
+
+			renderer.shadowMapEnabled = true;
+			renderer.shadowMapSoft = true;
+
+
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			container.innerHTML = "";
 			container.appendChild( renderer.domElement );
@@ -222,6 +283,10 @@ todo:
 				cube.position.y = block.coord.z * cubeSize;
 				// Keep a reference to the isograph in the block
 				// Add the cube to the scene
+
+				cube.receiveShadow = true;
+			    cube.castShadow = true;
+
 				scene.add(cube);
 				model = cube;
 			}
@@ -289,6 +354,7 @@ todo:
 			// Reposition the camera
 			camera.lookAt( scene.position );
 			// Render the scene with the camera
+			renderer.clear();
 			renderer.render( scene, camera );
 		};
 
