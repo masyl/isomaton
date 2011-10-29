@@ -65,19 +65,24 @@ todo:
 					material(id, "front"),
 					material(id, "back")
 				];
+				var offset = { x: 0, y: 0, z: 0};
 				if (shape == "liquidBlock") {
 					geometry = new THREE.CubeGeometry(cubeSize, cubeSize*0.85, cubeSize, 4, 4, 1, materials);
 				} else if (shape == "mediumBlock") {
-					geometry = new THREE.CubeGeometry(cubeSize*0.85, cubeSize*0.85, cubeSize*0.85, 4, 4, 1, materials);
+					geometry = new THREE.CubeGeometry(cubeSize * 0.85, cubeSize * 0.85, cubeSize * 0.85, 4, 4, 1, materials);
+					offset = { x: 0, y: 0, z:-(cubeSize * 0.15/2)};
 				} else if (shape == "smallBlock") {
 					geometry = new THREE.CubeGeometry(cubeSize*0.75, cubeSize*0.75, cubeSize*0.75, 4, 4, 1, materials);
+					offset = { x: 0, y: 0, z:-(cubeSize * 0.25)/2};
 				} else if (shape == "floorTile") {
 					geometry = new THREE.CubeGeometry(cubeSize, 0, cubeSize*0.75, 4, 4, 1, materials);
+					offset = { x: 0, y: 0, z:-(cubeSize/2)};
 				} else if (shape == "verticalTile") {
 					geometry = new THREE.CubeGeometry(cubeSize, cubeSize, 0, 4, 4, 1, materials);
 				} else {
 					geometry = new THREE.CubeGeometry(cubeSize, cubeSize, cubeSize, 4, 4, 1, materials);
 				}
+				geometry.offset = offset;
 				geometries[id] = geometry;
 			}
 			function material(id, face) {
@@ -229,9 +234,9 @@ todo:
 			var model, x, y, z, direction, speed;
 			speed = 300;
 			model = block.isograph.model;
-			x = block.coord.x * cubeSize - 500;
-			z = block.coord.y * cubeSize - 500;
-			y = block.coord.z * cubeSize;
+			x = block.coord.x * cubeSize - 500 + model.offset.x;
+			z = block.coord.y * cubeSize - 500 + model.offset.y;
+			y = block.coord.z * cubeSize + model.offset.z;
 			direction = block.coord.direction;
 			// Remove the animation if the displacment is more than one block
 			if (block.coord.stepDistanceFrom(block.prevCoord) > 1) speed = 0;
@@ -266,14 +271,23 @@ todo:
 			if (!block.type.isInvisible) {
 				var geometry = getGeometry(block.type);
 				var cube = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial() );
-				cube.position.x = block.coord.x * cubeSize - (cubeSize * 10);
-				cube.position.z = block.coord.y * cubeSize - (cubeSize * 10);
-				cube.position.y = block.coord.z * cubeSize;
+				cube.offset = geometry.offset;
+				cube.position.x = block.coord.x * cubeSize - (cubeSize * 10) + cube.offset.x;
+				cube.position.z = block.coord.y * cubeSize - (cubeSize * 10) + cube.offset.y;
+				cube.position.y = block.coord.z * cubeSize + cube.offset.z;
 				// Keep a reference to the isograph in the block
 				// Add the cube to the scene
 
-				cube.receiveShadow = true;
-			    cube.castShadow = true;
+				if (block.type.shape === "floorTile") {
+					cube.receiveShadow = true;
+				    cube.castShadow = false;
+				} else if (block.type.shape === "verticalTile") {
+					cube.receiveShadow = true;
+				    cube.castShadow = false;
+				} else {
+					cube.receiveShadow = true;
+				    cube.castShadow = true;
+				}
 
 				scene.add(cube);
 				model = cube;
