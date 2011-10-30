@@ -44,7 +44,7 @@ window.commonworld = {
 				},
 				"stone": {
 					"isSolid": true,
-					"shape": "fullBlock",
+					"shape": "halfBlock",
 					"offset": 4
 				},
 				"water": {
@@ -87,7 +87,7 @@ window.commonworld = {
 				"chicken": {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
-					"shape": "mediumBlock",
+					"shape": "smallBlock",
 					"offset": 4
 				}
 			}

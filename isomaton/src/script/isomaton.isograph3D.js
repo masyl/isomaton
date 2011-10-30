@@ -68,6 +68,7 @@ todo:
 				var offset = { x: 0, y: 0, z: 0};
 				if (shape == "liquidBlock") {
 					geometry = new THREE.CubeGeometry(cubeSize, cubeSize*0.85, cubeSize, 4, 4, 1, materials);
+					offset = { x: 0, y: 0, z:-(cubeSize * 0.15/2)};
 				} else if (shape == "mediumBlock") {
 					geometry = new THREE.CubeGeometry(cubeSize * 0.85, cubeSize * 0.85, cubeSize * 0.85, 4, 4, 1, materials);
 					offset = { x: 0, y: 0, z:-(cubeSize * 0.15/2)};
@@ -77,6 +78,9 @@ todo:
 				} else if (shape == "floorTile") {
 					geometry = new THREE.CubeGeometry(cubeSize, 0, cubeSize*0.75, 4, 4, 1, materials);
 					offset = { x: 0, y: 0, z:-(cubeSize/2)};
+				} else if (shape == "halfBlock") {
+					geometry = new THREE.CubeGeometry(cubeSize, cubeSize*0.5, cubeSize, 4, 4, 1, materials);
+					offset = { x: 0, y: 0, z:-(cubeSize*0.5/2)};
 				} else if (shape == "verticalTile") {
 					geometry = new THREE.CubeGeometry(cubeSize, cubeSize, 0, 4, 4, 1, materials);
 				} else {
@@ -156,7 +160,7 @@ todo:
 			scene = new THREE.Scene();
 
 
-			var ambient = new THREE.AmbientLight( 0x55555 );
+			var ambient = new THREE.AmbientLight( 0x888888 );
 			scene.add( ambient );
 
 			var light;
@@ -169,7 +173,7 @@ todo:
 			scene.add(light);
 */
 //			light = new THREE.PointLight(0xffffff, 0.8);
-			light = new THREE.SpotLight(0xff4400, 0.8);
+			light = new THREE.SpotLight(0xffffff, 0.8);
 			light.position.set(-100, 700, 200);
 			light.castShadow = true;
 			scene.add(light);
