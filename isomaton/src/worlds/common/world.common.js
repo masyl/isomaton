@@ -17,11 +17,6 @@
 				var stage = source.stage;
 				source.goNext(this.coord.copy());
 				stage.sounds.play("pop");
-
-				var puffBlock = world.blockTypes["effects.puff"];
-				var block = I.builder.one(puffBlock, source.coord.copy());
-				stage.editMode(I.editModes.normal);
-				stage.placeBlocks([block]);
 			});
 		});
 		this.init();

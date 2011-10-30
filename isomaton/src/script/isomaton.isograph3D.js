@@ -2,13 +2,8 @@
 todo:
 - Mouse events
 - Show offstage blocks
-- Remove concept of "puff" block, replace with an isograph specific event
-- Proper reference point for blocks (blocks on the floor)
 - Textures for letters
 - Texture for life hearts
-- Texture for cursor blocks
-- Rotate with mouse
-- Zoom in and out on double click or mouse wheel
  */
 (function IsomatonIsographPackage(Isomaton, _, undefined){
 	var fps = 12;
@@ -290,6 +285,7 @@ todo:
 				// Keep a reference to the isograph in the block
 				// Add the cube to the scene
 
+				// todo: should be in type settings?
 				if (block.type.shape === "floorTile") {
 					cube.receiveShadow = true;
 				    cube.castShadow = false;
