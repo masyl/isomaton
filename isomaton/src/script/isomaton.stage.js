@@ -283,7 +283,7 @@
 			var block = this.pickedUpBlock,
 				coord = this.selectedCoord;
 			if (coord) {
-				coord.west();
+				coord.north();
 				if (block) {
 					block.goNext(coord.copy()).go();
 				}
@@ -295,7 +295,7 @@
 			var block = this.pickedUpBlock,
 				coord = this.selectedCoord;
 			if (coord) {
-				coord.east();
+				coord.south();
 				if (block) {
 					block.goNext(coord.copy()).go();
 				}
@@ -307,7 +307,7 @@
 			var block = this.pickedUpBlock,
 				coord = this.selectedCoord;
 			if (coord) {
-				coord.north();
+				coord.west();
 				if (block) {
 					block.goNext(coord.copy()).go();
 				}
@@ -319,7 +319,7 @@
 			var block = this.pickedUpBlock,
 				coord = this.selectedCoord;
 			if (coord) {
-				coord.south();
+				coord.east();
 				if (block) {
 					block.goNext(coord.copy()).go();
 				}

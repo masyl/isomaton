@@ -327,11 +327,11 @@
 			groundArea.coord.up();
 
 			// place random yellow flowers
-			var flowersCount = Math.round(this.random("flowersCount") * 9 + 3);
+			var flowersCount = 8;//Math.round(this.random("flowersCount") * 9 + 3);
 			this.placeBlocks(I.builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
 
 			// place random weeds
-			var weedCount = Math.round(this.random("weedCount") * 20 + 3);
+			var weedCount = 24;//Math.round(this.random("weedCount") * 20 + 3);
 			this.placeBlocks(I.builder.random(this.random("weeds"), shortweedsBlock, groundArea, weedCount));
 
 			// place a gold block at random

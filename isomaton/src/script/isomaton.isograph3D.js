@@ -1,15 +1,14 @@
 /*
 todo:
-- Remove concept of "puff" block, replace with an isograph specific event
-- Transparency for flowers and grass textues
 - Mouse events
 - Show offstage blocks
+- Remove concept of "puff" block, replace with an isograph specific event
 - Proper reference point for blocks (blocks on the floor)
 - Textures for letters
 - Texture for life hearts
 - Texture for cursor blocks
 - Rotate with mouse
-- Zoom in and out on double click
+- Zoom in and out on double click or mouse wheel
  */
 (function IsomatonIsographPackage(Isomaton, _, undefined){
 	var fps = 12;
@@ -33,7 +32,7 @@ todo:
 	}
 
 	Isomaton.Isograph = function Isograph(options) {
-		var container, camera, scene, renderer;
+		var container, camera, scene, renderer, mouse2d;
 
 		var isograph = this;
 		mixinPubSub(this);
@@ -83,6 +82,9 @@ todo:
 					offset = { x: 0, y: 0, z:-(cubeSize*0.5/2)};
 				} else if (shape == "verticalTile") {
 					geometry = new THREE.CubeGeometry(cubeSize, cubeSize, 0, 4, 4, 1, materials);
+				} else if (shape == "cursorBlock") {
+					geometry = new THREE.CubeGeometry(cubeSize*1.1, cubeSize*1.1, cubeSize*1.1, 4, 4, 1, materials);
+					offset = { x: 0, y: 0, z:(cubeSize*0.1/2)};
 				} else {
 					geometry = new THREE.CubeGeometry(cubeSize, cubeSize, cubeSize, 4, 4, 1, materials);
 				}
@@ -116,26 +118,14 @@ todo:
 
 			this.canvas = canvas;
 
-			/*
-			todo:
-			canvasStage = this.canvasStage = new Stage(canvas);
-			canvasStage.mouseEnabled = true;
-			*/
-
-			// attach mouse handlers directly to the source canvas:
-			/*
-			todo:
-			canvas.onmousemove = this.onMouseMove;
-			canvas.onmousedown = this.onMouseDown;
-			canvas.onmouseup = this.onMouseUp;
-			 */
-
 			// todo: update how the focus and selection of blocks is done
-
 			container = document.getElementById("isomaton");
+			container.onmousemove = this.onMouseMove;
+			container.onmousedown = this.onMouseDown;
+			container.onmouseup = this.onMouseUp;
 
 			// Create place the camera
-			var cameraSize = 1.2; // 2 is default (not sure what it means)
+			var cameraSize = 1.3; // 2 is default (not sure what it means)
 			var width = window.innerWidth;
 			var height = window.innerHeight;
 			camera = new THREE.OrthographicCamera(
@@ -143,19 +133,22 @@ todo:
 					width / cameraSize,
 					height / cameraSize,
 					height / - cameraSize,
-					-4000,
-					4000
+					-3000,
+					3000
 			);
 /*
-			camera = new THREE.PerspectiveCamera(
-					30, window.innerWidth / window.innerHeight, 200, -200
+			camera = new THREE.Camera(
+				35,
+				width / height,
+				.2,
+				10000
 			);
-			*/
-
-			camera.position.x = 700;
+*/
+			camera.position.x = -700;
 			camera.position.y = 600;
-			camera.position.z = 700;
+			camera.position.z = -700;
 
+			mouse2d = new THREE.Vector3(0, 0, 1);
 
 			scene = new THREE.Scene();
 
@@ -165,13 +158,6 @@ todo:
 
 			var light;
 
-//			light = new THREE.PointLight(0xffffff, 0.6);
-/*
-			light = new THREE.SpotLight(0xffffff, 0.6);
-			light.position.set(300, 300, 700);
-			light.castShadow = true;
-			scene.add(light);
-*/
 //			light = new THREE.PointLight(0xffffff, 0.8);
 			light = new THREE.SpotLight(0xffffff, 0.8);
 			light.position.set(-100, 700, 200);
@@ -206,17 +192,39 @@ todo:
 			return this._options;
 		};
 
+		this.projector = new THREE.Projector();
+
+		this.screenPointToRay = function(screenPos) {
+			var vector = new THREE.Vector3(screenPos.x, screenPos.y, 1/*0.5*/);
+			isograph.projector.unprojectVector(vector, camera);
+			return new THREE.Ray(camera.position, vector.subSelf(camera.position).normalize());
+		};
+
 		this.onMouseMove = function onMouseMove(e) {
+			e.preventDefault();
 			if (!e) { e = window.event; }
-			isograph.mouseX = e.pageX - this.offsetLeft;
-			isograph.mouseY = e.pageY - this.offsetTop;
 		};
 		this.onMouseDown = function onMouseDown(e) {
+			e.preventDefault();
 			if (!e) { e = window.event; }
 			isograph.mouseIsDown = true;
+
+
+			var collisions;
+			mouse2d.x = (e.clientX / window.innerWidth) * 2 - 1;
+	  		mouse2d.y = -(e.clientY / window.innerHeight) * 2 + 1;
+			var vector = new THREE.Vector3( mouse2d.x, mouse2d.y, 0.5 );
+			isograph.projector.unprojectVector(vector, camera);
+			var ray = new THREE.Ray(camera.position, vector.subSelf(camera.position).normalize());
+		   collisions = THREE.Collisions.rayCastNearest(ray);
+		   if (collisions) {
+			   isograph.mouseTarget = collisions.mesh.block;
+		   }
+
+
 			if (isograph.mouseTarget) {
-				isograph.mouseTarget.block.select();
-				isograph.publish("blockSelect", [isograph.mouseTarget.block]);
+				isograph.mouseTarget.select();
+				isograph.publish("blockSelect", [isograph.mouseTarget]);
 			}
 		};
 		this.onMouseUp = function onMouseUp(e) {
@@ -238,8 +246,8 @@ todo:
 			var model, x, y, z, direction, speed;
 			speed = 300;
 			model = block.isograph.model;
-			x = block.coord.x * cubeSize - 500 + model.offset.x;
-			z = block.coord.y * cubeSize - 500 + model.offset.y;
+			x = (block.coord.x * cubeSize - 500 + model.offset.x);
+			z = (block.coord.y * cubeSize - 500 + model.offset.y);
 			y = block.coord.z * cubeSize + model.offset.z;
 			direction = block.coord.direction;
 			// Remove the animation if the displacment is more than one block
@@ -285,6 +293,9 @@ todo:
 				if (block.type.shape === "floorTile") {
 					cube.receiveShadow = true;
 				    cube.castShadow = false;
+				} else if (block.type.shape === "cursorBlock") {
+					cube.receiveShadow = false;
+				    cube.castShadow = false;
 				} else if (block.type.shape === "verticalTile") {
 					cube.receiveShadow = true;
 				    cube.castShadow = false;
@@ -292,7 +303,10 @@ todo:
 					cube.receiveShadow = true;
 				    cube.castShadow = true;
 				}
-
+				// back reference to the block
+				cube.block = block;
+				//Add a colider for this cube, so that mouse2d can detect it
+				THREE.Collisions.colliders.push(THREE.CollisionUtils.MeshOBB(cube));
 				scene.add(cube);
 				model = cube;
 			}
@@ -350,14 +364,42 @@ todo:
 
 		this.animate = function animate() {
 			requestAnimationFrame(isograph.animate);
+
+
+			// Raycast nearest
+/*
+			var r = new THREE.Ray();
+			r.origin = mouse2d.clone();
+			var matrix = camera.matrixWorld.clone();
+			matrix.multiplySelf(THREE.Matrix4.makeInvert(camera.projectionMatrix));
+			matrix.multiplyVector3(r.origin);
+			r.direction = r.origin.clone().subSelf(camera.position);
+
+			var c = THREE.Collisions.rayCastNearest(r);
+//			console.log("c:", r, mouse2d.x, mouse2d.y, mouse2d.z, c);
+			if (c) {
+
+			}
+
+*/
 			isograph.frameStep();
 		};
 
 		/**
 		 * Go through one frame redraw
 		 */
+		var r, f, dist;
+		dist = 1000;
+		r = 1;
+		f = -10;
 		this.frameStep = function frameStep() {
 			// Reposition the camera
+			/*
+			r = r + 1/400;
+			camera.position.x = dist * Math.cos(r);
+			camera.position.y = dist * Math.sin(f);
+			camera.position.z = dist * Math.sin(r);
+			*/
 			camera.lookAt( scene.position );
 			// Render the scene with the camera
 			renderer.clear();

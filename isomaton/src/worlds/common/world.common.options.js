@@ -125,6 +125,7 @@ window.commonworld = {
 			"blocks": {
 				"whiteframe": {
 					"isSolid": false,
+					"shape": "cursorBlock",
 					"offset": 0
 				},
 				"blackframe": {
