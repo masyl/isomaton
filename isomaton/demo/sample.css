@@ -1,7 +1,6 @@
 body {
 	margin:  0px;
 	padding:  0px;
-	height: 900px;
 	background:  #000;
 }
 
@@ -11,7 +10,6 @@ body {
 	position: absolute;
 	top: -108px;
 	left: 250px;
-	/*background-image: url(bottle.png);*/
 }
 
 #debug {
@@ -32,4 +30,15 @@ body {
 	height: 32px;
 	border:  1px dotted #000;
 	z-index: 90000;
+}
+
+#isomaton {
+	height: 100%;
+	width: 100%;
+}
+#isomaton canvas {
+	top:0;
+	left: 0;
+	z-index: 10000;
+	position: absolute;
 }

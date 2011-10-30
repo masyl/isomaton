@@ -1,9 +1,11 @@
 /*
 todo:
-- Mouse events
-- Show offstage blocks
-- Textures for letters
-- Texture for life hearts
+- Move knight with keyboard arrows (instead of cursor)
+- Knight picks up the blocks in front of him when hitting spacebar, and hold it over his head
+- Knight puts down the block he is holding when hitting spacebar, placing it at floor or item level
+- Fix the mouse events to support the isographic camera
+- Add block type and textures for each letters
+- Add block type and texture for life heart
  */
 (function IsomatonIsographPackage(Isomaton, _, undefined){
 	var fps = 12;
