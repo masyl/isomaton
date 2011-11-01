@@ -69,14 +69,17 @@ window.commonworld = {
 				"princess": {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
-					"shape": "mediumBlock",
-					"offset": 1
+					"shape": "mediumBlock"
 				},
 				"slime": {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
-					"shape": "mediumBlock",
-					"offset": 2
+					"shape": "mediumBlock"
+				},
+				"tinySlime": {
+					"hasOwnSpriteSheet": true,
+					"isSolid": true,
+					"shape": "tinyBlock"
 				},
 				"sidekick": {
 					"hasOwnSpriteSheet": true,

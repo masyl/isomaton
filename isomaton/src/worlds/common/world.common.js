@@ -1,9 +1,30 @@
+
+// todo: move all actors into global scope in a separate package
+
 (function (isomaton, I) {
 
 	var world;
 
 	// todo: worl instantiation makes no sense
 	world = isomaton.worlds.common = new isomaton.World(window.commonworld);
+
+	world.Actors.Cursor = function Cursor(options) {
+		I.Actor.apply(this, arguments); // Inherit from the Actor class
+		this.type = "cursor";
+		this.label = "Cursor";
+		// todo: use a functionnal getter for block types (with fallbacks)
+		this.blockType = world.blockTypes["cursors.whiteframe"];
+		this.subscribe("bind", function () {
+			// When an actor teleports to this spawn point
+			this.react("goto", function (source, options) {
+				if (options.coord) {
+					console.log("cursor moving!");
+					this.goNext(options.coord);
+				}
+			});
+		});
+		this.init();
+	};
 
 	world.Actors.SpawnPoint = function SpawnPoint(options) {
 		I.Actor.apply(this, arguments); // Inherit from the Actor class
@@ -49,20 +70,6 @@
 			}
 		});
 
-		// Slime will start to follow  any princess that is within a distance between 1 and 16 blocks
-		this.compulsions.Follow = new I.Compulsions.Follow(this, {
-			weight: [2, 0.9],
-			stepInterval: 4,
-			minDistance: 1,
-			maxDistance: 16,
-			resolveTarget: function resolveTarget(actor, distance) {
-				var weight = 0;
-				if (actor.type === "princess") {
-					weight = this.weightByDistance(distance);
-				}
-				return weight;
-			}
-		});
 		// Slime will start to follow  any princess that is within a distance between 1 and 16 blocks
 		this.compulsions.Follow = new I.Compulsions.Follow(this, {
 			weight: [3, 0.9],
@@ -122,6 +129,15 @@
 		this.init();
 	};
 
+	world.Actors.TinySlime = function TinySlime(options) {
+		// todo: better handling of default options and default values when inheriting
+		this.defaultLife = 1;
+		world.Actors.Slime.apply(this, arguments); // Inherit from the Actor class
+		this.type = "tinySlime";
+		this.label = "Tiny Slime";
+		this.blockType = world.blockTypes["actors.tinySlime"];
+		this.init();
+	};
 
 	world.Actors.Chicken = function Chicken(options) {
 		this.defaultLife = 2;
@@ -192,8 +208,22 @@
 				return weight;
 			}
 		});
-		this.compulsions.Attack = new I.Compulsions.Attack(this, {
+		//
+		this.compulsions.TrackCursor = new I.Compulsions.Track(this, {
 			weight: [2, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
+			stepInterval: 2,
+			minDistance: 1,
+			maxDistance: 24,
+			resolveTarget: function resolveTarget(actor, distance) {
+				var weight = 0;
+				if (actor.type === "cursor") {
+					weight = this.weightByDistance(distance);
+				}
+				return weight;
+			}
+		});
+		this.compulsions.Attack = new I.Compulsions.Attack(this, {
+			weight: [3, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
 			stepInterval: 2,
 			minDistance: 0,
 			maxDistance: 2,
@@ -340,6 +370,16 @@
 			coord = groundArea.randomCoord(this.random("slimeCoord"));
 			var slime = new world.Actors.Slime().bind(this, coord);
 			this.placeActors([slime]);
+
+			// place 2 tiny slime
+			var tinySlime;
+			coord = groundArea.randomCoord(this.random("tinySlimeCoord"));
+			tinySlime = new world.Actors.TinySlime().bind(this, coord);
+			this.placeActors([tinySlime]);
+
+			coord = groundArea.randomCoord(this.random("tinySlimeCoord2"));
+			tinySlime = new world.Actors.TinySlime().bind(this, coord);
+			this.placeActors([tinySlime]);
 
 			// place 4 chickens
 			coord = groundArea.randomCoord(this.random("chickenCoord1"));

@@ -1,14 +1,11 @@
 /*
 todo:
-- Move knight with keyboard arrows (instead of cursor)
-- Knight picks up the blocks in front of him when hitting spacebar, and hold it over his head
-- Knight puts down the block he is holding when hitting spacebar, placing it at floor or item level
 - Fix the mouse events to support the isographic camera
 - Add block type and textures for each letters
 - Add block type and texture for life heart
  */
 (function IsomatonIsographPackage(Isomaton, _, undefined){
-	var fps = 12;
+	var fps = 16;
 	var requestAnimationFrame;
 
 	if ( !window.requestAnimationFrame ) {
@@ -71,6 +68,9 @@ todo:
 				} else if (shape == "smallBlock") {
 					geometry = new THREE.CubeGeometry(cubeSize*0.75, cubeSize*0.75, cubeSize*0.75, 4, 4, 1, materials);
 					offset = { x: 0, y: 0, z:-(cubeSize * 0.25)/2};
+				} else if (shape == "tinyBlock") {
+					geometry = new THREE.CubeGeometry(cubeSize*0.50, cubeSize*0.50, cubeSize*0.50, 4, 4, 1, materials);
+					offset = { x: 0, y: 0, z:-(cubeSize * 0.50)/2};
 				} else if (shape == "floorTile") {
 					geometry = new THREE.CubeGeometry(cubeSize, 0, cubeSize*0.75, 4, 4, 1, materials);
 					offset = { x: 0, y: 0, z:-(cubeSize/2)};

@@ -89,7 +89,7 @@
 			return distance;
 		};
 
-		this.directionsThoward = function directionsThoward(coord) {
+		this.directionsNotAway = function directionsThoward(coord) {
 			var directions = [];
 			if (coord) {
 				if (this.x > coord.x) {
@@ -105,6 +105,23 @@
 					directions.push(1,1);
 				} else {
 					directions.push(1, 3);
+				}
+			}
+			return directions;
+		};
+
+		this.directionsThoward = function directionsThoward(coord) {
+			var directions = [];
+			if (coord) {
+				if (this.x > coord.x) {
+					directions.push(2);
+				} else if (this.x < coord.x) {
+					directions.push(0);
+				}
+				if (this.y > coord.y) {
+					directions.push(3);
+				} else if (this.y < coord.y) {
+					directions.push(1);
 				}
 			}
 			return directions;

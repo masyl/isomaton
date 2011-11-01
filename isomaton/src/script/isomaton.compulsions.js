@@ -80,6 +80,28 @@
 		this.act = function () {
 			var mod = actor.stage.time % this.stepInterval;
 			if (mod === 0) {
+				var directions = actor.coord.directionsNotAway(this.target.coord);
+				actor.block.coord.direction = actor.stage.randomItem(actor.id, directions);
+				actor.goNext(actor.coord.copy().move(actor.block.coord.direction));
+			}
+			if (this.options.act) {
+				this.options.act.call(this);
+			}
+		};
+	};
+
+	Compulsions.Track = function Track(actor, _options) {
+		Compulsion.apply(this, arguments); // Inherit from the Compulsion class
+		var options, minDistance, maxDistance;
+
+		this.resolveTarget = this.options.resolveTarget;
+		this.target = null;
+
+		this.weight = relativeWeightByMinMaxDistance;
+
+		this.act = function () {
+			var mod = actor.stage.time % this.stepInterval;
+			if (mod === 0) {
 				var directions = actor.coord.directionsThoward(this.target.coord);
 				actor.block.coord.direction = actor.stage.randomItem(actor.id, directions);
 				actor.goNext(actor.coord.copy().move(actor.block.coord.direction));

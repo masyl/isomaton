@@ -13,6 +13,15 @@
 
 An Actor is a base conceptual element which can act on each world step. Many other elements derive from this class. They are abstract, but can manifest themselves on stage by placing/moving blocks. A single actor might be composed of a single block are hundreds. A knight or slime are actor entities, but the decor is also an entity. Some actors could even be invisible to the user and exist only to make things happen in the game. Ex.: A "thunder god" entity could be active, invisible, but from time to time struck lightning by placing lighting blocks on stage.
 
+
+### Elemental Actors
+
+Spawners, Seed blocks
+
+### Character Actors
+
+Monsters, heros and animals
+
 ## Block
 
 Blocks are the material representation of actors. An entity can create and manipulate many blocks on stage. Block are rendered by the isograph.
