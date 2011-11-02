@@ -247,11 +247,19 @@
 			}
 		};
 
-		this.cursorAct = function act() {
+		this.cursorAct = function cursorAct() {
 			var cursor = this.cursor();
 			if (cursor) {
 				// Cursor call "activate" upon himself
 				cursor.act("activate", cursor);
+			}
+		};
+
+		this.cursorRelease = function cursorRelease() {
+			var cursor = this.cursor();
+			if (cursor) {
+				// Cursor call "release" upon himself
+				cursor.act("release", cursor);
 			}
 		};
 
