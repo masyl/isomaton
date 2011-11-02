@@ -250,6 +250,60 @@ function doc(pseudo) {
 			this.stage.actorSelect(this);
 		};
 
+		this.blockInHands = null;
+
+		this.use = function use(coord) {
+			var blocks, block;
+			// Find blocks on this coordinate
+			blocks = this.stage.state.find({
+				class: "Block",
+				"isPickable": true,
+				"coord.x": coord.x,
+				"coord.y": coord.y
+			});
+			// Filter out blocks not in the playing fields
+
+			blocks = blocks.filter(function(index, item) {
+				console.log(item, index);
+				return item.coord.z < 3;
+			});
+
+			// Order them by which is top most
+			blocks.sort(function(a, b) {
+				return a.coord.z < b.coord.z;
+			});
+			if (blocks.length) {
+				block = blocks[0];
+
+				console.log("sorted blocks: ", blocks, blocks.length);
+
+				if (this.blockInHands) {
+					// If actor is carrying a block
+
+						// Test if there is a place to put the block within the playing fields
+						// Place the block
+				} else {
+					// Else if actor isnt carrying anything
+					// If it is a pickable block
+					if (block.isPickable) {
+						// Place the block in the actors hands
+						this.set({
+							blockInHands: block
+						});
+						block.goNext(
+							this.coord.copy().up()
+						).go();
+					} else {
+						// Else emit a rejection sound
+						console.log("CANT PICKUP THIS BLOCK!");
+					}
+				}
+			} else {
+				// Else emit a rejection sound
+				console.log("NO BLOCKS TO PICKUP!");
+			}
+		};
+
 		this.subscribe("bind", function () {
 			// todo: move the "die" reaction to a "living" mixxing
 			this.react("die", function (source, options) {
@@ -269,6 +323,10 @@ function doc(pseudo) {
 				if (spawner) {
 					this.act("respawnTo", spawner);
 				}
+			});
+			// todo: find a better method/signature to handle situation when the game want to order an actor to do something
+			this.react("forceUse", function (source, options) {
+				this.use(options.coord);
 			});
 		});
 	};

@@ -18,16 +18,26 @@
 			// When an actor teleports to this spawn point
 			this.react("activate", function (source, options) {
 				// Find any Actor following the cursor
-				var followers = this.stage.state.find({
+				var follower = this.stage.state.find({
 					"class": "Actor",
 					"followCursor": true
-				});
-				if (followers.first()) {
+				}).first();
+				if (follower) {
 					// Compell the follower to grab or act on the item under the cursor
-					// if he is in direct reach (ext to the cursor)
-					console.log("YATA!");
+					if (follower.coord.stepDistanceFrom(this.coord) < 2) {
+						this.act("forceUse", follower, {
+							coord: this.coord
+						});
+						// if he is in direct reach (next to the cursor) trigger the "use" action
+						console.log("YATA!");
+					} else {
+						// if he is in direct reach (ext to the cursor)
+						console.log("Whoa... trop loin!");
+
+					}
 				} else {
 					// Otherwise, bind the first knight found
+					// todo: should find the first nearest "hero" Actor instead of just the knight
 					var knight = this.stage.state.find({
 						"class": "Actor",
 						"type": "knight"
@@ -36,7 +46,6 @@
 						// If the knight is found, set him up to follow the cursor
 						knight.set({followCursor: true});
 					}
-					console.log("Calling the knight");
 				}
 			});
 			this.react("release", function (source, options) {

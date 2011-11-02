@@ -9,12 +9,14 @@ window.commonworld = {
 					"isSolid": false,
 					"isInvisible": true,
 					"shape": "empty",
+					"isPickable": false,
 					"offset": 0
 				},
 				"blank": {
 					"isSolid": true,
 					"isInvisible": true,
 					"shape": "empty",
+					"isPickable": true,
 					"offset": 1
 				}
 			}
@@ -25,26 +27,31 @@ window.commonworld = {
 				"dirt": {
 					"isSolid": true,
 					"shape": "fullBlock",
+					"isPickable": true,
 					"offset": 0
 				},
 				"bush": {
 					"isSolid": true,
 					"shape": "fullBlock",
+					"isPickable": true,
 					"offset": 1
 				},
 				"grass": {
 					"isSolid": true,
 					"shape": "fullBlock",
+					"isPickable": true,
 					"offset": 2
 				},
 				"gold": {
 					"isSolid": true,
 					"shape": "fullBlock",
+					"isPickable": true,
 					"offset": 3
 				},
 				"stone": {
 					"isSolid": true,
 					"shape": "halfBlock",
+					"isPickable": true,
 					"offset": 4
 				},
 				"water": {
@@ -53,6 +60,7 @@ window.commonworld = {
 					"hasOwnSpriteSheet": true,
 					"shape": "liquidBlock",
 					"isSolid": false,
+					"isPickable": false,
 					"loop": true
 				}
 			}
@@ -64,33 +72,39 @@ window.commonworld = {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
 					"shape": "mediumBlock",
+					"isPickable": false,
 					"offset": 0
 				},
 				"princess": {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
+					"isPickable": false,
 					"shape": "mediumBlock"
 				},
 				"slime": {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
+					"isPickable": false,
 					"shape": "mediumBlock"
 				},
 				"tinySlime": {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
+					"isPickable": false,
 					"shape": "tinyBlock"
 				},
 				"sidekick": {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
 					"shape": "smallBlock",
+					"isPickable": false,
 					"offset": 3
 				},
 				"chicken": {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
 					"shape": "smallBlock",
+					"isPickable": false,
 					"offset": 4
 				}
 			}
@@ -100,10 +114,12 @@ window.commonworld = {
 			"blocks": {
 				"sword": {
 					"isSolid": false,
+					"isPickable": true,
 					"offset": 0
 				},
 				"egg": {
 					"isSolid": false,
+					"isPickable": true,
 					"offset": 1
 				}
 			}
@@ -114,11 +130,13 @@ window.commonworld = {
 				"yellowflowers": {
 					"isSolid": false,
 					"shape": "floorTile",
+					"isPickable": true,
 					"offset": 0
 				},
 				"shortweeds": {
 					"isSolid": false,
 					"shape": "verticalTile",
+					"isPickable": true,
 					"offset": 1
 				}
 			}
@@ -129,22 +147,27 @@ window.commonworld = {
 				"whiteframe": {
 					"isSolid": false,
 					"shape": "cursorBlock",
+					"isPickable": false,
 					"offset": 0
 				},
 				"blackframe": {
 					"isSolid": false,
+					"isPickable": false,
 					"offset": 1
 				},
 				"whiteplaceholder": {
 					"isSolid": false,
+					"isPickable": false,
 					"offset": 2
 				},
 				"life": {
 					"isSolid": false,
+					"isPickable": false,
 					"offset": 4
 				},
 				"halfLife": {
 					"isSolid": false,
+					"isPickable": false,
 					"offset": 5
 				}
 			}

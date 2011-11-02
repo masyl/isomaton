@@ -213,6 +213,23 @@
 			return value;
 		};
 
+		/**
+		 * Filter the result set using a function handler. The boolean output of the handler is used
+		 * to determine if the item should be included in the new result set.
+		 * @param handler Function handler with [index, item] in arguments
+		 */
+		this.filter = function first(handler) {
+			var i, item, results;
+			results = [];
+			for (i = 0; i < this.length; i = i + 1) {
+				item = this[i];
+				if (handler(i, item)) {
+					results.push(item);
+				}
+			}
+			return buildSelection(results);
+		};
+
 		this.find = function find(criterias) {
 			return buildSelection(
 				this.get(criterias)

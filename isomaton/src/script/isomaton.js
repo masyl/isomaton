@@ -74,6 +74,7 @@ Reversible Transactions:
 			options = this._options;
 			_(options).extend(_options);
 
+			// todo: remove the concept of blockSets
 			// If new blockSets are provided, Load the blockSet collections from the options
 			if (_options && _options.blockSets) {
 				for (setId in _options.blockSets) {

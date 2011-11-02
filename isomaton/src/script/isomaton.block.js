@@ -11,6 +11,7 @@
 					"uid": this["class"] + "-" + this.id,
 					"id": this.id,
 					"offStage": this.offStage,
+					"isPickable": this.isPickable,
 					"group": this.group,
 					"type.id": this.type.id,
 					"type.isSolid": this.type.isSolid,
@@ -33,6 +34,7 @@
 			id: _.uniqueId(),
 			"class": "Block",
 			type: type,
+			isPickable: type.isPickable,
 			coord: coord.copy(),
 			group: group || "",
 			nextCoord: null,
@@ -93,6 +95,7 @@
 		// todo: use an extend method instead of this idiotic approach...
 		this.isSolid = this.isSolid = (options.isSolid !== undefined) ? options.isSolid : true;
 		this.isAnimated = this.isAnimated = (options.isAnimated !== undefined) ? options.isAnimated : false;
+		this.isPickable = this.isPickable = (options.isPickable !== undefined) ? options.isPickable : false;
 		this.loop = this.loop = (options.loop !== undefined) ? options.loop : false;
 		this.frames = this.frames = (options.frames !== undefined) ? options.frames : true;
 		this.isInvisible = this.isInvisible = (options.isInvisible !== undefined) ? options.isInvisible : false;
