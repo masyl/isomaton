@@ -118,7 +118,7 @@ Reversible Transactions:
 		};
 
 		this.bindKeyboard = function bindKeyboard() {
-			$(document).bind('keydown', 'esc', function(e) {
+			$(document).bind('keydown', 'p', function(e) {
 				e.preventDefault();
 				var stage = world.currentStage;
 				if (stage.playState !== "pause") {
@@ -131,11 +131,15 @@ Reversible Transactions:
 				e.preventDefault();
 				world.currentStage.cursorAct();
 			});
-			$(document).bind('keydown', 'p', function(e) {
+			$(document).bind('keydown', 'esc', function(e) {
+				e.preventDefault();
+				world.currentStage.cursorRelease();
+			});
+			$(document).bind('keydown', 'o', function(e) {
 				e.preventDefault();
 				world.currentStage.faster();
 			});
-			$(document).bind('keydown', 'o', function(e) {
+			$(document).bind('keydown', 'i', function(e) {
 				e.preventDefault();
 				world.currentStage.slower();
 			});
