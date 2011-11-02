@@ -37,7 +37,6 @@ Reversible Transactions:
 			world = this.worlds[options.world];
 			isograph = new Isomaton.Isograph({
 				skin: options.skin,
-				blockTypes: world.blockTypes,
 				canvas: $("#isomaton").find("canvas.isograph")[0]
 			});
 			world.start({
@@ -63,8 +62,6 @@ Reversible Transactions:
 		this.Actors = {};
 		this.stages = {};
 		this.currentStage = null;
-		this.blockSets = {};
-		this.blockTypes = {};
 		this._options = {};
 
 		this.init = function init() {
@@ -81,9 +78,8 @@ Reversible Transactions:
 			if (_options && _options.blockSets) {
 				for (setId in _options.blockSets) {
 					blockSet = new Isomaton.BlockSet(setId, _options.blockSets[setId]);
-					this.blockSets[setId] = blockSet;
 					for (typeId in blockSet.blockTypes) {
-						this.blockTypes[setId + "." + typeId] = blockSet.blockTypes[typeId];
+						Isomaton.Blocks[setId + "." + typeId] = blockSet.blockTypes[typeId];
 					}
 				}
 			}
@@ -171,6 +167,8 @@ Reversible Transactions:
 
 		this.init();
 	}
+
+	Isomaton.Blocks = {};
 
 	Isomaton.fakeRandom = function fakeRandom(seed, key) {
 		// todo: make better handling of key to prevent accidental duplicate results
