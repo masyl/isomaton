@@ -23,10 +23,9 @@
 					"followCursor": true
 				});
 				if (followers.first()) {
-					// If followers are found, unbind them from their obligation
-					followers.set({
-						followCursor: false
-					});
+					// Compell the follower to grab or act on the item under the cursor
+					// if he is in direct reach (ext to the cursor)
+					console.log("YATA!");
 				} else {
 					// Otherwise, bind the first knight found
 					var knight = this.stage.state.find({
@@ -38,6 +37,19 @@
 						knight.set({followCursor: true});
 					}
 					console.log("Calling the knight");
+				}
+			});
+			this.react("release", function (source, options) {
+				// Find any Actor following the cursor
+				var followers = this.stage.state.find({
+					"class": "Actor",
+					"followCursor": true
+				});
+				if (followers.first()) {
+					// If followers are found, unbind them from their obligation
+					followers.set({
+						followCursor: false
+					});
 				}
 			});
 		});
