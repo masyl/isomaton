@@ -22,6 +22,7 @@ function doc(pseudo) {
 					"uid": this["class"] + "-" + this.id,
 					"id": this.id,
 					"type": this.type,
+					"followCursor": this.followCursor,
 					"coord.x": this.coord.x,
 					"coord.y": this.coord.y,
 					"coord.z": this.coord.z
@@ -52,11 +53,28 @@ function doc(pseudo) {
 			compulsions: {}, // Collection of compulsion that animate the actors behaviors
 			blockType: null, // A string id of the blockType
 			block: null, // The block representing the Actor
+			followCursor: false,
 			// The life meter of this actor
 			defaultLife: this.defaultLife || this.options.defaultLife || 10,
 			life: this.life || this.defaultLife
 		});
 
+		/**
+		 * Basic compulsion for tracking the cursor if compelled
+		 */
+		this.compulsions.TrackCursor = new Isomaton.Compulsions.Track(this, {
+			weight: [100, 0.9],
+			stepInterval: 2,
+			minDistance: 1,
+			maxDistance: 24,
+			resolveTarget: function resolveTarget(actor, distance) {
+				var weight = 0;
+				if (actor.type === "cursor") {
+					weight = 100;//this.weightByDistance(distance);
+				}
+				return weight;
+			}
+		});
 
 
 		/**

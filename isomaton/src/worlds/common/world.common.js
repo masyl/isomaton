@@ -17,7 +17,28 @@
 		this.subscribe("bind", function () {
 			// When an actor teleports to this spawn point
 			this.react("activate", function (source, options) {
-				console.log("Calling the knight");
+				// Find any Actor following the cursor
+				var followers = this.stage.state.find({
+					"class": "Actor",
+					"followCursor": true
+				});
+				if (followers.first()) {
+					// If followers are found, unbind them from their obligation
+					followers.set({
+						followCursor: false
+					});
+				} else {
+					// Otherwise, bind the first knight found
+					var knight = this.stage.state.find({
+						"class": "Actor",
+						"type": "knight"
+					}).first();
+					if (knight) {
+						// If the knight is found, set him up to follow the cursor
+						knight.set({followCursor: true});
+					}
+					console.log("Calling the knight");
+				}
 			});
 		});
 		this.init();
@@ -201,20 +222,6 @@
 				var weight = 0;
 				if (actor.type === "slime") {
 					weight = this.weightByDistance(distance);
-				}
-				return weight;
-			}
-		});
-		//
-		this.compulsions.TrackCursor = new I.Compulsions.Track(this, {
-			weight: [9, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
-			stepInterval: 2,
-			minDistance: 1,
-			maxDistance: 24,
-			resolveTarget: function resolveTarget(actor, distance) {
-				var weight = 0;
-				if (actor.type === "cursor") {
-					weight = 20;//this.weightByDistance(distance);
 				}
 				return weight;
 			}

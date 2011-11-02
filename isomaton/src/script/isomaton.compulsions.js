@@ -97,11 +97,22 @@
 		this.resolveTarget = this.options.resolveTarget;
 		this.target = null;
 
-		this.weight = relativeWeightByMinMaxDistance;
+		this.weight = function weight() {
+			var weight = 0;
+			if (actor.followCursor) {
+				weight = 100;
+			}
+			return weight;
+		};
 
 		this.act = function () {
 			var distance, direction, directions, coord;
 			var mod = actor.stage.time % this.stepInterval;
+			this.target = this.actor.stage.state.find({
+				"class": "Actor",
+				"type": "cursor"
+			}).first();
+
 			if (mod === 0) {
 				distance = actor.coord.stepDistanceFrom(this.target.coord);
 				directions = actor.coord.directionsThoward(this.target.coord);
