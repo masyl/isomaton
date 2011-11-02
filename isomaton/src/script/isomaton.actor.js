@@ -120,6 +120,9 @@ function doc(pseudo) {
 				nextCoord: coord
 			});
 			this.block.goNext(coord);
+			if (this.blockInHands) {
+				this.blockInHands.goNext(coord.copy().up());
+			}
 			return this;
 		};
 
@@ -137,6 +140,9 @@ function doc(pseudo) {
 				});
 			}
 			this.block.go();
+			if (this.blockInHands) {
+				this.blockInHands.go();
+			}
 			return this;
 		};
 
