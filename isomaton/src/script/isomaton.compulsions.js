@@ -100,11 +100,25 @@
 		this.weight = relativeWeightByMinMaxDistance;
 
 		this.act = function () {
+			var distance, direction, directions, coord;
 			var mod = actor.stage.time % this.stepInterval;
 			if (mod === 0) {
-				var directions = actor.coord.directionsThoward(this.target.coord);
-				actor.block.coord.direction = actor.stage.randomItem(actor.id, directions);
-				actor.goNext(actor.coord.copy().move(actor.block.coord.direction));
+				distance = actor.coord.stepDistanceFrom(this.target.coord);
+				directions = actor.coord.directionsThoward(this.target.coord);
+				if (distance > 1 && distance !== 0) {
+					actor.block.coord.direction = actor.stage.randomItem(actor.id, directions);
+					actor.goNext(actor.coord.copy().move(actor.block.coord.direction));
+				} else {
+					// If the actor doesnt need to move, it checks if it is facing in the right direction
+					if (directions.length) {
+						direction = directions[0];
+						if (direction !== actor.coord.direction) {
+							coord = actor.coord.copy();
+							coord.direction = direction;
+							actor.goNext(coord);
+						}
+					}
+				}
 			}
 			if (this.options.act) {
 				this.options.act.call(this);

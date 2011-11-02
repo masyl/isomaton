@@ -248,22 +248,27 @@ todo:
 			y = block.coord.z * cubeSize + model.offset.z;
 			direction = block.coord.direction;
 			// Remove the animation if the displacment is more than one block
-			if (block.coord.stepDistanceFrom(block.prevCoord) > 1) speed = 0;
+			var distance = block.coord.stepDistanceFrom(block.prevCoord);
+			if (distance > 1) {
+				speed = 0;
+			}
 			// Call the animation sequence on the scenegraph
-			this.updateBlockBitmap(model, x, y, z, direction, speed);
+			this.updateBlockModel(model, x, y, z, direction, speed);
 		};
 
-		this.updateBlockBitmap = function(model, x, y, z, direction, speed) {
-			var coord = model.position;
+		this.updateBlockModel = function(model, x, y, z, direction, speed) {
+			var coord, rotation;
+			coord = model.position;
 			// If the bitmap if moving higher/forward the z index
 			// update the z-ordering first
+			rotation = ((1 - direction) * 90) * (Math.PI / 180);
 			Tween
 				.get(model.rotation, {
 					override: true
 				})
 				.to({
-					y: ((1 - direction) * 90) * (Math.PI / 180)
-				}, speed/2, Transition.ease.in(Transition.quad));
+					y: rotation
+				}, speed/2);
 			Tween
 				.get(coord, {
 					override: true

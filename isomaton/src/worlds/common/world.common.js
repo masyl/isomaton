@@ -207,14 +207,14 @@
 		});
 		//
 		this.compulsions.TrackCursor = new I.Compulsions.Track(this, {
-			weight: [2, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
+			weight: [9, 0.9], // Will override WanderAtRandom if the weight is resolved at more than 0.1
 			stepInterval: 2,
 			minDistance: 1,
 			maxDistance: 24,
 			resolveTarget: function resolveTarget(actor, distance) {
 				var weight = 0;
 				if (actor.type === "cursor") {
-					weight = this.weightByDistance(distance);
+					weight = 20;//this.weightByDistance(distance);
 				}
 				return weight;
 			}
@@ -366,21 +366,21 @@
 			// place 1 slime
 			coord = groundArea.randomCoord(this.random("slimeCoord"));
 			var slime = new world.Actors.Slime().bind(this, coord);
-			this.placeActors([slime]);
+//			this.placeActors([slime]);
 
 			// place the cursor at the center of the stage
 			var cursor = new world.Actors.Cursor().bind(this, new Isomaton.Coord(10, 10, 1, 0));
-			this.placeActors([cursor]);
-console.log("Added cursor");
+				this.placeActors([cursor]);
+
 			// place 2 tiny slime
 			var tinySlime;
 			coord = groundArea.randomCoord(this.random("tinySlimeCoord"));
 			tinySlime = new world.Actors.TinySlime().bind(this, coord);
-			this.placeActors([tinySlime]);
+//			this.placeActors([tinySlime]);
 
 			coord = groundArea.randomCoord(this.random("tinySlimeCoord2"));
 			tinySlime = new world.Actors.TinySlime().bind(this, coord);
-			this.placeActors([tinySlime]);
+//			this.placeActors([tinySlime]);
 
 			// place 4 chickens
 			coord = groundArea.randomCoord(this.random("chickenCoord1"));
@@ -391,7 +391,7 @@ console.log("Added cursor");
 			var chicken3 = new world.Actors.Chicken().bind(this, coord);
 			coord = groundArea.randomCoord(this.random("chickenCoord4"));
 			var chicken4 = new world.Actors.Chicken().bind(this, coord);
-			this.placeActors([chicken1, chicken2, chicken3, chicken4]);
+//			this.placeActors([chicken1, chicken2, chicken3, chicken4]);
 
 			// place 1 knight
 			coord = groundArea.randomCoord(this.random("knightCoord"));
@@ -401,12 +401,12 @@ console.log("Added cursor");
 			// place 1 sidekick
 			coord = groundArea.randomCoord(this.random("sidekickCoord"));
 			var sidekick = new world.Actors.Sidekick().bind(this, coord);
-			this.placeActors([sidekick]);
+//			this.placeActors([sidekick]);
 
 			// place 1 princess
 			coord = groundArea.randomCoord(this.random("princessCoord"));
 			var princess = new world.Actors.Princess().bind(this, coord);
-			this.placeActors([princess]);
+//			this.placeActors([princess]);
 
 			// place 12 spawn points
 			var i, spawnPoints = [];
@@ -414,10 +414,10 @@ console.log("Added cursor");
 				coord = groundArea.randomCoord(this.random("spawnCoords-" + i));
 				spawnPoints.push(new world.Actors.SpawnPoint().bind(this, coord));
 			}
-			this.placeActors(spawnPoints);
+//			this.placeActors(spawnPoints);
 
 			// place frame
-			this.placeBlocks(I.builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
+//			this.placeBlocks(I.builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
 
 
 		},

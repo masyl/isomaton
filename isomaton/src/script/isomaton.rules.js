@@ -35,7 +35,7 @@
 		});
 		if (blocks.length) {
 			//todo: handle case where multiple blocks occupy the same space
-			if (blocks[0].type.isSolid) {
+			if (blocks[0].type.isSolid && blocks[0] !== this.block) {
 				isValidMove = false;
 			}
 		}

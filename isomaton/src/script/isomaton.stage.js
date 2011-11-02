@@ -377,20 +377,7 @@
 					}
 				}
 
-/*
-				blocks = this.state.find({
-					"class": "Block"
-				});
-				if (blocks) {
-					// Call the go handler of each actors
-					for (j = 0; j < blocks.length; j = j + 1) {
-						block = blocks[j];
-						block.go();
-					}
-				}
-				 */
-
-				// Update the fps counter (for debug usage)
+				// Update the step per second counter (for debug usage)
 				this.sps.update();
 			}
 			// Move to the next step
