@@ -129,7 +129,7 @@ Reversible Transactions:
 			});
 			$(document).bind('keydown', 'space', function(e) {
 				e.preventDefault();
-				world.currentStage.pickUpBlock();
+				world.currentStage.cursorAct();
 			});
 			$(document).bind('keydown', 'p', function(e) {
 				e.preventDefault();

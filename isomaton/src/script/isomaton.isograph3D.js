@@ -117,9 +117,9 @@ todo:
 
 			// todo: update how the focus and selection of blocks is done
 			container = document.getElementById("isomaton");
-			container.onmousemove = this.onMouseMove;
-			container.onmousedown = this.onMouseDown;
-			container.onmouseup = this.onMouseUp;
+//			container.onmousemove = this.onMouseMove;
+//			container.onmousedown = this.onMouseDown;
+//			container.onmouseup = this.onMouseUp;
 
 			// Create place the camera
 			var cameraSize = 1.3; // 2 is default (not sure what it means)

@@ -16,11 +16,8 @@
 		this.blockType = world.blockTypes["cursors.whiteframe"];
 		this.subscribe("bind", function () {
 			// When an actor teleports to this spawn point
-			this.react("goto", function (source, options) {
-				if (options.coord) {
-					console.log("cursor moving!");
-					this.goNext(options.coord);
-				}
+			this.react("activate", function (source, options) {
+				console.log("Calling the knight");
 			});
 		});
 		this.init();
@@ -371,6 +368,10 @@
 			var slime = new world.Actors.Slime().bind(this, coord);
 			this.placeActors([slime]);
 
+			// place the cursor at the center of the stage
+			var cursor = new world.Actors.Cursor().bind(this, new Isomaton.Coord(10, 10, 1, 0));
+			this.placeActors([cursor]);
+console.log("Added cursor");
 			// place 2 tiny slime
 			var tinySlime;
 			coord = groundArea.randomCoord(this.random("tinySlimeCoord"));

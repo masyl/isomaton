@@ -205,6 +205,14 @@
 			return results;
 		};
 
+		this.first = function first() {
+			var value = null;
+			if (this.length) {
+				value = this[0];
+			}
+			return value;
+		};
+
 		this.find = function find(criterias) {
 			return buildSelection(
 				this.get(criterias)

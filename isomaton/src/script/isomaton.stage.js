@@ -1,3 +1,8 @@
+/*
+
+- Make the chickens "not" react on cursor presence
+
+ */
 (function IsomatonStagePackage(Isomaton, $, _, undefined) {
 
 	// Constants for editModes
@@ -59,6 +64,7 @@
 		this.init = function init() {
 			this.editMode(editModes.emptyFirst);
 			this.options(stageOptions);
+
 		};
 
 		this.options = function options(_options) {
@@ -159,6 +165,12 @@
 				// todo: find a better way than calling from options
 				stageOptions.start.call(stage);
 				stage.step(1);
+				// Find the cursor actor
+				var cursor = stage.state.find({
+					"class": "Actor",
+					"type": "cursor"
+				}).first();
+				stage.cursor(cursor);
 			}
 		};
 
@@ -182,6 +194,7 @@
 			}
 		};
 
+
 		this.faster = function faster() {
 			if (this.speedMultiplier > 16) {
 				jQuery.fx.off = true;
@@ -194,137 +207,52 @@
 			this.isograph.stepSpeed = this.speed / this.speedMultiplier;
 		};
 
-
-		this.pickedUpBlock = null;
-		/**
-		 * Pick up the top-most block currently under the cursor and keep it up along with the cursor
-		 * until it is put down again
-		 */
-		this.pickUpBlock = function pickUpBlock() {
-			var block, blocks, coord, newCoord;
-			if (!this.pickedUpBlock) {
-
-				if (this.selectedCoord) {
-					coord = this.selectedCoord;
-					blocks = this.state.find({
-						"class": "Block",
-						"group": "",
-						"coord.x": coord.x,
-						"coord.y": coord.y
-					});
-
-					//todo: fix error: Remove cursor blocks from selection
-					// use a .filter({group:""}) method on the miniDB
-
-					// todo: add a "sort" method to minidb to get the top most block
-					if (blocks.length > 0) {
-						block = blocks[0];
-						this.pickedUpBlock = block;
-						newCoord = coord.copy();
-						newCoord.z = 10;
-						block.goNext(newCoord).go();
-					}
-				}
-			} else {
-				if (this.selectedCoord) {
-					coord = this.selectedCoord;
-					block = this.pickedUpBlock;
-
-					newCoord = coord.copy();
-					newCoord.z = 0;
-					block.goNext(newCoord).go();
-					this.pickedUpBlock = null;
-				}
-			}
-		};
-
-		/**
-		 * Put down the block that the cursor is currently carrying
-		 */
-		this.putDownBlock = function putDownBlock() {
-
-		};
-
-		this.selectedCoord = null;
-		this.updateCursor = function updateCursor() {
-			var i, block, coord, cursorBlock, cursorBlockType;
-			coord = this.selectedCoord;
-			if (coord) {
-				coord.z = 0;
-				// find and delete all block for the actorStatus group
-				this.state.find({
-					"class": "Block",
-					group: "cursor"
-				}).remove();
-
-				// place a series of cursor blocks
-				this.editMode(Isomaton.editModes.normal);
-				for (i = 0; i < 11; i = i + 1) {
-					cursorBlockType = this.world.blockTypes["cursors.whiteframe"];
-					block = new Isomaton.Block(cursorBlockType, coord, true, "cursor");
-					this.placeBlocks([block]);
-					coord.up();
-				}
-			}
-		};
-
-		this.onBlockSelected = function onBlockSelected(block) {
-			if (!block.actor) {
-				this.selectedCoord = block.coord.copy();
-				this.updateCursor();
-			}
-		};
-
 		this.actorSelect = function actorSelect(actor) {
 			this.setActorStatus(actor);
 		};
 
-		this.up = function up() {
-			var block = this.pickedUpBlock,
-				coord = this.selectedCoord;
-			if (coord) {
-				coord.north();
-				if (block) {
-					block.goNext(coord.copy()).go();
-				}
+		this._cursor = null;
+		this.cursor = function cursor(cursor) {
+			if (cursor) {
+				stage._cursor = cursor;
 			}
-			this.updateCursor();
+			return stage._cursor;
+		};
+
+		this.up = function up() {
+			var cursor = this.cursor();
+			if (cursor) {
+				cursor.goNext(cursor.coord.north()).go();
+			}
 		};
 
 		this.down = function down() {
-			var block = this.pickedUpBlock,
-				coord = this.selectedCoord;
-			if (coord) {
-				coord.south();
-				if (block) {
-					block.goNext(coord.copy()).go();
-				}
+			var cursor = this.cursor();
+			if (cursor) {
+				cursor.goNext(cursor.coord.south()).go();
 			}
-			this.updateCursor();
 		};
 
 		this.left = function left() {
-			var block = this.pickedUpBlock,
-				coord = this.selectedCoord;
-			if (coord) {
-				coord.west();
-				if (block) {
-					block.goNext(coord.copy()).go();
-				}
+			var cursor = this.cursor();
+			if (cursor) {
+				cursor.goNext(cursor.coord.west()).go();
 			}
-			this.updateCursor();
 		};
 
 		this.right = function right() {
-			var block = this.pickedUpBlock,
-				coord = this.selectedCoord;
-			if (coord) {
-				coord.east();
-				if (block) {
-					block.goNext(coord.copy()).go();
-				}
+			var cursor = this.cursor();
+			if (cursor) {
+				cursor.goNext(cursor.coord.east()).go();
 			}
-			this.updateCursor();
+		};
+
+		this.cursorAct = function act() {
+			var cursor = this.cursor();
+			if (cursor) {
+				// Cursor call "activate" upon himself
+				cursor.act("activate", cursor);
+			}
 		};
 
 
