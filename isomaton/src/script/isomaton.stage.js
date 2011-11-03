@@ -357,7 +357,7 @@
 		 * @param stepCount The number of steps to do in a batch without applying a setTimout
 		 */
 		this.step = function step(stepCount) {
-			var i, j, isValidMove, key, actor, actors, block, blocks, coord;
+			var i, j, key, actor, actors, block, blocks, coord;
 			for (i = 0; i < stepCount; i = i + 1) {
 				// Increment the time marker by one
 				stage.time = stage.time + 1;

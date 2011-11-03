@@ -24,12 +24,11 @@
 				}).first();
 				if (follower) {
 					// Compell the follower to grab or act on the item under the cursor
+					// if he is in direct reach (next to the cursor) trigger the "use" action
 					if (follower.coord.stepDistanceFrom(this.coord) < 2) {
 						this.act("forceUse", follower, {
 							coord: this.coord
 						});
-						// if he is in direct reach (next to the cursor) trigger the "use" action
-						console.log("YATA!");
 					} else {
 						// if he is in direct reach (ext to the cursor)
 						console.log("Whoa... trop loin!");

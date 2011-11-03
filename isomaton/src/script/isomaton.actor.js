@@ -127,6 +127,21 @@ function doc(pseudo) {
 		};
 
 		/**
+		 * Set a coordinate as the location of the actor in the next step
+		 * @param coord
+		 */
+		this.undoGoNext = function undoGoNext() {
+			this.set({
+				nextCoord: null
+			});
+			this.block.goNext(null);
+			if (this.blockInHands) {
+				this.blockInHands.goNext(null);
+			}
+			return this;
+		};
+
+		/**
 		 * Process the nextCoord as a valide move for the actor and its block
 		 * and update the miniDB index
 		 */
@@ -160,13 +175,7 @@ function doc(pseudo) {
 					}
 				}
 				if (!isValid) {
-					// Invalidate the nextCoordinate of both the actor and its block
-					this.set({
-						nextCoord: null
-					});
-					this.block.set({
-						nextCoord: null
-					});
+					this.undoGoNext();
 				}
 			}
 			return this;
@@ -270,7 +279,6 @@ function doc(pseudo) {
 			// Filter out blocks not in the playing fields
 
 			blocks = blocks.filter(function(index, item) {
-				console.log(item, index);
 				return item.coord.z < 3;
 			});
 
@@ -279,7 +287,6 @@ function doc(pseudo) {
 				return a.coord.z < b.coord.z;
 			});
 
-			console.log("sorted blocks: ", blocks, blocks.length);
 			if (blocks.length) {
 				block = blocks[0];
 			}
@@ -287,13 +294,11 @@ function doc(pseudo) {
 			// If actor is carrying a block
 			if (this.blockInHands) {
 				// Test if there is a place to put the block within the playing fields
-				console.log("tring to place block");
 				if (block) {
 					newCoordZ = block.coord.z + 1;
 				} else {
 					newCoordZ = 0;
 				}
-				console.log("newCoordZ", newCoordZ);
 				if (newCoordZ < 3) {
 					newCoord = coord.copy();
 					newCoord.z = newCoordZ;
@@ -303,7 +308,6 @@ function doc(pseudo) {
 					// Else emit a rejection sound
 					console.log("CANT DROP THIS BLOCK HERE!");
 				}
-					// Place the block
 			} else {
 				if (block) {
 					// Else if actor isnt carrying anything
