@@ -17,6 +17,7 @@ window.commonworld = {
 					"isInvisible": true,
 					"shape": "empty",
 					"isPickable": true,
+					"isStackable": true,
 					"offset": 1
 				}
 			}
@@ -28,6 +29,7 @@ window.commonworld = {
 					"isSolid": true,
 					"shape": "fullBlock",
 					"isPickable": true,
+					"isStackable": true,
 					"offset": 0
 				},
 				"bush": {
@@ -40,12 +42,14 @@ window.commonworld = {
 					"isSolid": true,
 					"shape": "fullBlock",
 					"isPickable": true,
+					"isStackable": true,
 					"offset": 2
 				},
 				"gold": {
 					"isSolid": true,
 					"shape": "fullBlock",
 					"isPickable": true,
+					"isStackable": true,
 					"offset": 3
 				},
 				"stone": {
@@ -60,7 +64,6 @@ window.commonworld = {
 					"hasOwnSpriteSheet": true,
 					"shape": "liquidBlock",
 					"isSolid": false,
-					"isPickable": false,
 					"loop": true
 				}
 			}
@@ -72,39 +75,33 @@ window.commonworld = {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
 					"shape": "mediumBlock",
-					"isPickable": false,
 					"offset": 0
 				},
 				"princess": {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
-					"isPickable": false,
 					"shape": "mediumBlock"
 				},
 				"slime": {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
-					"isPickable": false,
 					"shape": "mediumBlock"
 				},
 				"tinySlime": {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
-					"isPickable": false,
 					"shape": "tinyBlock"
 				},
 				"sidekick": {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
 					"shape": "smallBlock",
-					"isPickable": false,
 					"offset": 3
 				},
 				"chicken": {
 					"hasOwnSpriteSheet": true,
 					"isSolid": true,
 					"shape": "smallBlock",
-					"isPickable": false,
 					"offset": 4
 				}
 			}
@@ -147,27 +144,27 @@ window.commonworld = {
 				"whiteframe": {
 					"isSolid": false,
 					"shape": "cursorBlock",
-					"isPickable": false,
+					"isOffstage": true,
 					"offset": 0
 				},
 				"blackframe": {
 					"isSolid": false,
-					"isPickable": false,
+					"isOffstage": true,
 					"offset": 1
 				},
 				"whiteplaceholder": {
 					"isSolid": false,
-					"isPickable": false,
+					"isOffstage": true,
 					"offset": 2
 				},
 				"life": {
 					"isSolid": false,
-					"isPickable": false,
+					"isOffstage": true,
 					"offset": 4
 				},
 				"halfLife": {
 					"isSolid": false,
-					"isPickable": false,
+					"isOffstage": true,
 					"offset": 5
 				}
 			}

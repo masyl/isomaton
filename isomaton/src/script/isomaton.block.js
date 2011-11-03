@@ -15,6 +15,8 @@
 					"group": this.group,
 					"type.id": this.type.id,
 					"type.isSolid": this.type.isSolid,
+					"type.isStackable": this.type.isStackable,
+					"type.isOffstage": this.type.isOffstage,
 					"coord.x": this.coord.x,
 					"coord.y": this.coord.y,
 					"coord.z": this.coord.z
@@ -96,6 +98,8 @@
 		this.isSolid = this.isSolid = (options.isSolid !== undefined) ? options.isSolid : true;
 		this.isAnimated = this.isAnimated = (options.isAnimated !== undefined) ? options.isAnimated : false;
 		this.isPickable = this.isPickable = (options.isPickable !== undefined) ? options.isPickable : false;
+		this.isStackable = this.isStackable = (options.isStackable !== undefined) ? options.isStackable : false;
+		this.isOffstage = this.isOffstage = (options.isOffstage !== undefined) ? options.isOffstage : false;
 		this.loop = this.loop = (options.loop !== undefined) ? options.loop : false;
 		this.frames = this.frames = (options.frames !== undefined) ? options.frames : true;
 		this.isInvisible = this.isInvisible = (options.isInvisible !== undefined) ? options.isInvisible : false;

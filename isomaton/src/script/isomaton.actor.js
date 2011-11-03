@@ -268,11 +268,11 @@ function doc(pseudo) {
 		this.blockInHands = null;
 
 		this.use = function use(coord) {
-			var blocks, block, newCoord, newCoordZ;
+			var blocks, block, newCoord, newCoordZ, canStack;
 			// Find blocks on this coordinate
 			blocks = this.stage.state.find({
-				class: "Block",
-				"isPickable": true,
+				"class": "Block",
+				"type.isOffstage": false,
 				"coord.x": coord.x,
 				"coord.y": coord.y
 			});
@@ -292,27 +292,36 @@ function doc(pseudo) {
 			}
 
 			// If actor is carrying a block
+			canStack = true;
 			if (this.blockInHands) {
 				// Test if there is a place to put the block within the playing fields
 				if (block) {
 					newCoordZ = block.coord.z + 1;
+					if (!block.type.isStackable) {
+						canStack = false;
+					}
 				} else {
 					newCoordZ = 0;
 				}
-				if (newCoordZ < 3) {
-					newCoord = coord.copy();
-					newCoord.z = newCoordZ;
-					this.blockInHands.goNext(newCoord).go(newCoord);
-					this.blockInHands = null;
+				if (canStack) {
+					if (newCoordZ < 3 && canStack) {
+						newCoord = coord.copy();
+						newCoord.z = newCoordZ;
+						this.blockInHands.goNext(newCoord).go(newCoord);
+						this.blockInHands = null;
+					} else {
+						// Else emit a rejection sound
+						console.log("CANT DROP THIS BLOCK HERE! No free space");
+					}
 				} else {
 					// Else emit a rejection sound
-					console.log("CANT DROP THIS BLOCK HERE!");
+					console.log("CANT STACK A BLOCK ON THIS BLOCK");
 				}
 			} else {
 				if (block) {
 					// Else if actor isnt carrying anything
 					// If it is a pickable block
-					if (block.isPickable) {
+					if (block.type.isPickable) {
 						// Place the block in the actors hands (one block up)
 						this.set({
 							blockInHands: block
