@@ -259,7 +259,7 @@ function doc(pseudo) {
 		this.blockInHands = null;
 
 		this.use = function use(coord) {
-			var blocks, block;
+			var blocks, block, newCoord, newCoordZ;
 			// Find blocks on this coordinate
 			blocks = this.stage.state.find({
 				class: "Block",
@@ -278,35 +278,51 @@ function doc(pseudo) {
 			blocks.sort(function(a, b) {
 				return a.coord.z < b.coord.z;
 			});
+
+			console.log("sorted blocks: ", blocks, blocks.length);
 			if (blocks.length) {
 				block = blocks[0];
+			}
 
-				console.log("sorted blocks: ", blocks, blocks.length);
-
-				if (this.blockInHands) {
-					// If actor is carrying a block
-
-						// Test if there is a place to put the block within the playing fields
-						// Place the block
+			// If actor is carrying a block
+			if (this.blockInHands) {
+				// Test if there is a place to put the block within the playing fields
+				console.log("tring to place block");
+				if (block) {
+					newCoordZ = block.coord.z + 1;
 				} else {
+					newCoordZ = 0;
+				}
+				console.log("newCoordZ", newCoordZ);
+				if (newCoordZ < 3) {
+					newCoord = coord.copy();
+					newCoord.z = newCoordZ;
+					this.blockInHands.goNext(newCoord).go(newCoord);
+					this.blockInHands = null;
+				} else {
+					// Else emit a rejection sound
+					console.log("CANT DROP THIS BLOCK HERE!");
+				}
+					// Place the block
+			} else {
+				if (block) {
 					// Else if actor isnt carrying anything
 					// If it is a pickable block
 					if (block.isPickable) {
-						// Place the block in the actors hands
+						// Place the block in the actors hands (one block up)
 						this.set({
 							blockInHands: block
 						});
-						block.goNext(
-							this.coord.copy().up()
-						).go();
+						newCoord = this.coord.copy().up();
+						block.goNext(newCoord).go();
 					} else {
 						// Else emit a rejection sound
 						console.log("CANT PICKUP THIS BLOCK!");
 					}
+				} else {
+					// Else emit a rejection sound
+					console.log("NO BLOCKS TO PICKUP!");
 				}
-			} else {
-				// Else emit a rejection sound
-				console.log("NO BLOCKS TO PICKUP!");
 			}
 		};
 
