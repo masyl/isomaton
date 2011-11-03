@@ -24,14 +24,15 @@
 				}).first();
 				if (follower) {
 					// Compell the follower to grab or act on the item under the cursor
-					// if he is in direct reach (next to the cursor) trigger the "use" action
-					if (follower.coord.stepDistanceFrom(this.coord) < 2) {
+					// if he is in direct reach, but not directly under or over
+					// (next to the cursor) the cursor triggers the "forceUse" action
+					if (follower.coord.stepDistanceFrom(this.coord) === 1) {
 						this.act("forceUse", follower, {
 							coord: this.coord
 						});
 					} else {
 						// if he is in direct reach (ext to the cursor)
-						console.log("Whoa... trop loin!");
+						console.log("Whoa... trop loin ou trop proche!");
 
 					}
 				} else {
