@@ -13,24 +13,21 @@
 	// todo: Take a "Smart Pieces + Easy assembly" approach
 	world.stages.prairie = new I.Stage("prairie", {
 		start: function start() {
-			var coord;
+			var coord, x, y;
 			var world = this.world;
 			var worldOptions = world.options();
-			var groundArea = new I.Area(new I.Coord(1, 1, -2), worldOptions.width, worldOptions.height);
+			x = -2//parseInt(worldOptions.width/2);
+			y = -2//parseInt(worldOptions.height/2);
+			var groundArea = new I.Area(new I.Coord(x, y, 0), worldOptions.width, worldOptions.height);
 
 			this.editMode(I.editModes.emptyFirst);
 
-			// place layer of stone
-			// todo: bring back this layer once isograph is optimized
-//			this.placeBlocks(I.builder.fill(Blocks["materials.stone"], groundArea));
+			// place the cursor at the center of the stage
+			var cursor = new Actors.Cursor().bind(this, new Isomaton.Coord(0, 0, 1, 0));
+			this.placeActors([cursor]);
 
-			// place layer of dirt
-			groundArea.coord.up();
-			// todo: bring back this layer once isograph is optimized
-//			this.placeBlocks(I.builder.fill(Blocks["materials.dirt"], groundArea));
 
 			// place layer of grass
-			groundArea.coord.up();
 			this.placeBlocks(I.builder.fill(Blocks["materials.grass"], groundArea));
 
 			// place random patches of dirt in the grass at random
@@ -64,10 +61,6 @@
 			var slime = new Actors.Slime().bind(this, coord);
 //			this.placeActors([slime]);
 
-			// place the cursor at the center of the stage
-			var cursor = new Actors.Cursor().bind(this, new Isomaton.Coord(10, 10, 1, 0));
-				this.placeActors([cursor]);
-
 			// place 2 tiny slime
 			var tinySlime;
 			coord = groundArea.randomCoord(this.random("tinySlimeCoord"));
@@ -85,9 +78,7 @@
 			var chicken2 = new Actors.Chicken().bind(this, coord);
 			coord = groundArea.randomCoord(this.random("chickenCoord3"));
 			var chicken3 = new Actors.Chicken().bind(this, coord);
-			coord = groundArea.randomCoord(this.random("chickenCoord4"));
-			var chicken4 = new Actors.Chicken().bind(this, coord);
-//			this.placeActors([chicken1, chicken2, chicken3, chicken4]);
+//			this.placeActors([chicken1, chicken2, chicken3]);
 
 			// place 1 knight
 			coord = groundArea.randomCoord(this.random("knightCoord"));
@@ -102,7 +93,8 @@
 			// place 1 princess
 			coord = groundArea.randomCoord(this.random("princessCoord"));
 			var princess = new Actors.Princess().bind(this, coord);
-//			this.placeActors([princess]);
+			this.placeActors([princess]);
+
 
 			// place 12 spawn points
 			var i, spawnPoints = [];
@@ -112,8 +104,6 @@
 			}
 //			this.placeActors(spawnPoints);
 
-			// place frame
-//			this.placeBlocks(I.builder.random(this.random("flowers"), yellowflowersBlock, groundArea, flowersCount));
 
 
 		},

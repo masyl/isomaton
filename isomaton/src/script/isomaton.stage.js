@@ -1,6 +1,41 @@
 /*
+Block inventory:
+	-
 
-- Make the chickens "not" react on cursor presence
+
+Think Big
+	- Performance should be impacted by more actors, not by the stage size
+	- Optimize isograph and isomaton logic for a 30 x 30 stage or more
+	- Limit how much of the horizon the player can see to 24 (optimization)
+	- Instant optimization settings for : low, medium, high, full
+		- horizon depth
+		- Anti-Aliasing
+		- Shadows and lighting vs Ambiant light
+
+100% More Grabing
+	- Make the chickens "not" react on cursor presence
+	- Actor can grab another actor and freeze its movements
+	- Only certain blocks can be placed at the ground level
+	- When holding a block, the actor can spin it clockwise
+
+Fancier 3D
+	- User can zoom stage in thoward the cursor for a close-up action shot
+	- User can zoom out to see the full stage
+	- alt-up/down/left/right Keystrokes to temporarilly jerk the camera clockwise/anti-clock wise to see what is behind something
+	- As blocks are higher, they should have more light or be a little paler to enhacne de 3d perspective
+	- Move the cursor on the 3D plane with the mouse instead of the keyboard
+
+Playing with water
+	- Picking up a water block leaves the original block in place and the player obtains a smaller water block
+	- Dropping a water block on the ground layer fills it with a full water block
+	- Dropping a water block on grass creates weeds
+	- Dropping a water block on other blocks does nothing, water is lost
+	- Dropping water does a splash sound
+	- Water will flow and propagate to any empty spot where it is:
+		- next to one block of water and two other solid blocks
+		- next to two blocks of water
+	- Putting a solid block over a water block will remove the water block
+ -
 
  */
 (function IsomatonStagePackage(Isomaton, $, _, undefined) {

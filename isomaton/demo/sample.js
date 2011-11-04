@@ -30,8 +30,8 @@
 			world: "common",
 			root: "#isomaton",
 			stage: "prairie",
-			width: 20,
-			height: 20,
+			width: 24,
+			height: 24,
 			skin: isomatonOptions,
 			step: function debugStep(stage, world) {
 				$time[0].innerHTML = stage.time;

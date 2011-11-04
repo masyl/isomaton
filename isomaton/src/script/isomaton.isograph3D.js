@@ -1,11 +1,30 @@
 /*
 todo:
-- Fix the mouse events to support the isographic camera
 - Add block type and textures for each letters
 - Add block type and texture for life heart
+
+
+- Fix the mouse events to support the isographic camera
+	https://github.com/mrdoob/three.js/issues/599
+	http://catchvar.com/threejs-game-transforming-isometric-screen-co
+
  */
+LOWRES = false;
+ISOCAM = true;
+if (LOWRES) {
+	SETTING_ANTIALIAS = false;
+	SETTING_FANCYLIGHTING = false;
+	SETTING_FPS = 12;
+	ANIMATED = false;
+} else {
+	SETTING_ANTIALIAS = true;
+	SETTING_FANCYLIGHTING = true;
+	SETTING_FPS = 4;
+	ANIMATED = true;
+}
+
 (function IsomatonIsographPackage(Isomaton, _, undefined){
-	var fps = 16;
+	var fps = SETTING_FPS;
 	var requestAnimationFrame;
 
 	if ( !window.requestAnimationFrame ) {
@@ -38,7 +57,13 @@ todo:
 
 
 		var cubeSize = 50;
-		var baseMaterial = THREE.MeshLambertMaterial;
+
+		var baseMaterial;
+		if (SETTING_FANCYLIGHTING) {
+			baseMaterial = THREE.MeshLambertMaterial;
+		} else {
+			baseMaterial = THREE.MeshBasicMaterial;
+		}
 		var loader = THREE.ImageUtils.loadTexture;
 		var geometries = {};
 
@@ -118,65 +143,97 @@ todo:
 			// todo: update how the focus and selection of blocks is done
 			container = document.getElementById("isomaton");
 //			container.onmousemove = this.onMouseMove;
-//			container.onmousedown = this.onMouseDown;
+			container.onmousedown = this.onMouseDown;
 //			container.onmouseup = this.onMouseUp;
 
 			// Create place the camera
-			var cameraSize = 1.3; // 2 is default (not sure what it means)
 			var width = window.innerWidth;
 			var height = window.innerHeight;
-			camera = new THREE.OrthographicCamera(
-					width / - cameraSize,
-					width / cameraSize,
-					height / cameraSize,
-					height / - cameraSize,
-					-3000,
-					3000
-			);
-/*
-			camera = new THREE.Camera(
-				35,
-				width / height,
-				.2,
-				10000
-			);
-*/
-			camera.position.x = -700;
-			camera.position.y = 600;
-			camera.position.z = -700;
+
+			if (ISOCAM) {
+				var cameraSize = 1.1; // 2 is default (not sure what it means)
+				camera = new THREE.OrthographicCamera(
+						width / - cameraSize,
+						width / cameraSize,
+						height / cameraSize,
+						height / - cameraSize,
+						-3000,
+						3000
+				);
+				var offset = 600;
+				camera.position.x = -600;
+				camera.position.y = 600;
+				camera.position.z = -600;
+				var pos = {
+					x: 0,
+					y: 0,
+					z: 0
+				};
+				console.log(camera);
+				camera.lookAt( pos );
+				var angle = -0;
+				camera.scale.x = 0.82;
+				camera.scale.y = 0.82;
+				camera.up.x = camera.up.x + angle;
+				camera.up.y = camera.up.y + angle;
+			} else {
+				camera = new THREE.PerspectiveCamera(
+					40,
+					width / height,
+					.2,
+					10000
+				);
+				/*
+				camera.position.x = -700;
+				camera.position.y = 500;
+				camera.position.z = -700;
+				*/
+				camera.position.x = -1700;
+				camera.position.y = 1700;
+				camera.position.z = -1700;
+				var pos = {
+					x: -500,
+					y: 0,
+					z: -500
+				};
+				camera.lookAt( pos );
+			}
+
 
 			mouse2d = new THREE.Vector3(0, 0, 1);
 
 			scene = new THREE.Scene();
 
+			var light, ambient;
 
-			var ambient = new THREE.AmbientLight( 0x888888 );
-			scene.add( ambient );
+			if (SETTING_FANCYLIGHTING) {
+				light = new THREE.SpotLight(0xffffff, 0.8);
+				light.position.set(-100, 700, 200);
+				light.castShadow = true;
+				scene.add(light);
+				ambient = new THREE.AmbientLight( 0x888888 );
+				scene.add( ambient );
+			} else {
+				light = new THREE.PointLight(0xffffff, 0.8);
+				scene.add(light);
+			}
 
-			var light;
-
-//			light = new THREE.PointLight(0xffffff, 0.8);
-			light = new THREE.SpotLight(0xffffff, 0.8);
-			light.position.set(-100, 700, 200);
-			light.castShadow = true;
-			scene.add(light);
-
-			//
-			//renderer = new THREE.CanvasRenderer();
 			renderer = new THREE.WebGLRenderer({
-				antialias: true
+				antialias: SETTING_ANTIALIAS
 			});
 
 			// Shadow settings
-			renderer.shadowCameraNear = 2;
-			renderer.shadowCameraFar = camera.far;
-			renderer.shadowCameraFov = 90; // Was originally 50
-			renderer.shadowMapBias = 0.003885;
-			renderer.shadowMapDarkness = 0.35;
-			renderer.shadowMapWidth = 1024;
-			renderer.shadowMapHeight = 1024;
-			renderer.shadowMapEnabled = true;
-			renderer.shadowMapSoft = true;
+			if (SETTING_FANCYLIGHTING) {
+				renderer.shadowCameraNear = 2;
+				renderer.shadowCameraFar = camera.far;
+				renderer.shadowCameraFov = 90; // Was originally 50
+				renderer.shadowMapBias = 0.003885;
+				renderer.shadowMapDarkness = 0.35;
+				renderer.shadowMapWidth = 1024;
+				renderer.shadowMapHeight = 1024;
+				renderer.shadowMapSoft = true;
+				renderer.shadowMapEnabled = true;
+			}
 
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			container.innerHTML = "";
@@ -189,7 +246,6 @@ todo:
 			return this._options;
 		};
 
-		this.projector = new THREE.Projector();
 
 		this.screenPointToRay = function(screenPos) {
 			var vector = new THREE.Vector3(screenPos.x, screenPos.y, 1/*0.5*/);
@@ -205,8 +261,48 @@ todo:
 			e.preventDefault();
 			if (!e) { e = window.event; }
 			isograph.mouseIsDown = true;
+/* begin */
+			var x, y;
+
+			x = e.clientX;
+			y = e.clientY;
+
+			x = ( x / window.innerWidth ) * 2 - 1;
+			y = ( y / window.innerHeight ) * 2 + 1;
+
+			var
+			    startVector = new THREE.Vector3(),
+			    endVector = new THREE.Vector3(),
+			    dirVector = new THREE.Vector3(),
+			    goalVector = new THREE.Vector3(),
+			    t;
+
+			startVector.set( x, y, -1.0 );
+			endVector.set( x, y, 1.0 );
+
+			var projector = new THREE.Projector();
+
+			// Convert back to 3D world coordinates
+			startVector = projector.unprojectVector( startVector, camera );
+			endVector = projector.unprojectVector( endVector, camera );
+
+			// Get direction from startVector to endVector
+			dirVector.sub( endVector, startVector );
+			dirVector.normalize();
+
+			// Find intersection where y = 0
+			t = startVector.y / - ( dirVector.y );
+
+			// Find goal point
+			goalVector.set(
+				startVector.x + t * dirVector.x,
+				startVector.y + t * dirVector.y,
+				startVector.z + t * dirVector.z );
+
+console.log(goalVector.x/50, parseInt(goalVector.z/50));
 
 
+/*
 			var collisions;
 			mouse2d.x = (e.clientX / window.innerWidth) * 2 - 1;
 	  		mouse2d.y = -(e.clientY / window.innerHeight) * 2 + 1;
@@ -217,7 +313,30 @@ todo:
 		   if (collisions) {
 			   isograph.mouseTarget = collisions.mesh.block;
 		   }
+*/
 
+			if (isograph.mouseTarget) {
+				isograph.mouseTarget.select();
+				isograph.publish("blockSelect", [isograph.mouseTarget]);
+			}
+		};
+		this.onMouseDownOld = function onMouseDown(e) {
+			e.preventDefault();
+			if (!e) { e = window.event; }
+			isograph.mouseIsDown = true;
+
+/*
+			var collisions;
+			mouse2d.x = (e.clientX / window.innerWidth) * 2 - 1;
+	  		mouse2d.y = -(e.clientY / window.innerHeight) * 2 + 1;
+			var vector = new THREE.Vector3( mouse2d.x, mouse2d.y, 0.5 );
+			isograph.projector.unprojectVector(vector, camera);
+			var ray = new THREE.Ray(camera.position, vector.subSelf(camera.position).normalize());
+		   collisions = THREE.Collisions.rayCastNearest(ray);
+		   if (collisions) {
+			   isograph.mouseTarget = collisions.mesh.block;
+		   }
+*/
 
 			if (isograph.mouseTarget) {
 				isograph.mouseTarget.select();
@@ -240,44 +359,67 @@ todo:
 		// note: to prevent the "update" event chain from going into a loop
 		// this method should not call the ".set" method on blocks
 		this.updateBlock = function (block) {
-			var model, x, y, z, direction, speed;
+			var model, x, y, z, direction, speed, coord3d;
 			speed = 300;
 			model = block.isograph.model;
-			x = (block.coord.x * cubeSize - 500 + model.offset.x);
-			z = (block.coord.y * cubeSize - 500 + model.offset.y);
-			y = block.coord.z * cubeSize + model.offset.z;
-			direction = block.coord.direction;
-			// Remove the animation if the displacment is more than one block
-			var distance = block.coord.stepDistanceFrom(block.prevCoord);
-			if (distance > 1) {
-				speed = 0;
+			// If there is a 3D Model (some blocks are invisible)
+			if (model) {
+				coord3d = this.translateCoordTo3d(block.coord, model);
+				x = coord3d.x;
+				y = coord3d.y;
+				z = coord3d.z;
+				direction = block.coord.direction;
+				// Remove the animation if the displacment is more than one block
+				var distance = block.coord.stepDistanceFrom(block.prevCoord);
+				if (distance > 1) {
+					speed = 0;
+				}
+				// Call the animation sequence on the scenegraph
+				this.updateBlockModel(model, x, y, z, direction, speed);
+			} else {
+				// todo: Invisible block such as Spawnpoints are still comming throught this method... why?
+//				console.log("isInvisible", block);
 			}
-			// Call the animation sequence on the scenegraph
-			this.updateBlockModel(model, x, y, z, direction, speed);
 		};
 
 		this.updateBlockModel = function(model, x, y, z, direction, speed) {
 			var coord, rotation;
 			coord = model.position;
-			// If the bitmap if moving higher/forward the z index
-			// update the z-ordering first
 			rotation = ((1 - direction) * 90) * (Math.PI / 180);
-			Tween
-				.get(model.rotation, {
-					override: true
-				})
-				.to({
-					y: rotation
-				}, speed/2);
-			Tween
-				.get(coord, {
-					override: true
-				})
-				.to({
-					x: x,
-					y: y,
-					z: z
-				}, speed, Transition.ease.in(Transition.quad));
+			if (ANIMATED) {
+				Tween
+					.get(model.rotation, {
+						override: true
+					})
+					.to({
+						y: rotation
+					}, speed/2);
+				Tween
+					.get(coord, {
+						override: true
+					})
+					.to({
+						x: x,
+						y: y,
+						z: z
+					}, speed, Transition.ease.in(Transition.quad));
+			} else {
+				model.rotation.y = rotation;
+				coord.x = x;
+				coord.y = y;
+				coord.z = z;
+
+			}
+		};
+
+		this.translateCoordTo3d = function translateCoordTo3d(coord, mesh) {
+			var coord3d = {};
+			var worldCenterOffset = cubeSize * 10;
+			// todo handle different stage offset of x, y , z
+			coord3d.x = coord.x * cubeSize - worldCenterOffset + mesh.offset.x;
+			coord3d.y = coord.z * cubeSize - worldCenterOffset + mesh.offset.z;
+			coord3d.z = coord.y * cubeSize;
+			return coord3d;
 		};
 
 		this.renderBlock = function renderBlock(block) {
@@ -286,9 +428,10 @@ todo:
 				var geometry = getGeometry(block.type);
 				var cube = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial() );
 				cube.offset = geometry.offset;
-				cube.position.x = block.coord.x * cubeSize - (cubeSize * 10) + cube.offset.x;
-				cube.position.z = block.coord.y * cubeSize - (cubeSize * 10) + cube.offset.y;
-				cube.position.y = block.coord.z * cubeSize + cube.offset.z;
+				var coord3d = this.translateCoordTo3d(block.coord, cube);
+				cube.position.x = coord3d.x;
+				cube.position.y = coord3d.y;
+				cube.position.z = coord3d.z;
 				// Keep a reference to the isograph in the block
 				// Add the cube to the scene
 
@@ -309,7 +452,7 @@ todo:
 				// back reference to the block
 				cube.block = block;
 				//Add a colider for this cube, so that mouse2d can detect it
-				THREE.Collisions.colliders.push(THREE.CollisionUtils.MeshOBB(cube));
+//				THREE.Collisions.colliders.push(THREE.CollisionUtils.MeshOBB(cube));
 				scene.add(cube);
 				model = cube;
 			}
@@ -391,20 +534,7 @@ todo:
 		/**
 		 * Go through one frame redraw
 		 */
-		var r, f, dist;
-		dist = 1000;
-		r = 1;
-		f = -10;
 		this.frameStep = function frameStep() {
-			// Reposition the camera
-			/*
-			r = r + 1/400;
-			camera.position.x = dist * Math.cos(r);
-			camera.position.y = dist * Math.sin(f);
-			camera.position.z = dist * Math.sin(r);
-			*/
-			camera.lookAt( scene.position );
-			// Render the scene with the camera
 			renderer.clear();
 			renderer.render( scene, camera );
 		};
