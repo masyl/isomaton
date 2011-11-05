@@ -1,5 +1,7 @@
 /*
 todo:
+- Implement communication between Stage and Isograph using webSocket : http://socket.io/
+- bug: Spawn points prevent the placement of blocks... if not, actors would spawn inside a block!!! Spawn points needs to find the nearest avail spot to spawn (which isnt surrounded by any solid blocks?).
 - Add block type and textures for each letters
 - Add block type and texture for life heart
 
@@ -11,6 +13,7 @@ todo:
  */
 LOWRES = false;
 ISOCAM = true;
+CAMERA_ZOOM = 0.87;
 if (LOWRES) {
 	SETTING_ANTIALIAS = false;
 	SETTING_FANCYLIGHTING = false;
@@ -83,30 +86,30 @@ if (LOWRES) {
 					material(id, "front"),
 					material(id, "back")
 				];
-				var offset = { x: 0, y: 0, z: 0};
+				var offset = { x: 0, z: 0, y: 0};
 				if (shape == "liquidBlock") {
 					geometry = new THREE.CubeGeometry(cubeSize, cubeSize*0.85, cubeSize, 4, 4, 1, materials);
-					offset = { x: 0, y: 0, z:-(cubeSize * 0.15/2)};
+					offset = { x: 0, z: 0, y:-(cubeSize * 0.15/2)};
 				} else if (shape == "mediumBlock") {
 					geometry = new THREE.CubeGeometry(cubeSize * 0.85, cubeSize * 0.85, cubeSize * 0.85, 4, 4, 1, materials);
-					offset = { x: 0, y: 0, z:-(cubeSize * 0.15/2)};
+					offset = { x: 0, z: 0, y:-(cubeSize * 0.15/2)};
 				} else if (shape == "smallBlock") {
 					geometry = new THREE.CubeGeometry(cubeSize*0.75, cubeSize*0.75, cubeSize*0.75, 4, 4, 1, materials);
-					offset = { x: 0, y: 0, z:-(cubeSize * 0.25)/2};
+					offset = { x: 0, z: 0, y:-(cubeSize * 0.25)/2};
 				} else if (shape == "tinyBlock") {
 					geometry = new THREE.CubeGeometry(cubeSize*0.50, cubeSize*0.50, cubeSize*0.50, 4, 4, 1, materials);
-					offset = { x: 0, y: 0, z:-(cubeSize * 0.50)/2};
+					offset = { x: 0, z: 0, y:-(cubeSize * 0.50)/2};
 				} else if (shape == "floorTile") {
 					geometry = new THREE.CubeGeometry(cubeSize, 0, cubeSize*0.75, 4, 4, 1, materials);
-					offset = { x: 0, y: 0, z:-(cubeSize/2)};
+					offset = { x: 0, z: 0, y:-(cubeSize/2)};
 				} else if (shape == "halfBlock") {
 					geometry = new THREE.CubeGeometry(cubeSize, cubeSize*0.5, cubeSize, 4, 4, 1, materials);
-					offset = { x: 0, y: 0, z:-(cubeSize*0.5/2)};
+					offset = { x: 0, z: 0, y:-(cubeSize*0.5/2)};
 				} else if (shape == "verticalTile") {
 					geometry = new THREE.CubeGeometry(cubeSize, cubeSize, 0, 4, 4, 1, materials);
 				} else if (shape == "cursorBlock") {
 					geometry = new THREE.CubeGeometry(cubeSize*1.1, cubeSize*1.1, cubeSize*1.1, 4, 4, 1, materials);
-					offset = { x: 0, y: 0, z:(cubeSize*0.1/2)};
+					offset = { x: 0, z: 0, y:(cubeSize*0.1/2)};
 				} else {
 					geometry = new THREE.CubeGeometry(cubeSize, cubeSize, cubeSize, 4, 4, 1, materials);
 				}
@@ -160,22 +163,18 @@ if (LOWRES) {
 						-3000,
 						3000
 				);
-				var offset = 600;
-				camera.position.x = -600;
-				camera.position.y = 600;
-				camera.position.z = -600;
+				camera.position.x = -1;
+				camera.position.y = 1;
+				camera.position.z = -1;
 				var pos = {
 					x: 0,
 					y: 0,
 					z: 0
 				};
-				console.log(camera);
 				camera.lookAt( pos );
-				var angle = -0;
-				camera.scale.x = 0.82;
-				camera.scale.y = 0.82;
-				camera.up.x = camera.up.x + angle;
-				camera.up.y = camera.up.y + angle;
+				var scale = CAMERA_ZOOM;
+				camera.scale.x = scale;
+				camera.scale.y = scale;
 			} else {
 				camera = new THREE.PerspectiveCamera(
 					40,
@@ -413,12 +412,16 @@ console.log(goalVector.x/50, parseInt(goalVector.z/50));
 		};
 
 		this.translateCoordTo3d = function translateCoordTo3d(coord, mesh) {
-			var coord3d = {};
-			var worldCenterOffset = cubeSize * 10;
-			// todo handle different stage offset of x, y , z
-			coord3d.x = coord.x * cubeSize - worldCenterOffset + mesh.offset.x;
-			coord3d.y = coord.z * cubeSize - worldCenterOffset + mesh.offset.z;
-			coord3d.z = coord.y * cubeSize;
+			var coord3d, offset3d;
+			coord3d = {};
+			offset3d = {
+				x: 0,
+				y: 0,
+				z: 0
+			};
+			coord3d.x = coord.x * cubeSize + offset3d.x + mesh.offset.x;
+			coord3d.y = coord.z * cubeSize + offset3d.y + mesh.offset.y;
+			coord3d.z = coord.y * cubeSize + offset3d.z;
 			return coord3d;
 		};
 

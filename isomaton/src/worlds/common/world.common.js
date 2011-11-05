@@ -16,8 +16,8 @@
 			var coord, x, y;
 			var world = this.world;
 			var worldOptions = world.options();
-			x = -2//parseInt(worldOptions.width/2);
-			y = -2//parseInt(worldOptions.height/2);
+			x = -parseInt(worldOptions.width/2);
+			y = -parseInt(worldOptions.height/2);
 			var groundArea = new I.Area(new I.Coord(x, y, 0), worldOptions.width, worldOptions.height);
 
 			this.editMode(I.editModes.emptyFirst);
@@ -59,17 +59,17 @@
 			// place 1 slime
 			coord = groundArea.randomCoord(this.random("slimeCoord"));
 			var slime = new Actors.Slime().bind(this, coord);
-//			this.placeActors([slime]);
+			this.placeActors([slime]);
 
 			// place 2 tiny slime
 			var tinySlime;
 			coord = groundArea.randomCoord(this.random("tinySlimeCoord"));
 			tinySlime = new Actors.TinySlime().bind(this, coord);
-//			this.placeActors([tinySlime]);
+			this.placeActors([tinySlime]);
 
 			coord = groundArea.randomCoord(this.random("tinySlimeCoord2"));
 			tinySlime = new Actors.TinySlime().bind(this, coord);
-//			this.placeActors([tinySlime]);
+			this.placeActors([tinySlime]);
 
 			// place 4 chickens
 			coord = groundArea.randomCoord(this.random("chickenCoord1"));
@@ -78,7 +78,7 @@
 			var chicken2 = new Actors.Chicken().bind(this, coord);
 			coord = groundArea.randomCoord(this.random("chickenCoord3"));
 			var chicken3 = new Actors.Chicken().bind(this, coord);
-//			this.placeActors([chicken1, chicken2, chicken3]);
+			this.placeActors([chicken1, chicken2, chicken3]);
 
 			// place 1 knight
 			coord = groundArea.randomCoord(this.random("knightCoord"));
@@ -88,7 +88,7 @@
 			// place 1 sidekick
 			coord = groundArea.randomCoord(this.random("sidekickCoord"));
 			var sidekick = new Actors.Sidekick().bind(this, coord);
-//			this.placeActors([sidekick]);
+			this.placeActors([sidekick]);
 
 			// place 1 princess
 			coord = groundArea.randomCoord(this.random("princessCoord"));
@@ -102,7 +102,7 @@
 				coord = groundArea.randomCoord(this.random("spawnCoords-" + i));
 				spawnPoints.push(new Actors.SpawnPoint().bind(this, coord));
 			}
-//			this.placeActors(spawnPoints);
+			this.placeActors(spawnPoints);
 
 
 
